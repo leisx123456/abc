@@ -1,0 +1,31 @@
+﻿生成启动时间为 2020/3/19 23:32:30。
+     1>项目“F:\work\pro\LxGame\LxGameBase\CardGameBase\CardGameBase\CardGameBase.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I. /Z7 /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _WINDOWS /D _USRDLL /D CARDGAMEBASE_EXPORTS /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt mahjong\SiChuanMj\SiChuanMjDesk.cpp
+         SiChuanMjDesk.cpp
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"F:\work\pro\LxGame\LxMahjone\LxSiChuanMahjong\proj.win32\Debug\CardGameBase.lib" /NOLOGO Debug\LCard.obj
+         Debug\LCardOperate.obj
+         Debug\LClockActive.obj
+         Debug\LCpp11Timer.obj
+         Debug\LDicePair.obj
+         Debug\LGameDispatcher.obj
+         Debug\LMjCard.obj
+         Debug\LRight.obj
+         Debug\TimerCore.obj
+         Debug\AbstractThink.obj
+         Debug\BasicThink.obj
+         Debug\CleverThink.obj
+         Debug\CmpThink.obj
+         Debug\LMjDesk.obj
+         Debug\LMjLogic.obj
+         Debug\LMjPlayer.obj
+         Debug\SiChuanMjDesk.obj
+         Debug\SiChuanMjLogic.obj
+     1>LCardOperate.obj : warning LNK4221: 此对象文件未定义任何之前未定义的公共符号，因此任何耗用此库的链接操作都不会使用此文件
+         CardGameBase.vcxproj -> F:\work\pro\LxGame\LxMahjone\LxSiChuanMahjong\proj.win32\Debug\CardGameBase.lib
+     1>已完成生成项目“F:\work\pro\LxGame\LxGameBase\CardGameBase\CardGameBase\CardGameBase.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:01.08
