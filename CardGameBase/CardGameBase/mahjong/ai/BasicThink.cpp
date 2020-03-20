@@ -1299,7 +1299,7 @@ void CBasicThink::SetTeamPai( int type)
 //
 //
 //
-/
+
 //
 //void CLMjPlayer::resetParticipated()
 //{
