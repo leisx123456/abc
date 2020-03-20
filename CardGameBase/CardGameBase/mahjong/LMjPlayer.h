@@ -99,15 +99,7 @@ private:
 	E_PlayerActiveState m_ePlayerActiveState;
 	E_PlayerStatus m_ePlayerStatus;
 
-		//E_OrderNumCardType m_eTBA;	//缺
-
-
-	
-
-	//vector<int> m_vecKong;	//杠牌队列
-
-	
-
+	CLMjCard::E_MjCardColor m_eColorTBA;	//定缺所用
 
 	
 	int	m_nOtherOutCard;	//别人出的牌

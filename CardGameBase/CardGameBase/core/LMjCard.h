@@ -14,18 +14,19 @@ public:
 	enum E_MjCardColor
 	{
 		/*序数牌 */
-		EM_Circle,         //筒牌 0-8
-		EM_Character,      //万牌 9-17
-		EM_Bamboo,          //条牌 18-26
+		EM_Character,      //万牌 0x01-0x09
+		EM_Bamboo,          //条牌 0x11-0x19
+		EM_Circle,         //筒牌 0x21-0x29
 
 		/* 字牌, 包含风牌和箭牌*/
-		EM_Wind,            //风牌 -东、南、西、北风
-		EM_Wrigley,         //箭牌 -中、发、白
+		EM_Word,
+		//EM_Wind,            //风牌 -东、南、西、北风
+		//EM_Wrigley,         //箭牌 -中、发、白
 
 		/* 花牌 */
 		EM_Flower,           //花牌 -春、夏、秋、冬、梅、竹、兰、菊
 
-		EM_Invalid = 255    //没有其他牌了
+		EM_Invalid_Color = 255    //没有其他牌了
 	};
 
 	// 麻将视图视角方向
@@ -60,18 +61,18 @@ public:
 	CLMjCard(E_CardResType eCardResType, E_ViewDirection eViewDirection, int nCard);
 
 	virtual bool isValid();
+	virtual int logicValue(){ return m_nValue & MASK_VALUE; }
+	virtual int color() { return (m_nValue & MASK_COLOR) >> 4; }
 
 	void initCard();
+	bool isTBA(E_MjCardColor eMjCardColor);
 
 	// 把CLCard申明为类模板后就不用重载这些操作符函数了，这就是类模板的强大
 	//CLMjCard & operator = (const int & nCard);
 	//CLMjCard & operator = (const CLMjCard & rhs);
 
 
-	int color()
-	{
-		return m_nValue & MJ_COLOR_MASK;
-	}
+
 
 	E_ViewDirection getViewDirection()
 	{
@@ -102,6 +103,8 @@ protected:
 	E_CardResType m_eCardResType; //
 	E_ViewPosture m_eViewPosture;
 	E_ViewDirection m_eViewDirection;	//
+
+	
 };
 
 // 一副麻将

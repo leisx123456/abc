@@ -4,7 +4,13 @@
 #include <vector>
 #include <algorithm>
 
+
 #define INVALID_CARD		0
+/************************************************************************/
+/* 
+CLCardOperate 牌操作容器类， 即对多数量的牌管理操作, 由于是用的数组而非stl容器，需要自己实现一些函数
+*/
+/************************************************************************/
 
 // 声明为类模板，因为还不知道对确切的哪一种牌操作
 template<class CLCard>
@@ -14,15 +20,14 @@ public:
 	CLCardOperate();
 	virtual ~CLCardOperate();
 
-	// 有效性判断
-	//virtual bool isValidCard(CLCard card) = 0;
-	virtual bool isValidCard(CLCard card) { return false; }
-
 	// 洗牌
-	void shuffleCard(CLCard aCards[], unsigned int unCardCount);
+	void shuffleCards(CLCard aCards[], unsigned int unCardCount);
 
 	// 理牌
-	void sortCard(CLCard aCards[], unsigned int unCardCount);
+	void sortCards(CLCard aCards[], unsigned int unCardCount);
+
+	// 复制-(由于对象不能memcpy,需要自己定义)
+	void copyCards(CLCard aCardsDest[], unsigned int unDestCount, CLCard aCardsSrc[], unsigned int unSrcCount);
 
 	// 删除操作
 	// 根据牌值表删除
@@ -39,7 +44,7 @@ public:
 	int findCardIndex(CLCard aCards[], unsigned int unCardCount, CLCard card);
 
 	// 从牌数组中，获取某一牌值得具体个数
-	int getCardNum(CLCard aCards[], unsigned int unCardCount, CLCard card);
+	int getCardsNum(CLCard aCards[], unsigned int unCardCount, CLCard card);
 
 	// other
 	bool isCardInArray(CLCard const aCards[], unsigned int unCardCount, CLCard card);
@@ -59,7 +64,7 @@ CLCardOperate<CLCard>::~CLCardOperate()
 }
 
 template<class CLCard>
-void CLCardOperate<CLCard>::shuffleCard(CLCard aCards[], unsigned int unCardCount)
+void CLCardOperate<CLCard>::shuffleCards(CLCard aCards[], unsigned int unCardCount)
 {
 	//std::random_shuffle(aCards[0], aCards[unCardCount]);
 
@@ -85,7 +90,7 @@ void CLCardOperate<CLCard>::shuffleCard(CLCard aCards[], unsigned int unCardCoun
 }
 
 template<class CLCard>
-void CLCardOperate<CLCard>::sortCard(CLCard aCards[], unsigned int unCardCount)
+void CLCardOperate<CLCard>::sortCards(CLCard aCards[], unsigned int unCardCount)
 {
 	//std::sort(aCards[0], aCards[unCardCount]);
 
@@ -106,6 +111,18 @@ void CLCardOperate<CLCard>::sortCard(CLCard aCards[], unsigned int unCardCount)
 	}
 }
 
+
+template<class CLCard>
+void CLCardOperate<CLCard>::copyCards(CLCard aCardsDest[], unsigned int unDestCount, CLCard aCardsSrc[], unsigned int unSrcCount)
+{
+	unsigned int unCopyCount = unDestCount > unSrcCount ? unSrcCount : unDestCount;
+	for (int i = 0; i < unCopyCount; ++i)
+	{
+		aCardsDest[i] = aCardsSrc[i];
+	}
+}
+
+
 template<class CLCard>
 bool CLCardOperate<CLCard>::removeCard(CLCard aCards[], unsigned int unCardCount, CLCard cardRemove)
 {
@@ -118,7 +135,7 @@ bool CLCardOperate<CLCard>::removeCard(CLCard aCards[], unsigned int unCardCount
 				aCards[j - 1] = aCards[j];
 			}
 
-			aCards[unCardCount - 1] = INVALID_CARD;
+			aCards[unCardCount - 1] = CARD_EMPTY;
 			return true;
 		}
 	}
@@ -161,26 +178,24 @@ bool CLCardOperate<CLCard>::isCardsInArray(CLCard const aCard[], unsigned int un
 	{
 		return false;
 	}
-	CLCard* cardTemp = new CLCard[unCardCount];
+	CLCard* pArrCardTemp = new CLCard[unCardCount];
 	int nTempSize = unCardCount;
-	if (NULL == cardTemp)
+	if (NULL == pArrCardTemp)
 	{
 		return false;
 	}
-	memcpy(cardTemp, aCard, sizeof(CLCard)* unCardCount);
+	copyCards(pArrCardTemp, unCardCount, aCard, unCardCount);
 
 	for (int i = 0; i < unSubsetCardCount; i++)
 	{
-		if (!removeCard(cardTemp, nTempSize--, aSubsetCards[i]))
+		if (!removeCard(pArrCardTemp, nTempSize--, aSubsetCards[i]))
 		{
-			delete cardTemp;
-			cardTemp = NULL;
+			delete[] pArrCardTemp;
 			return false;
 		}
 	}
 
-	delete cardTemp;
-	cardTemp = NULL;
+	delete [] pArrCardTemp;
 	return true;
 }
 
@@ -199,7 +214,7 @@ int CLCardOperate<CLCard>::findCardIndex(CLCard aCards[], unsigned int unCardCou
 }
 
 template<class CLCard>
-int CLCardOperate<CLCard>::getCardNum(CLCard aCards[], unsigned int unCardCount, CLCard card)
+int CLCardOperate<CLCard>::getCardsNum(CLCard aCards[], unsigned int unCardCount, CLCard card)
 {
 	int num = 0;
 	for (int i = 0; i < unCardCount; ++i)

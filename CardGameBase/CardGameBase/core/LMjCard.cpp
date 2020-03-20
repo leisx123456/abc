@@ -73,9 +73,14 @@ bool CLMjCard::isValid()
 
 void CLMjCard::initCard()
 {
-	m_nLogicValue = (m_nValue & MASK_VALUE);
-	m_nColor = (m_nValue & MASK_COLOR) >> 4;
+	
 }
+
+bool CLMjCard::isTBA(E_MjCardColor eMjCardColor)
+{
+	return color() == (int)eMjCardColor;
+}
+
 
 //CLMjCard & CLMjCard::operator=(const int & nCard)
 //{

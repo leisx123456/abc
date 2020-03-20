@@ -789,24 +789,7 @@ void CBasicThink::SetTeamPai( int type)
 //	return true;
 //}
 //
-//
-//bool CLMjPlayer::isExistTriplet(CHandCard handCard, int &pos1, int &pos2)
-//{
-//	pos1 = findPosInActiveHandCards(handCard);
-//	if (-1 == pos1)
-//	{
-//		return false;
-//	}
-//	m_vecActiveHandCards[pos1].setParticipated(true);
-//	pos2 = findPosInActiveHandCards(handCard);
-//	if (-1 == pos2)
-//	{
-//		m_vecActiveHandCards[pos1].setParticipated(false);
-//		return false;
-//	}
-//	m_vecActiveHandCards[pos2].setParticipated(true);
-//	return true;
-//}
+
 //
 //
 ///*************************************************************/
@@ -888,17 +871,7 @@ void CBasicThink::SetTeamPai( int type)
 //	}
 //}
 //
-//bool CLMjPlayer::isExistPair(CHandCard handCard, int & pos1)
-//{
-//	pos1 = findPosInActiveHandCards(handCard);
-//	if (-1 == pos1)
-//	{
-//		return false;
-//	}
-//	m_vecActiveHandCards[pos1].setParticipated(true);
-//	return true;
-//}
-//
+
 //
 //bool CLMjPlayer::isExistDoor(CHandCard handCard, E_DoorType & doorType, int &pos1)
 //{
@@ -1326,40 +1299,7 @@ void CBasicThink::SetTeamPai( int type)
 //
 //
 //
-//
-//void CLMjPlayer::thinkSevenPair()
-//{
-//	int i, j;
-//	int nPairs = 0;
-//	for (i = 0; i < 12; ++i)
-//	{
-//		if (m_arrHandCard[i].isParticipated())
-//		{
-//			continue;
-//		}
-//		for (j = i + 1; j < 13; ++j)
-//		{
-//			if (!m_arrHandCard[j].isParticipated() && (m_arrHandCard[i] == m_arrHandCard[j]))
-//			{
-//				m_arrHandCard[i].setParticipated(true);
-//				m_arrHandCard[j].setParticipated(true);
-//				++nPairs;
-//				break;
-//			}
-//		}
-//	}
-//	if (nPairs == 6)
-//	{
-//		for (i = 0; i < 13; ++i)
-//		{
-//			if (!m_arrHandCard[i].isParticipated())
-//			{
-//				m_vecTing.push_back(m_arrHandCard[i].getCard());
-//			}
-//		}
-//	}
-//	resetParticipated();
-//}
+/
 //
 //void CLMjPlayer::resetParticipated()
 //{

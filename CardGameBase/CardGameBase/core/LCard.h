@@ -41,6 +41,11 @@ public:
 		return m_nValue;
 	}
 
+	// 牌的逻辑值
+	virtual int logicValue(){ return m_nValue; }
+	// 牌的花色
+	virtual int color(){ return 1; }
+
 	void setValue(int nValue)
 	{
 		m_nValue = nValue;
@@ -163,9 +168,6 @@ public:
 protected:
 	int m_nValue;		// 牌值
 
-	int m_nLogicValue;	// 牌的逻辑值
-	int m_nColor;	// 牌的花色
-
 	bool m_bMagicCard;		// 是否癞子牌
 
 	int m_nScore;				//牌的分值、比重、权重、重要性
@@ -175,8 +177,7 @@ protected:
 template<class T>
 void CLCard<T>::initCard()
 {
-	m_nLogicValue = m_nValue;
-	m_nColor = 0;
+
 	m_bMagicCard = false;
 	m_nScore = 0;
 }

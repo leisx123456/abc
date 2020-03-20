@@ -5,36 +5,24 @@
 
 
 CLMjLogic::CLMjLogic()
-: m_nMaxHandCards(14)
 {
 
 }
 
-bool CLMjLogic::isValidCard(const CLMjCard & card)
-{
-	return true;
-}
 
 bool CLMjLogic::isCanPong(CLMjCard aCards[], unsigned int unCardCount, const CLMjCard & cardDest)
 {
-	if (!isValidCard(cardDest))
-	{
-		return false;
-	}
-	return getCardNum(aCards, unCardCount, cardDest) >= 2;
+	return getCardsNum(aCards, unCardCount, cardDest) >= 2;
 }
 
 bool CLMjLogic::isCanKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize,
 	CLMjCard cardDest)
 {
-	if (!isValidCard(cardDest))
-	{
-		return false;
-	}
-	if (getCardNum(aCards, unCardCount, cardDest) == 3)
+	if (getCardsNum(aCards, unCardCount, cardDest) == 3)
 	{
 		return true;
 	}
+	return false;
 	//找补杠
 	//for (int i = 0; i < iCGPNums; ++i)
 	//{
@@ -54,74 +42,7 @@ bool CLMjLogic::isCanKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCa
 }
 
 
-// 
-bool CLMjLogic::isCanHu(CLMjCard aCards[]
-	, unsigned int unCardCount
-	, T_WeaveCardsItem aWeaveItem[]
-	, unsigned int unItemSize
-	, const CLMjCard & cardOtherOut/* = CARD_EMPTY*/
-	, const CLMjCard & cardGet/* = CARD_EMPTY*/
-	, bool bMust258Pair /*= false*/)
-{
-	if (cardOtherOut < 0)
-	{
-		return false;
-	}
 
-	// 复制牌组
-	unsigned int unCardNumTemp = unCardCount;
-	CLMjCard aCardsTemp[MAX_HAND_COUNT];
-	memcpy(aCardsTemp, aCards, unCardNumTemp * sizeof(CLMjCard));
-
-	// 理牌
-	sortCard(aCardsTemp, unCardNumTemp);
-
-	bool bCanHu3x2 = isCanHu_3x2(aCardsTemp, unCardNumTemp, bMust258Pair);
-}
-
-// 递归删除法
-bool CLMjLogic::isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair /*= false*/)
-{
-	assert(unCardCount > m_nMaxHandCards || unCardCount <= 0);
-	if (unCardCount % 3 != 2)
-	{
-		return false;
-	}
-
-	// 剩下一对将就可以胡了
-	if (unCardCount == 2)
-	{
-		if (getMagicNum(aCards, unCardCount) > 1)
-		{
-			return true;
-		}
-		if (aCards[0] == aCards[1])
-		{
-			return true;
-		}
-		return false;
-	}
-
-	// 重新拷贝一份，以此递归失败时恢复起始点
-	CLMjCard aCardsTemp[MAX_HAND_COUNT];
-	
-	memcpy(aCardsTemp, aCards, sizeof(CLMjCard)* unCardCount);
-	// 剔除刻子
-	if (removeTriplet(aCardsTemp, unCardCount))
-	{
-		isCanHu_3x2(aCardsTemp, unCardCount - 3); // 剔除成功则使用aCardsTemp传参
-	}
-
-	// 剔除失败则重新拷贝
-	memcpy(aCardsTemp, aCards, sizeof(CLMjCard)* unCardCount);
-	// 剔除顺子
-	if (removeSequence(aCardsTemp, unCardCount))
-	{
-		isCanHu_3x2(aCardsTemp, unCardCount - 3);
-	}
-
-	return false;
-}
 
 // 要保证手牌已经从小到大排序
 // 移除刻子
@@ -219,5 +140,118 @@ int CLMjLogic::getMagicNum(CLMjCard aCards[], unsigned int unCardCount)
 	}
 	return num;
 }
+
+
+// 
+bool CLMjLogic::isCanHu(CLMjCard aCards[]
+	, unsigned int unCardCount
+	, T_WeaveCardsItem aWeaveItem[]
+	, unsigned int unItemSize
+	, const CLMjCard & cardOtherOut/* = CARD_EMPTY*/
+	, const CLMjCard & cardGet/* = CARD_EMPTY*/
+	, bool bMust258Pair /*= false*/)
+{
+	if (cardOtherOut < 0)
+	{
+		return false;
+	}
+
+	// 复制牌组
+	unsigned int unCardNumTemp = unCardCount;
+	CLMjCard aCardsTemp[MAX_HAND_COUNT];
+	copyCards(aCardsTemp, unCardNumTemp, aCards, unCardCount);
+
+	// 理牌
+	sortCards(aCardsTemp, unCardNumTemp);
+
+	bool bCanHu3x2 = isCanHu_3x2(aCardsTemp, unCardNumTemp, bMust258Pair);
+	return bCanHu3x2;
+}
+
+// 递归删除法
+bool CLMjLogic::isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair /*= false*/)
+{
+	assert(unCardCount > MAX_HAND_COUNT || unCardCount <= 0);
+	if (unCardCount % 3 != 2)
+	{
+		return false;
+	}
+
+	// 剩下一对将就可以胡了
+	if (unCardCount == 2)
+	{
+		if (getMagicNum(aCards, unCardCount) > 1)
+		{
+			return true;
+		}
+		if (aCards[0] == aCards[1])
+		{
+			return true;
+		}
+		return false;
+	}
+
+	// 重新拷贝一份，以此递归失败时恢复起始点
+	CLMjCard aCardsTemp[MAX_HAND_COUNT];
+	copyCards(aCardsTemp, unCardCount, aCards, unCardCount);
+
+	// 剔除刻子
+	if (removeTriplet(aCardsTemp, unCardCount))
+	{
+		isCanHu_3x2(aCardsTemp, unCardCount - 3); // 剔除成功则使用aCardsTemp传参
+	}
+
+	// 剔除失败则重新拷贝
+	copyCards(aCardsTemp, unCardCount, aCards, unCardCount);
+
+	// 剔除顺子
+	if (removeSequence(aCardsTemp, unCardCount))
+	{
+		isCanHu_3x2(aCardsTemp, unCardCount - 3);
+	}
+
+	return false;
+}
+
+bool CLMjLogic::isCanHu_7Pair(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair /*= false*/)
+{
+	assert(unCardCount > MAX_HAND_COUNT || unCardCount <= 0);
+	if (unCardCount % 3 != 2)
+	{
+		return false;
+	}
+		int i, j;
+		int nPairs = 0;
+		for (i = 0; i < 12; ++i)
+		{
+			if (m_arrHandCard[i].isParticipated())
+			{
+				continue;
+			}
+			for (j = i + 1; j < 13; ++j)
+			{
+				if (!m_arrHandCard[j].isParticipated() && (m_arrHandCard[i] == m_arrHandCard[j]))
+				{
+					m_arrHandCard[i].setParticipated(true);
+					m_arrHandCard[j].setParticipated(true);
+					++nPairs;
+					break;
+				}
+			}
+		}
+		if (nPairs == 6)
+		{
+			for (i = 0; i < 13; ++i)
+			{
+				if (!m_arrHandCard[i].isParticipated())
+				{
+					m_vecTing.push_back(m_arrHandCard[i].getCard());
+				}
+			}
+		}
+		resetParticipated();
+
+}
+
 
 

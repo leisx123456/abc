@@ -37,7 +37,7 @@ int CLMjDesk::getSurplusCardsOnWall()
 void CLMjDesk::ruffle()
 {
 	assert(1 < mjNum());
-	m_mjLogic.shuffleCard(m_arrMjCard, mjNum());
+	m_mjLogic.shuffleCards(m_arrMjCard, mjNum());
 }
 
 /*************************************************************/

@@ -5,20 +5,12 @@
 #include "../core/LMjCard.h"
 #include "../core/LCardOperate.h"
 	
-
-
-
-
-
-
-
 class CLMjLogic : public CLCardOperate<CLMjCard>
 {
 public:
 	CLMjLogic();
-	virtual bool isValidCard(const CLMjCard & card);
 
-	//virtual void initMjCards() = 0;	// 每种麻将的玩法和麻将数目不一样，需要自己实现
+	//bool isExistPair(CLMjCard aCards[]);
 
 	// 是否能碰
 	bool isCanPong(CLMjCard aCards[], unsigned int unCardCount, const CLMjCard & cardDest);
@@ -47,12 +39,9 @@ public:
 		, bool bMust258Pair = false);
 
 	bool isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair = false);
+	bool isCanHu_7Pair(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair = false);
 
-private:
-	unsigned char* m_pByMjCards;	// 麻将牌
-	int m_nTotalCards;				// 麻将牌总数
-	unsigned int m_nMaxHandCards;	// 最大手牌数
-	int m_nMagicNum;				// 癞子数
+
 };
 
 
