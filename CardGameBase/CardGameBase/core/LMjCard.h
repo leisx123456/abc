@@ -2,6 +2,7 @@
 #include "LCard.h"
 #include "LMjDef.h"
 
+
 #define MJ_COLOR_MASK	0xf0
 #define MJ_VALUE_MASK	0x0f
 
@@ -26,6 +27,7 @@ public:
 		/* »¨ÅÆ */
 		EM_Flower,           //»¨ÅÆ -´º¡¢ÏÄ¡¢Çï¡¢¶¬¡¢Ã·¡¢Öñ¡¢À¼¡¢¾Õ
 
+		EM_Max_Color,
 		EM_Invalid_Color = 255    //Ã»ÓÐÆäËûÅÆÁË
 	};
 
@@ -61,7 +63,11 @@ public:
 	CLMjCard(E_CardResType eCardResType, E_ViewDirection eViewDirection, int nCard);
 
 	virtual bool isValid();
+
 	virtual int logicValue(){ return m_nValue & MASK_VALUE; }
+	virtual int switchToCardIndex();
+	static CLMjCard switchToCardValue(int nCardIndex);
+
 	virtual int color() { return (m_nValue & MASK_COLOR) >> 4; }
 
 	void initCard();

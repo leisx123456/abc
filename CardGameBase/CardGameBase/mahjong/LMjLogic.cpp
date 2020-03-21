@@ -10,6 +10,41 @@ CLMjLogic::CLMjLogic()
 }
 
 
+int CLMjLogic::switchToCardData(const unsigned int arrCardIndex[MAX_INDEX], CLMjCard aCards[MAX_HAND_COUNT])
+{
+	int cbPosition = 0;
+
+	for (int index = 0; index < MAX_INDEX; index++)
+	{
+		if (aCards[index] != 0)	// aCards[index] 最大位4张
+		{
+			for (int j = 0; j < arrCardIndex[index]; j++)
+			{
+				assert(cbPosition < MAX_HAND_COUNT);
+				aCards[cbPosition++] = CLMjCard::switchToCardValue(index);
+			}
+		}
+	}
+
+	return cbPosition;
+}
+
+
+int CLMjLogic::switchToCardIndex(CLMjCard aCards[], unsigned int unCardCount, unsigned int arrCardIndex[MAX_INDEX])
+{
+	memset(arrCardIndex, 0, sizeof(unsigned int) * MAX_INDEX);
+
+	for (int i = 0; i < unCardCount; i++)
+	{
+		assert(aCards[i].isValid());
+		arrCardIndex[aCards[i].switchToCardIndex()]++;
+	}
+
+	return unCardCount;
+}
+
+
+
 bool CLMjLogic::isCanPong(CLMjCard aCards[], unsigned int unCardCount, const CLMjCard & cardDest)
 {
 	return getCardsNum(aCards, unCardCount, cardDest) >= 2;
@@ -142,6 +177,48 @@ int CLMjLogic::getMagicNum(CLMjCard aCards[], unsigned int unCardCount)
 }
 
 
+int CLMjLogic::getColorCount(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize)
+{
+	const int c_nColorCount = CLMjCard::EM_Max_Color;	// 花色最大种类
+	unsigned int arrColorIndex[c_nColorCount];			// 定义花牌种类索引
+	int nColorBiggerZero = 0;							// 定义牌数大于0的花色有多少种
+	memset(arrColorIndex, 0, sizeof(unsigned int)* c_nColorCount);
+
+	// 手牌
+	for (int i = 0; i < unCardCount; ++i)
+	{
+		arrColorIndex[aCards[i].color()]++;
+	}
+
+	// 组合牌
+	for (int i = 0; i < unItemSize; ++i)
+	{
+		arrColorIndex[aWeaveItem[i].cardCenter.color()]++;
+	}
+
+	// 
+	for (int i = 0; i < c_nColorCount; ++i)
+	{
+		if (arrColorIndex[i] > 0)
+		{
+			nColorBiggerZero++;
+		}
+	}
+
+	return nColorBiggerZero;
+}
+
+
+
+
+bool CLMjLogic::isFlowerPig(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize)
+{
+	// 所有牌的花色种类大于2就是花猪
+	return getColorCount(aCards, unCardCount, aWeaveItem, unItemSize) > 2;
+}
+
+
+
 // 
 bool CLMjLogic::isCanHu(CLMjCard aCards[]
 	, unsigned int unCardCount
@@ -220,38 +297,56 @@ bool CLMjLogic::isCanHu_7Pair(CLMjCard aCards[], unsigned int unCardCount, bool 
 	{
 		return false;
 	}
-		//int i, j;
-		//int nPairs = 0;
-		//for (i = 0; i < 12; ++i)
-		//{
-		//	if (m_arrHandCard[i].isParticipated())
-		//	{
-		//		continue;
-		//	}
-		//	for (j = i + 1; j < 13; ++j)
-		//	{
-		//		if (!m_arrHandCard[j].isParticipated() && (m_arrHandCard[i] == m_arrHandCard[j]))
-		//		{
-		//			m_arrHandCard[i].setParticipated(true);
-		//			m_arrHandCard[j].setParticipated(true);
-		//			++nPairs;
-		//			break;
-		//		}
-		//	}
-		//}
-		//if (nPairs == 6)
-		//{
-		//	for (i = 0; i < 13; ++i)
-		//	{
-		//		if (!m_arrHandCard[i].isParticipated())
-		//		{
-		//			m_vecTing.push_back(m_arrHandCard[i].getCard());
-		//		}
-		//	}
-		//}
-		//resetParticipated();
+
+	//单牌数目
+	int cbReplaceCount = 0;
+
+	//临时数据
+	unsigned int arrCardIndexTemp[MAX_INDEX];
+	switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
+
+	//计算单牌
+	for (int i = 0; i < MAX_INDEX; i++)
+	{
+		int cbCardCount = arrCardIndexTemp[i];
+
+		//单牌统计
+		if (cbCardCount == 1 || cbCardCount == 3)
+		{
+			cbReplaceCount++;
+		}
+	}
+
+	if (cbReplaceCount > 0)
+	{
+		return false;
+	}
+		
 	return true;
 }
+
+bool CLMjLogic::isPengPeng(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize)
+{
+	if (unCardCount != 2 || unItemSize != 4)
+	{
+		return false;
+	}
+	
+	for (int i = 0; i < unItemSize; i++)
+	{
+		if (aWeaveItem[i].byWeaveKind  & (ACTION_LEFT | ACTION_CENTER | ACTION_RIGHT))
+			return false;
+	}
+	return true;
+}
+
+// 我的思路，只有一种花色的牌数大于0，其他花色的牌数为0，就是清一色 20200321 leisx
+bool CLMjLogic::isQingYiSe(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize)
+{
+	return getColorCount(aCards, unCardCount, aWeaveItem, unItemSize) == 1;
+}
+
+
 
 
 

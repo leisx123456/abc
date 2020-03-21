@@ -25,8 +25,9 @@ namespace LxMahjone
 
 //常量定义
 #define MAX_WEAVE					4									//最大组合
+#define MAX_INDEX					42									//最大索引
 //#define MAX_INDEX					34									//最大索引
-#define MAX_INDEX					27									//最大索引
+//#define MAX_INDEX					27									//最大索引
 #define MAX_HAND_COUNT				14									//最大数目
 #define MJ_MAX_OUTED				30									//最大数目
 #define CARD_TOTAL_NUM				108									//最大库存

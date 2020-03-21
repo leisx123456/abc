@@ -43,6 +43,8 @@ public:
 
 	// 牌的逻辑值
 	virtual int logicValue(){ return m_nValue; }
+	virtual int switchToCardIndex(){ return m_nValue; }
+
 	// 牌的花色
 	virtual int color(){ return 1; }
 

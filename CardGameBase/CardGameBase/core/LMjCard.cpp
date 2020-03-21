@@ -1,6 +1,6 @@
 #include "LMjCard.h"
 #include <iostream>
-
+#include <assert.h>
 
 // Ò»¸±Âé½«
 const CLMjCard g_arrMjCardPair[] =
@@ -71,6 +71,19 @@ bool CLMjCard::isValid()
 
 }
 
+int CLMjCard::switchToCardIndex()
+{
+	/*return logicValue()*/
+	assert(isValid());
+	return color() * 9 + logicValue() - 1;
+}
+
+CLMjCard CLMjCard::switchToCardValue(int nCardIndex)
+{
+	assert(nCardIndex < MAX_INDEX);
+	return CLMjCard(((nCardIndex / 9) << 4) | (nCardIndex % 9 + 1));
+}
+
 void CLMjCard::initCard()
 {
 	
@@ -80,6 +93,12 @@ bool CLMjCard::isTBA(E_MjCardColor eMjCardColor)
 {
 	return color() == (int)eMjCardColor;
 }
+
+
+
+
+
+
 
 
 //CLMjCard & CLMjCard::operator=(const int & nCard)
