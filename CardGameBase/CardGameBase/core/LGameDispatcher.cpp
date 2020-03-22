@@ -25,10 +25,22 @@ void CLGameDispatcher::start(int nTaskId)
 	}
 
 	T_GameDispatcherTask tGameDispatcherTask = m_mapDispatcherTask.at(nTaskId);
-	std::thread([=](){
-		std::this_thread::sleep_for(std::chrono::milliseconds(tGameDispatcherTask.unElapseMs));
-		tGameDispatcherTask.task();
-	}).detach();
+	//std::thread([=](){
+	//	std::this_thread::sleep_for(std::chrono::milliseconds(tGameDispatcherTask.unElapseMs));
+	//	tGameDispatcherTask.task();
+	//}).detach();
+
+	std::thread t(&CLGameDispatcher::runTimer, this, tGameDispatcherTask);
+	t.detach();
+	//t.join();
+}
+
+void CLGameDispatcher::runTimer(T_GameDispatcherTask tGameDispatcherTask)
+{
+	//_mutex.lock();//¼ÓËø  
+	std::this_thread::sleep_for(std::chrono::milliseconds(tGameDispatcherTask.unElapseMs));
+	tGameDispatcherTask.task();
+	//_mutex.unlock();//½âËø  
 }
 
 

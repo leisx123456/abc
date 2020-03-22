@@ -2,6 +2,7 @@
 
 #include<functional>
 #include <map>
+#include <mutex>
 
 /************************************************************************/
 /* 
@@ -29,6 +30,7 @@ class CLGameDispatcher
 
 		}
 	};
+
 public:
 	CLGameDispatcher();
 	~CLGameDispatcher();
@@ -41,7 +43,10 @@ public:
 		m_mapDispatcherTask[nTaskId] = T_GameDispatcherTask(after, task);
 	}
 
+	void runTimer(T_GameDispatcherTask tGameDispatcherTask);
+
 private:
 	std::map<int, T_GameDispatcherTask> m_mapDispatcherTask;
+	std::mutex _mutex;
 };
 

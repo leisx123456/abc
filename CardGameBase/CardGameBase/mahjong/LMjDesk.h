@@ -23,25 +23,19 @@ public:
 	// 获取下个玩家的索引 nPlayerCount为实际参与的玩家数
 	static int nextPlayerIndex(int nCurIndex, int nPlayerCount = GAME_MJ_PLAYER_MAX);
 
-	// 分配麻将子，如四川麻将只需万条筒
-	virtual void allocation() = 0;
+	
 	virtual int playerCount() const { return GAME_MJ_PLAYER_MAX; }	// 参与游戏的实际人数， 表示2人玩  3 表示3人玩  4表示4人
 	virtual int mjNum() const { return GAME_MJ_CARD_COUNT_MAX; }	// 这里的数量是具体麻将游戏实际加入的牌数，如有的只加入万条筒就是108
 
-	//洗牌
-	void ruffle();
 
-	//按四个方向摆放牌墙
-	void initWall();
-
-	// 摇骰子，实质为cut切牌
-	void rockDice();
-
-	// deal发牌, 发手牌
-	void dealCards(CLMjCard pArrCardHand[][14]);
-
-	//sort理牌
-	void sortCard();
+	// shuffle洗牌,cut切牌,deal发牌,sort理牌,draw摸牌,play打出,discard弃牌shuffle：本意是指调换顺序,这里调换牌的顺序,也就是“洗牌”.
+	//cut：切牌.作弊的时候常用一招“假切牌”,看起来好像切了,实际上没有改过牌的...
+	virtual void allocation() = 0; // 分配麻将子，如四川麻将只需万条筒
+	void ruffle();	//洗牌
+	void initWall(); //按四个方向摆放牌墙
+	void rockDice(); // 摇骰子，实质为cut切牌
+	void dealCards(CLMjCard pArrCardHand[][14]);	// deal发牌, 发手牌
+	void sortCard();	//sort理牌
 
 	// shuffle洗牌,cut切牌,deal发牌,sort理牌,draw摸牌,play打出,discard弃牌
 

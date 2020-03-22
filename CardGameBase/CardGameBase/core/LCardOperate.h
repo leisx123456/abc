@@ -28,6 +28,7 @@ public:
 
 	// 复制-(由于对象不能memcpy,需要自己定义)
 	void copyCards(CLCard aCardsDest[], unsigned int unDestCount, CLCard aCardsSrc[], unsigned int unSrcCount);
+	void emptyCards(CLCard aCards[], unsigned int unCardCount);
 
 	// 删除操作
 	// 根据牌值表删除
@@ -51,6 +52,8 @@ public:
 	bool isCardsInArray(CLCard const aCards[], unsigned int unCardCount, CLCard const aSubsetCards[], unsigned int unSubsetCardCount);
 
 };
+
+
 
 /* 定义*/
 template<class CLCard>
@@ -121,6 +124,16 @@ void CLCardOperate<CLCard>::copyCards(CLCard aCardsDest[], unsigned int unDestCo
 		aCardsDest[i] = aCardsSrc[i];
 	}
 }
+
+template<class CLCard>
+void CLCardOperate<CLCard>::emptyCards(CLCard aCards[], unsigned int unCardCount)
+{
+	for (int i = 0; i < unCardCount; ++i)
+	{
+		aCards[i] = CARD_EMPTY;
+	}
+}
+
 
 
 template<class CLCard>

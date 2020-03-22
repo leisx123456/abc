@@ -53,6 +53,9 @@ public:
 		m_diceSecond.rock();
 	}
 
+	int dice1(){ return m_diceFirst.value(); }
+	int dice2(){ return m_diceSecond.value(); }
+
 	protected:
 	CLDice m_diceFirst;
 	CLDice m_diceSecond;

@@ -49,7 +49,7 @@ void CLMjDesk::initWall()
 {
 	/* step1 先确定每个牌墙的麻将数量 */
 	// 由于麻将牌墙以双为单位，确定麻将有多少双(顿)
-	assert((mjNum() % 2) == 1); // 麻将不能为奇数
+	assert((mjNum() % 2) == 0); // 麻将不能为奇数
 	int nMjNumPair = mjNum() / 2;
 
 	// 四个牌墙中每个牌墙得到的多少双 和 余下多少双
@@ -102,7 +102,7 @@ void CLMjDesk::rockDice()
 
 	/*确定牌墙*/
 	// 由于麻将牌墙以双为单位，确定麻将有多少双(顿)
-	assert((mjNum() % 2) == 1); // 麻将不能为奇数
+	assert((mjNum() % 2) == 0); // 麻将不能为奇数
 	int nMjNumPair = mjNum() / 2;
 
 	// 四个牌墙中每个牌墙得到的多少双 和 余下多少双

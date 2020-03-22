@@ -14,6 +14,49 @@
 
 using namespace std;
 
+enum E_OperatorStatus
+{
+	EO_Choosing,         //选牌中
+	EO_Choosed,				//已选定
+	EO_TBA_Choosing,		//定缺中
+	EO_TBA_Choosed,			//已定缺
+	EO_NULL					//未操作
+};
+
+struct T_UserInfo
+{
+	string strNickname;
+	unsigned short cbScore;
+	bool bOffline;
+	string strHeadPath;
+	bool bBanker;
+	bool bHouseOwner;
+	//		img_dingque
+	bool bReady;
+	bool bBaoJiao;
+	bool bHu;
+	bool bBuyCard;
+	CLMjCard::E_MjCardColor eTBACardColor;
+	E_OperatorStatus eOperatorStatus;
+
+	T_UserInfo()
+		: strNickname("")
+		, cbScore(0)
+		, bOffline(false)
+		, strHeadPath("")
+		, bBanker(false)
+		, bHouseOwner(false)
+		, bReady(false)
+		, bBaoJiao(false)
+		, bHu(false)
+		, bBuyCard(false)
+		, eTBACardColor(CLMjCard::EM_Invalid_Color)
+		, eOperatorStatus(EO_NULL)
+	{
+
+	}
+};
+
 class CLMjPlayer
 {
 public:
@@ -35,6 +78,13 @@ public:
 		p_unActive
 	};
 
+	enum E_Sex
+	{
+		S_Boy,
+		S_Girl
+	};
+
+
 	void dealCards(const CLMjCard arrHandCards[MAX_HAND_COUNT]);
 	void getHandCards(CLMjCard* pArrHandCards);
 
@@ -50,7 +100,11 @@ public:
 	//玩家出牌
 	int outCard(int nPlace);
 
+	// 定缺
+	void selectTBA(CLMjCard::E_MjCardColor eColorTBA);
 
+	void setReady(bool bReady);
+	bool isReady() { return m_bReady; }
 
 	//设置胡
 	void setHu(int nCard)
@@ -107,7 +161,8 @@ private:
 	bool m_bIsHu;						//是否已经胡了
 	
 	
-
+	//////////////////////////////////////////////////////////////////////////
+	bool m_bReady;
 
 
 	// 当player设置为机器人时使用AI出牌

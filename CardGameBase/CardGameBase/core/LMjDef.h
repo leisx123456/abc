@@ -39,8 +39,8 @@ namespace LxMahjone
 
 #define TIME_ID_CHOOSE_A_SEAT			10			// 选座
 #define TIME_ID_CHOOSE_BANKER				11			// 选庄
-#define TIME_ID_ROCK_DICE			12			// 系统确定起牌方向及起牌墩数据事件
 #define TIME_ID_SHUFFLE_CARD				13			// 系统洗牌据事件
+#define TIME_ID_ROCK_DICE			12			// 系统确定起牌方向及起牌墩数据事件
 #define TIME_ID_FETCH_HANDCARDS		14			//系统发手牌事件
 #define TIME_ID_TIAO_CARDS				15			//为各玩家跳牌事件
 #define TIME_ID_TBA         16          
@@ -69,35 +69,7 @@ const int SCORE_BASE = 5;
 const int MAX_FAN = 3;
 const long COIN_MUL = 200;
 
-// 分值权重定义
-#define SCORE_Hu 1000            //
-#define SCORE_Kong 500            //不影响牌的情况
-#define SCORE_Triplet 400        //刻子
-#define SCORE_Sequence  300      //顺子
-#define SCORE_Pair 120           //对子
-#define SCORE_Doors 100          //门子
-#define SCORE_DoorsEdge  80      //边缘门子
-#define SCORE_Single_34567 3           //单牌34567
-#define SCORE_Single_28 2          //单牌28
-#define SCORE_Single_19 0           //单牌19
 
-#define SCORE_Hu 1000            //
-#define SCORE_Kong 500            //不影响牌的情况
-#define SCORE_Triplet 400        //刻子 活动区-暗刻 固定区-明刻
-#define SCORE_Sequence  300      //顺子
-#define SCORE_Pair_Only 120      //将，全手牌只有一组对子
-#define SCORE_Door_TwoHead 100          //门子，两头张
-//#define SCORE_Pair 90           //对子
-#define SCORE_Door_Middle  80       //卡张
-#define SCORE_Door_Edge  70      //边缘门子
-//#define SCORE_Single 3           //单牌34567
-#define SCORE_Single_Middle 10          //单牌2-8
-#define SCORE_Single_Edge 6           //单牌1,9
-#define SCORE_Single_R_TwoHead 3
-#define SCORE_Single_R_Middle 2
-#define SCORE_Single_R_Edge 1
-#define SCORE_Badly_Zero 0             //标记这张牌很差
-#define SCORE_TBA 0                    //缺
 
 //麻将牌定义
 #define CARD_BACK_VALUE 0x31    //牌背面值
@@ -215,44 +187,6 @@ enum E_PlayerPriorityDirection
 };
 
 
-
-enum E_Sex
-{
-	S_Boy,
-	S_Girl
-};
-
-enum E_CardContentType
-{
-	E_Wind,            //风牌
-	E_Wrigley,         //箭牌
-	E_Flower,           //花牌
-	E_OrderNum          //序数牌
-};
-
-enum E_OrderNumCardType
-{
-	EO_Circle,         //筒牌 0-8
-	EO_Character,      //万牌 9-17
-	EO_Bamboo,          //条牌 18-26
-	EO_Invalid = 255    //没有其他牌了
-};
-
-enum E_CardColorType
-{
-	EC_Circle,         //筒牌 0-8
-	EC_Character,      //万牌 9-17
-	EC_Bamboo,          //条牌 18-26
-	EC_Wind,			// 风牌
-	EC_RedMiddle,			// 红中
-	EC_Fortune,				// 发
-	EC_WhiteBoard,			// 白板
-	EC_Invalid = 255    //没有其他牌了
-};
-
-
-
-
 enum E_GameState
 {
 	EGS_Ready,
@@ -266,109 +200,6 @@ enum E_GameState
 
 
 
-
-
-
-enum E_HandCardRelationType
-{
-	EHC_Group,      //一个顺子、刻子或杠子
-	EHC_OneToOne,     //差一张形成组
-	EHC_Single        //单牌，和周围牌任何2张都不能形成组
-};
-
-enum E_KongType
-{
-	EK_ConcealedKong,              //下雨-暗杠
-	EK_ExposedKong_Ba,              //刮风-巴杠
-	EK_ExposedKong_Dian             //刮风-点杠
-};
-
-//是否能形成顺子
-enum E_SequenceType
-{
-	ES_MiddleCard,                   //卡张-夹张-嵌张
-	ES_LeftEdgeCard,                  //边张-目标牌在最左
-	ES_RightEdgeCard                  //边张-目标牌在最右较大
-};
-
-//是否能形成门子(塔子)
-enum E_DoorType
-{
-	ED_DoorTwoHead,                //两头张 23
-	ED_DoorMiddle,                 //嵌张 02,35,68
-	ED_DoorEdge                    //边张 01,78
-};
-
-enum E_PlayerState
-{
-	P_Active,
-	p_unActive
-};
-
-
-
-
-
-
-
-
-enum E_CardType
-{
-	//手牌
-	CT_HAND_North,
-	CT_HAND_East,
-	CT_HAND_South,
-	CT_HAND_West,
-
-	//倒牌
-	CT_STAND_P,
-	CT_STAND_S,
-	CT_STAND_D,
-	CT_STAND_X,
-
-	//背面向上的倒牌
-	CT_STAND_B_P,
-	CT_STAND_B_S,
-	CT_STAND_B_D,
-	CT_STAND_B_X,
-
-	//桌面牌
-	CT_TABLE_P,
-	CT_TABLE_S,
-	CT_TABLE_D,
-	CT_TABLE_X,
-
-	//摸牌
-	CT_MO_P,
-	CT_MO_S,
-	CT_MO_D,
-	CT_MO_X,
-
-	//牌墙
-	CT_WALL_North,
-	CT_WALL_East,
-	CT_WALL_South,
-	CT_WALL_West,
-
-	//胡牌
-	CT_HU_North,
-	CT_HU_East,
-	CT_HU_South,
-	CT_HU_Wes,
-
-	//打出牌
-	CT_Out
-};
-
-
-//玩家状态
-enum E_PlayerStatus
-{
-	EPS_Waiting,
-	EPS_ThinkOutCard,
-	EPS_Choosing,
-	EPS_Hu,
-};
 
 
 

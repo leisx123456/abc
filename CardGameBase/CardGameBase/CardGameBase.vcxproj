@@ -24,6 +24,8 @@
     <ClCompile Include="mahjong\ai\BasicThink.cpp" />
     <ClCompile Include="mahjong\ai\CleverThink.cpp" />
     <ClCompile Include="mahjong\ai\CmpThink.cpp" />
+    <ClCompile Include="mahjong\ai\LBasicThink.cpp" />
+    <ClCompile Include="mahjong\ai\LCmpThink.cpp" />
     <ClCompile Include="mahjong\LMjDesk.cpp" />
     <ClCompile Include="mahjong\LMjLogic.cpp" />
     <ClCompile Include="mahjong\LMjPlayer.cpp" />
@@ -45,6 +47,8 @@
     <ClInclude Include="mahjong\ai\BasicThink.h" />
     <ClInclude Include="mahjong\ai\CleverThink.h" />
     <ClInclude Include="mahjong\ai\CmpThink.h" />
+    <ClInclude Include="mahjong\ai\LBasicThink.h" />
+    <ClInclude Include="mahjong\ai\LCmpThink.h" />
     <ClInclude Include="mahjong\LMjDesk.h" />
     <ClInclude Include="mahjong\LMjLogic.h" />
     <ClInclude Include="mahjong\LMjPlayer.h" />

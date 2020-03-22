@@ -31,6 +31,7 @@ public:
 		EM_Invalid_Color = 255    //没有其他牌了
 	};
 
+
 	// 麻将视图视角方向
 	enum E_ViewDirection
 	{
@@ -119,6 +120,18 @@ extern const CLMjCard g_arrMjCardPair[];
 // 组合牌子项
 struct T_WeaveCardsItem
 {
+
+	enum E_WeaveCardsType
+	{
+		EW_Sequence, // 顺子
+		EW_Triplet,	// 刻子
+		EW_KongAn,	//下雨-暗杠
+		EW_KongBa,	//刮风-巴杠
+		EW_KongDian	//刮风-点杠
+	};
+
+	bool isKong() { return byWeaveKind == EW_KongAn || byWeaveKind == EW_KongBa || byWeaveKind == EW_KongDian; }
+
 	unsigned char byWeaveKind;						//组合类型
 	CLMjCard cardCenter;						//中心扑克
 	unsigned char byPublicCard;						//公开标志

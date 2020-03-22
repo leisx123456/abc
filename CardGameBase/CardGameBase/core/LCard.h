@@ -53,10 +53,21 @@ public:
 		m_nValue = nValue;
 	}
 
+	void setScore(int nScore){ m_nScore = nScore; }
+	void addScore(int nScore){ m_nScore += nScore; }
+	int getScore(){ return m_nScore; }
+
 	virtual bool isMagicCard()
 	{
 		return m_bMagicCard;
 	}
+
+	bool isLocked()
+	{
+		return m_bLock;
+	}
+	void lock(){ m_bLock = true; }
+	void unLock(){ m_bLock = false; }
 
 	T & operator = (const int & nCard);
 	T & operator = (const T & rhs);
@@ -173,6 +184,7 @@ protected:
 	bool m_bMagicCard;		// 是否癞子牌
 
 	int m_nScore;				//牌的分值、比重、权重、重要性
+	bool m_bLock;
 
 };
 
@@ -182,6 +194,7 @@ void CLCard<T>::initCard()
 
 	m_bMagicCard = false;
 	m_nScore = 0;
+	m_bLock = false;
 }
 
 

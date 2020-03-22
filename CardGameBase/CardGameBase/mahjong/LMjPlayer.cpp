@@ -19,6 +19,7 @@ m_nOutedTimes = 0;
 
 m_nDrawTimes = 0;	//×¥ÅÆ´ÎÊý
 
+m_bReady = false;
 	//E_PlayerStatus m_ePlayerStatus;
 }
 
@@ -104,6 +105,16 @@ void CLMjPlayer::getHandCards(CLMjCard* pArrHandCards)
 	{
 		pArrHandCards[i] = m_arrHandCards[i];
 	}
+}
+
+void CLMjPlayer::selectTBA(CLMjCard::E_MjCardColor eColorTBA)
+{
+	m_eColorTBA = eColorTBA;
+}
+
+void CLMjPlayer::setReady(bool bReady)
+{
+	m_bReady = bReady;
 }
 
 
