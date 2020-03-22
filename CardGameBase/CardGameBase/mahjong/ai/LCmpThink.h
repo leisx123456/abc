@@ -10,6 +10,13 @@ class CLCmpThink:public CLBasicThink
 public:	
 	CLCmpThink();
 
+public:
+	virtual void thinkHu(CLMjCard aCards[], unsigned int unCardCount
+		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest);
+
+	virtual CLMjCard thinkOutCard(CLMjCard aCards[], unsigned int unCardCount
+		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize);
+
 	void markMeld();
 
 	void markOneToOne();
@@ -37,12 +44,12 @@ public:
 	
 	void resetParticipated();
 	
-	int findPosInActiveHandCards(CLMjCard handCard);
+	
 
 
 	void resetParticipatedInActive();
 
-
+	void thinkSuplseFour();
 
 	
 };

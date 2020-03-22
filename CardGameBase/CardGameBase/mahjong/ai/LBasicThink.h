@@ -18,7 +18,8 @@ public:
 	virtual CLMjCard thinkOutCard(CLMjCard aCards[], unsigned int unCardCount
 		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize) = 0;
 
-	bool isExistTriplet(CLMjCard aCards, int &pos1, int &pos2);
+	bool isExistTriplet(CLMjCard card, int &pos1, int &pos2);
+	int findPosInActiveHandCards(CLMjCard handCard);
 
 
 protected:
