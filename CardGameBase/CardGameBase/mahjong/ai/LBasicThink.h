@@ -23,6 +23,8 @@ protected:
 	//手牌
 	CLMjCard m_arrHandCard[14];
 	int m_nHandNums;
+	// 临时保存手牌状态,用于递归
+	CLMjCard m_arrHandCardTemp[14];
 
 	T_WeaveCardsItem m_arrWeaveCardsItem[4];
 	int m_nWeaveCardsItemNum;
@@ -31,20 +33,11 @@ protected:
 	CLMjCard m_cardNew;
 	CLMjCard m_CardBadly;
 
-	// 临时保存手牌状态
-	CLMjCard m_arrHandCardTemp[14];
-
 	bool m_bHavePair;
 
-	//当前手牌分数
+	//当前分数
 	int m_nScore;
-
-	//
 	int m_nMaxScore;
 
-	//
-	bool m_bIsHu;
-
-	
 };
 

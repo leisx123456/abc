@@ -2,8 +2,6 @@
 #include "LCmpThink.h"
 
 
-
-
 CLCmpThink::CLCmpThink()
 {
 	m_mapScore.insert(std::pair<int, int>(EHC_Hu, SCORE_Hu));
@@ -28,160 +26,10 @@ CLCmpThink::CLCmpThink()
 
 
 
-bool CLBasicThink::isTing()
-{
-	
-}
-
-void CLBasicThink::addTingCard(int nCard)
-{
-	if (nCard < 0 || nCard > 26)
-	{
-		return;
-	}
-	int i;
-	for (i = 0; i < m_vecTing.size(); i++)
-	{
-		if (nCard == m_vecTing.at(i))
-		{
-			break;
-		}
-	}
-	if (i == m_vecTing.size())
-	{
-		m_vecTing.push_back(nCard);
-	}
-	// using default comparison (operator <):
-	sort(m_vecTing.begin(), m_vecTing.end());
-}
-
-
 // 一般采用递归删除法
 void CLCmpThink::thinkHu(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest)
 {
-	//m_mjLogic.isCanHu(aCards, unCardCount, aWeaveItem, unItemSize, m_cardOut, m_cardNew);/*************************************************************/
-	/*函数功能：循环删除牌只有四张就可以考虑胡了
-	/*入口参数：无
-	/*返回类型：void
-	/*************************************************************/
-	//void CLBasicThink::thinkSuplseFour()
-	//{
-	//	CLMjCard nPai1, nPai2, nPai3, nPaiTemp;
-	//	int i, j;
-
-	//	//填补最后一张牌都必须满足3+2
-	//	//如2223, 2334, 2234同， 7789,7889,7899
-	//	//是否还能有一组（刻子，顺子）
-	//	vector<CLMjCard>::iterator iter;
-	//	for (i = 0; i < 4; ++i) //此处若为iter = m_arrHandCard.begin(); iter != m_arrHandCard.end();会成为死循环
-	//	{
-	//		iter = m_arrHandCard.begin();
-	//		nPai1 = (*iter);
-	//		m_arrHandCard.erase(iter);
-	//		if (isExistTripletBeforeDelete(nPai1))
-	//		{
-	//			deleteSurplseTwoInTriplet(nPai1);
-	//			addTingCard(m_arrHandCard.at(0));
-	//			m_arrHandCard.push_back(nPai1);//里面的其他成员变量变了，但最终没什么影响
-	//			m_arrHandCard.push_back(nPai1);
-	//		}
-	//		if (isExistSequenceBeforeDelete(nPai1, ES_MiddleCard))
-	//		{
-	//			deleteSurplseTwoInSequence(nPai1, ES_MiddleCard);
-	//			addTingCard(m_arrHandCard.at(0));
-	//			m_arrHandCard.push_back(nPai1 - 1);
-	//			m_arrHandCard.push_back(nPai1 + 1);
-	//		}
-	//		if (isExistSequenceBeforeDelete(nPai1, ES_LeftEdgeCard))
-	//		{
-	//			deleteSurplseTwoInSequence(nPai1, ES_LeftEdgeCard);
-	//			addTingCard(m_arrHandCard.at(0));
-	//			m_arrHandCard.push_back(nPai1 + 1);
-	//			m_arrHandCard.push_back(nPai1 + 2);
-	//		}
-	//		if (isExistSequenceBeforeDelete(nPai1, ES_RightEdgeCard))
-	//		{
-	//			deleteSurplseTwoInSequence(nPai1, ES_RightEdgeCard);
-	//			addTingCard(m_arrHandCard.at(0));
-	//			m_arrHandCard.push_back(nPai1 - 1);
-	//			m_arrHandCard.push_back(nPai1 - 2);
-	//		}
-	//		m_arrHandCard.push_back(nPai1);
-	//		//++iter;
-	//	}
-
-	//	//循环遍历4张牌中是否有（一对将带门子的胡法）
-	//	for (i = 0; i < 4; i++)
-	//	{
-	//		iter = m_arrHandCard.begin();
-	//		nPai1 = (*iter);
-	//		m_arrHandCard.erase(iter);
-	//		vector<CLMjCard>::iterator iter2;
-	//		for (j = 0; j < 3; j++)
-	//		{
-	//			iter2 = m_arrHandCard.begin();
-	//			nPaiTemp = *iter2;//执行出错
-	//			//判断是否有一对将，有则判断是否有门子
-	//			if (nPai1 == nPaiTemp)
-	//			{
-	//				iter2 = m_arrHandCard.erase(iter2); //为保险vc5和vc12的不同不能为m_arrHandCard.erase(iter2);
-	//				//剩余的两张牌
-	//				nPai2 = (*iter2);
-	//				nPai3 = (*(iter2 + 1));
-	//				//如果剩余的两张牌相同（即是胡两个将）
-	//				if (nPai2 == nPai3)
-	//				{
-	//					addTingCard(nPai1);
-	//					addTingCard(nPai2);
-	//				}
-	//				//如果剩余的两张牌不同并且在一种样式以内，并且都不是字
-	//				if (nPai2 / 9 == nPai3 / 9)
-	//				{
-	//					//判断两张牌的门子是那种
-	//					switch (nPai2 - nPai3)
-	//					{
-	//					case 1://倒序门子如6-5，7-6等
-	//						if ((nPai2 - 8) % 9)//判断是否边界8
-	//						{
-	//							addTingCard(nPai2 + 1);
-	//						}
-	//						if ((nPai2 - 1) % 9)//判断是否边界1
-	//						{
-	//							addTingCard(nPai2 - 2);
-	//						}
-	//						break;
-	//					case -1://顺序门子如5-6，7-8等
-	//						if (nPai2 % 9)//判断是否边界0
-	//						{
-	//							addTingCard(nPai2 - 1);
-	//						}
-	//						if ((nPai2 + 1 - 8) % 9)//判断是否边界7
-	//						{
-	//							addTingCard(nPai2 + 2);
-	//						}
-	//						break;
-	//					case 2://倒序间隔一张的门子如4-2，6-4等
-	//						if (nPai2 % 9)
-	//						{
-	//							addTingCard(nPai2 - 1);
-	//						}
-	//						break;
-	//					case -2://顺序间隔一张的门子如2-4，4-6等
-	//						if ((nPai2 - 8) % 9)
-	//						{
-	//							addTingCard(nPai2 + 1);
-	//						}
-	//						break;
-	//					default:
-	//						break;
-	//					}
-	//				}
-	//				m_arrHandCard.push_back(nPai1);
-	//			}
-	//		}
-	//		m_arrHandCard.push_back(nPai1);
-	//	}
-	//}
+	//m_mjLogic.isCanHu(aCards, unCardCount, aWeaveItem, unItemSize, m_cardOut, m_cardNew);
 
 }
 
@@ -363,7 +211,6 @@ void CLCmpThink::thinkNoSingle()
 		//如果仅剩的两张牌相同就胡牌
 		if (arrCardsRelation2Temp[0] == arrCardsRelation2Temp[1])
 		{
-			m_bIsHu = true;
 			m_CardBadly = CARD_EMPTY;
 			return;
 		}
@@ -548,66 +395,16 @@ void CLCmpThink::addExtraScoreToSingleCard(CLMjCard & card)
 
 }
 
-void CLCmpThink::setMark(E_HandCardRelationType relationType)
-{
-	for (int i = 0; i < m_nHandNums; ++i)
-	{
-		//组合等级低的不能改变组合等级高的
-		if (relationType > m_arrHandCard[i].getRelationType())
-		{
-			continue;
-		}
-		m_arrHandCard[i].setRelationType(EHC_Single);
-		if (m_arrHandCard[i].isLocked())
-		{
-			m_arrHandCard[i].setRelationType(relationType);
-		}
-	}
-}
-
-void CLCmpThink::setScore(E_HandCardRelationType relationType)
-{
-	int nScore;
-	switch (relationType)
-	{
-	case EHC_Sequence:
-		nScore = 300;
-		break;
-	case EHC_OneToOne:
-		nScore = 100;
-		break;
-	case EHC_Single:
-		nScore = 10;
-		break;
-	default:
-		break;
-	}
-	for (int i = 0; i < m_nHandNums; ++i)
-	{
-		if (m_arrHandCard[i].isLocked())
-		{
-			m_arrHandCard[i].setScore(nScore);
-		}
-	}
-}
 
 
 
 
 
-void CLCmpThink::resetParticipated()
-{
-	for (int i = 0; i < 13; ++i)
-	{
-		m_arrHandCard[i].unLock();
-	}
-}
 
 
 
 
-
-void CLCmpThink::resetParticipatedInActive()
+void CLCmpThink::unLockAll()
 {
 	for (int i = 0; i < m_nHandNums; ++i)
 	{
@@ -617,7 +414,14 @@ void CLCmpThink::resetParticipatedInActive()
 
 void CLCmpThink::commitScore()
 {
-
+	for (int i = 0; i < m_nHandNums; ++i)
+	{
+		if (m_arrHandCard[i].isLocked())
+		{
+			m_arrHandCard[i].setScore(m_mapScore[m_arrHandCard[i].getRelation()]);
+			m_arrHandCard[i].unLock();
+		}
+	}
 }
 
 

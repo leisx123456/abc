@@ -47,22 +47,11 @@ public:
 	void thinkNoSingle();
 	
 	void commitScore();
-	void setScore(E_HandCardRelationType relationType);
 	void addExtraScoreToSingleCard(CLMjCard & handCard);
 
 	int getMarkNum();
-	
-	void setMark(E_HandCardRelationType relationType);
-	
 
-
-	
-	void resetParticipated();
-	
-	
-
-
-	void resetParticipatedInActive();
+	void unLockAll();
 
 	//void thinkSuplseFour();
 private:
