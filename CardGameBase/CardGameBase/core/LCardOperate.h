@@ -130,7 +130,7 @@ void CLCardOperate<CLCard>::emptyCards(CLCard aCards[], unsigned int unCardCount
 {
 	for (int i = 0; i < unCardCount; ++i)
 	{
-		aCards[i] = CARD_EMPTY;
+		aCards[i].empty();
 	}
 }
 
@@ -148,7 +148,7 @@ bool CLCardOperate<CLCard>::removeCard(CLCard aCards[], unsigned int unCardCount
 				aCards[j - 1] = aCards[j];
 			}
 
-			aCards[unCardCount - 1] = CARD_EMPTY;
+			aCards[unCardCount - 1].empty();
 			return true;
 		}
 	}

@@ -6,6 +6,29 @@
 #define MJ_COLOR_MASK	0xf0
 #define MJ_VALUE_MASK	0x0f
 
+
+// 定义麻将与其他牌能形成的最佳关系
+enum E_HandCardRelationType
+{
+	EHC_Hu,
+	EHC_Kong,
+	EHC_Triplet,
+	EHC_Sequence,
+	EHC_Pair_only,
+	EHC_Pair,
+	EHC_Door_TwoHead,
+	EHC_Door_Middle,
+	EHC_Door_Edge,
+	EHC_Single_34567,
+	EHC_Single_28,
+	EHC_Single_19,
+	EHC_SingleToSingle_TwoHead,
+	EHC_SingleToSingle_Middle,
+	EHC_ingleToSingle_Edge,
+	EHC_Tba,
+	EHC_Relation_Invaild
+};
+
 // 从模板类中派生普通类
 class CLMjCard : public CLCard<CLMjCard>
 {
@@ -64,6 +87,7 @@ public:
 	CLMjCard(E_CardResType eCardResType, E_ViewDirection eViewDirection, int nCard);
 
 	virtual bool isValid();
+	virtual void empty();
 
 	virtual int logicValue(){ return m_nValue & MASK_VALUE; }
 	virtual int switchToCardIndex();
@@ -76,8 +100,7 @@ public:
 
 	// 把CLCard申明为类模板后就不用重载这些操作符函数了，这就是类模板的强大
 	//CLMjCard & operator = (const int & nCard);
-	//CLMjCard & operator = (const CLMjCard & rhs);
-
+	CLMjCard & operator = (const CLMjCard & rhs);
 
 
 
@@ -106,11 +129,35 @@ public:
 		return cbColor * 10 + cbValue;
 	}
 
+	bool isLocked()
+	{
+		return m_bLocked;
+	}
+	void lock(){ m_bLocked = true; }
+	void lock(int nRelation){ m_nRelation = nRelation; m_bLocked = true; }
+	void unLock(bool releaseRelationship = false)
+	{
+		if (releaseRelationship)
+		{
+				m_nRelation = EHC_Relation_Invaild;
+		}
+		m_bLocked = false;
+	}
+	void setRelation(int nRelation){ m_nRelation = nRelation; }
+	int getRelation(){ return m_nRelation; }
+
+	bool isRelation3();
+	bool isRelation2();
+	bool isRelation1();
+
 protected:
 	E_CardResType m_eCardResType; //
 	E_ViewPosture m_eViewPosture;
 	E_ViewDirection m_eViewDirection;	//
 
+	// ai相关
+	bool m_bLocked;
+	int m_nRelation;
 	
 };
 

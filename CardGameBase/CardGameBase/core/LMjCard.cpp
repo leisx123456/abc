@@ -86,13 +86,59 @@ CLMjCard CLMjCard::switchToCardValue(int nCardIndex)
 
 void CLMjCard::initCard()
 {
-	
+	m_bLocked = false;
+	m_nRelation = EHC_Relation_Invaild;
+}
+
+
+void CLMjCard::empty()
+{
+	CLCard::empty();
+	m_bLocked = false;
+	m_nRelation = EHC_Relation_Invaild;
 }
 
 bool CLMjCard::isTBA(E_MjCardColor eMjCardColor)
 {
 	return color() == (int)eMjCardColor;
 }
+
+CLMjCard & CLMjCard::operator=(const CLMjCard & rhs)
+{
+	m_eCardResType = rhs.m_eCardResType;
+	m_eViewPosture = rhs.m_eViewPosture;
+	m_eViewDirection = rhs.m_eViewDirection;
+
+	m_nValue = rhs.m_nValue;
+	m_nScore = rhs.m_nScore;
+	m_bLocked = rhs.m_bLocked;
+	m_nRelation = rhs.m_nRelation;
+	return *this;
+}
+
+bool CLMjCard::isRelation3()
+{
+	return m_nRelation == EHC_Sequence || m_nRelation == EHC_Triplet;
+}
+
+bool CLMjCard::isRelation2()
+{
+	return m_nRelation == EHC_Pair 
+		|| m_nRelation == EHC_Door_TwoHead
+		|| m_nRelation == EHC_Door_Middle
+		|| m_nRelation == EHC_Door_Edge;
+}
+
+bool CLMjCard::isRelation1()
+{
+	return m_nRelation == EHC_Single_34567
+		|| m_nRelation == EHC_Single_28
+		|| m_nRelation == EHC_Single_19;
+}
+
+
+
+
 
 
 
