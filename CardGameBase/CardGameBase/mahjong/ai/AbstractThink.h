@@ -12,7 +12,8 @@ public:
 	//接口定义
 	virtual ~IAbstractThink();
 
-	virtual int thinkDingQue(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize) = 0;
+	// 思考定缺，返回缺的花色
+	virtual int thinkDingQue(CLMjCard aCards[], unsigned int unCardCount) = 0;
 
 	virtual void thinkHu(CLMjCard aCards[], unsigned int unCardCount
 		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest) = 0;

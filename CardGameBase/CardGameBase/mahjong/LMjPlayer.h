@@ -57,6 +57,8 @@ struct T_UserInfo
 	}
 };
 
+class IAbstractThink;
+
 class CLMjPlayer
 {
 public:
@@ -130,6 +132,7 @@ public:
 
 
 private:
+	IAbstractThink* pIAbstractThink;
 	CLMjLogic m_mjLogic;
 	T_WeaveCardsItem m_arrWeaveCardsItem[4];	// 用户的组合牌
 

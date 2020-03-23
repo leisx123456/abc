@@ -26,6 +26,7 @@ enum E_HandCardRelationType
 	EHC_SingleToSingle_Middle,
 	EHC_ingleToSingle_Edge,
 	EHC_Tba,
+	EHC_Badly,
 	EHC_Relation_Invaild
 };
 
@@ -97,10 +98,17 @@ public:
 
 	void initCard();
 	bool isTBA(E_MjCardColor eMjCardColor);
+	// 是否序数牌
+	bool isOrderNumCard(){ return color() > -1 && color() < 3 && orderNumValue() > 0 && orderNumValue() < 10; }
+	// 序数值
+	int orderNumValue(){ return m_nValue & MASK_VALUE; }
+	// 是否幺九序数牌，即1,9万 1,9条 1,9同
+	bool isYaoJiuOrderNum_19(){ return m_nValue & MASK_VALUE == 1 || m_nValue & MASK_VALUE == 9; }
+	bool isJaing_28(){ return m_nValue & MASK_VALUE == 2 || m_nValue & MASK_VALUE == 8; }
 
 	// 把CLCard申明为类模板后就不用重载这些操作符函数了，这就是类模板的强大
 	//CLMjCard & operator = (const int & nCard);
-	CLMjCard & operator = (const CLMjCard & rhs);
+	CLMjCard & operator = (const CLMjCard & rhs); //赋值函数需要重载
 
 
 

@@ -19,8 +19,8 @@ CLCmpThink::CLCmpThink()
 	m_mapScore[EHC_SingleToSingle_TwoHead] = SCORE_SingleToSingle_TwoHead;
 	m_mapScore[EHC_SingleToSingle_Middle] = SCORE_SingleToSingle_Middle;
 	m_mapScore[EHC_ingleToSingle_Edge] = SCORE_SingleToSingle_Edge;
-	m_mapScore[EHC_Tba] = EHC_Tba;
-	m_mapScore[EHC_Relation_Invaild] = SCORE_Badly;
+	m_mapScore[EHC_Tba] = SCORE_TBA;
+	m_mapScore[EHC_Badly] = SCORE_Badly;
 
 }
 
@@ -35,10 +35,13 @@ void CLCmpThink::thinkHu(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCar
 
 CLMjCard CLCmpThink::thinkOutCard(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, int nCardColor)
 {
-
+	//
 	if (nCardColor > 0 && nCardColor < 3)
 	{
 		markDingQue();
+		// 如果有缺直接返回
+
+		return;
 	}
 
 	//
@@ -128,7 +131,7 @@ void CLCmpThink::markTwo()
 	for (int i = 0; i < m_nHandNums; i++)
 	if (!m_arrHandCard[i].isLocked())
 	{
-		m_arrHandCard[i].lock(EHC_Pair);
+		m_arrHandCard[i].lock();
 		//是否有对子
 		if (isExistPair(m_arrHandCard[i], pos1))
 		{
@@ -140,7 +143,8 @@ void CLCmpThink::markTwo()
 				m_bHavePair = true;
 			}
 			m_nScore += nScorePair;
-			m_arrHandCard[pos1].lock(EHC_Pair);
+			m_arrHandCard[i].lock(nScorePair);
+			m_arrHandCard[pos1].lock(nScorePair);
 			markTwo();
 			m_arrHandCard[pos1].unLock(true);
 			if (nScorePair == SCORE_Pair_Only)
@@ -190,9 +194,7 @@ void CLCmpThink::markTwo()
 
 
 void CLCmpThink::thinkNoSingle()
-{
-	bool bHavePair = false;
-	
+{	
 
 	CLMjCard arrCardsRelation2Temp[14];
 	int nCardsRelation2Num = 0;
@@ -201,6 +203,7 @@ void CLCmpThink::thinkNoSingle()
 	{
 		if (m_arrHandCard[i].isRelation2())
 		{
+			// 重载了赋值函数，赋值时会把状态都复制过去
 			arrCardsRelation2Temp[nCardsRelation2Num++] = m_arrHandCard[i];
 		}
 	}
@@ -211,7 +214,6 @@ void CLCmpThink::thinkNoSingle()
 		//如果仅剩的两张牌相同就胡牌
 		if (arrCardsRelation2Temp[0] == arrCardsRelation2Temp[1])
 		{
-			m_CardBadly = CARD_EMPTY;
 			return;
 		}
 
@@ -223,8 +225,8 @@ void CLCmpThink::thinkNoSingle()
 			if (m_arrHandCard[j] == m_arrHandCard[j + 1] && m_arrHandCard[j] == m_arrHandCard[j + 2])
 			{
 				bHaveTriplet = true;
-				//m_vecActiveHandCards[j].setScore(SCORE_Badly_Zero);
-				m_CardBadly = m_arrHandCard[j];
+				// 差的牌就解锁 清除组合关系 并分配到单牌判断中
+				m_arrHandCard[j].unLock(true);
 				break;
 			}
 		}
@@ -233,95 +235,70 @@ void CLCmpThink::thinkNoSingle()
 		{
 			for (int i = 0; i < m_nHandNums; ++i)
 			{
-				if (m_arrHandCard[i] == arrCardsRelation2Temp[0] || m_arrHandCard[i] == arrCardsRelation2Temp[1])
+				if (m_arrHandCard[i] == arrCardsRelation2Temp[0])
 				{
-					m_arrHandCard[i].lock(EHC_Single);
+					m_arrHandCard[i].unLock(true);
+				}
+				if (m_arrHandCard[i] == arrCardsRelation2Temp[1])
+				{
+					m_arrHandCard[i].unLock(true);
 				}
 			}
 		}
 	}
 	else
 	{
-		//两两一组，比较哪个组合最差, 把分数存在每一组的第一张牌中
-		for (int j = 0; j < nCardsRelation2Num / 2; j++)
+		/*如果大于2张*/
+		// 找出最差的两张解锁分配到单牌判断中
+		// 循环2次
+		for (int count = 0; count < 2; count++)
 		{
-			if (arrCardsRelation2Temp[j * 2] == arrCardsRelation2Temp[j * 2 + 1])
+			int posBadly = -1;
+			int nBadRelation = EHC_Hu;
+			for (int i = 0; i < m_nHandNums; ++i)
 			{
-				if (bHavePair)
+				if (m_arrHandCard[i].isLocked())
 				{
-					arrCardsRelation2Temp[j].setScore(6);
-				}
-				else
-				{
-					arrCardsRelation2Temp[j].setScore(8);
-					bHavePair = true;
+					if (m_arrHandCard[i].getRelation() > nBadRelation)
+					{
+						nBadRelation = m_arrHandCard[i].getRelation();
+						posBadly = i;
+					}
 				}
 			}
-			else if (arrCardsRelation2Temp[j * 2] == arrCardsRelation2Temp[j * 2 + 1] - 1)
-			{
-				if (arrCardsRelation2Temp[j * 2] % 9 == 0 || arrCardsRelation2Temp[j * 2 + 1] % 9 == 8)
-				{
-					arrCardsRelation2Temp[j].setScore(4);
-				}
-				else
-				{
-					arrCardsRelation2Temp[j].setScore(7);
-				}
-			}
-			else
-			{
-				if (arrCardsRelation2Temp[j * 2] % 9 == 0 || arrCardsRelation2Temp[j * 2 + 1] % 9 == 8)
-				{
-					arrCardsRelation2Temp[j].setScore(3);
-				}
-				else
-				{
-					arrCardsRelation2Temp[j].setScore(5);
-				}
-			}
-
+			m_arrHandCard[posBadly].unLock(true);
 		}
-
-		int nMinScore = 10;
-		CLMjCard handCardBadly;
-		//找出最差的一个组，再在组中最找出最差的牌
-		for (int k = 0; k < nCardsRelation2Num / 2; k++)
-		{
-			if (arrCardsRelation2Temp[k].getScore() < nMinScore)
-			{
-				nMinScore = arrCardsRelation2Temp[k].getScore();
-				if (arrCardsRelation2Temp[k * 2] % 9 == 0)
-				{
-					handCardBadly = arrCardsRelation2Temp[k * 2];
-				}
-				else if (arrCardsRelation2Temp[k * 2 + 1] % 9 == 8)
-				{
-					handCardBadly = arrCardsRelation2Temp[k * 2 + 1];
-				}
-				else
-				{
-					handCardBadly = arrCardsRelation2Temp[k * 2 + rand() % 2];
-				}
-			}
-		}
-		m_CardBadly = handCardBadly;
 	}
 }
 
 
 void CLCmpThink::markOne()
 {
+	// 如果从上面下来没有单张，说明胡了
+	if (getMarkNum() == 14)
+	{
+		return;
+	}
 
+
+	// 先添加额外分
 	for (int i = 0; i < m_nHandNums; ++i)
 	{
 		if (!m_arrHandCard[i].isLocked())
 		{
-
-			markOne(m_arrHandCard[i]);
 			addExtraScoreToSingleCard(m_arrHandCard[i]);
 		}
 	}
 
+	//
+	for (int i = 0; i < m_nHandNums; ++i)
+	{
+		if (!m_arrHandCard[i].isLocked())
+		{
+			markOne(m_arrHandCard[i]);
+		}
+	}
+	
 
 }
 
@@ -341,11 +318,11 @@ int CLCmpThink::getMarkNum()
 void CLCmpThink::markOne(CLMjCard & card)
 {
 	//如果是一或者九
-	if ((card.value() & MASK_VALUE == 1) || (card.value() & MASK_VALUE == 9))
+	if (card.isYaoJiuOrderNum_19())
 	{
 		card.setRelation(SCORE_Single_Edge);
 	}
-	else if ((card.value() & MASK_VALUE == 2) || (card.value() & MASK_VALUE == 8))
+	else if (card.isJaing_28())
 	{
 		card.setRelation(SCORE_Single_Middle);
 	}
@@ -394,13 +371,6 @@ void CLCmpThink::addExtraScoreToSingleCard(CLMjCard & card)
 	}
 
 }
-
-
-
-
-
-
-
 
 
 

@@ -46,16 +46,14 @@ public:
 	void markOne(CLMjCard & handCard);
 	void thinkNoSingle();
 	
-	void commitScore();
 	void addExtraScoreToSingleCard(CLMjCard & handCard);
-
+	void commitScore();
 	int getMarkNum();
-
 	void unLockAll();
 
-	//void thinkSuplseFour();
-private:
 
+private:
+	CLMjLogic m_mjLogic;
 	std::map<int, int> m_mapScore;
 	
 };

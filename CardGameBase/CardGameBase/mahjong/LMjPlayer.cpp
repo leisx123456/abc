@@ -6,7 +6,7 @@ CLMjPlayer::CLMjPlayer()
 , m_bIsHu(false)
 {
 
-
+	pIAbstractThink = nullptr;
 
 m_nHandNums = 0;
 
