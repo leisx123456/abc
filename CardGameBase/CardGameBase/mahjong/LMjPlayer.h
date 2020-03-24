@@ -14,14 +14,7 @@
 
 using namespace std;
 
-enum E_OperatorStatus
-{
-	EO_Choosing,         //选牌中
-	EO_Choosed,				//已选定
-	EO_TBA_Choosing,		//定缺中
-	EO_TBA_Choosed,			//已定缺
-	EO_NULL					//未操作
-};
+
 
 struct T_UserInfo
 {
@@ -62,8 +55,13 @@ class IAbstractThink;
 class CLMjPlayer
 {
 public:
-	CLMjPlayer();
-	~CLMjPlayer();
+	enum E_PlayerType
+	{
+		EP_People,
+		EP_CmpEasy,
+		EP_CmpNormal,
+		EP_CmpClever
+	};
 
 	//玩家状态
 	enum E_PlayerStatus
@@ -74,10 +72,20 @@ public:
 		EPS_Hu,
 	};
 
+	//玩家活动状态
 	enum E_PlayerActiveState
 	{
 		P_Active,
 		p_unActive
+	};
+
+	enum E_OperatorStatus
+	{
+		EO_Choosing,         //选牌中
+		EO_Choosed,				//已选定
+		EO_TBA_Choosing,		//定缺中
+		EO_TBA_Choosed,			//已定缺
+		EO_NULL					//未操作
 	};
 
 	enum E_Sex
@@ -86,12 +94,34 @@ public:
 		S_Girl
 	};
 
+	CLMjPlayer();
+	CLMjPlayer(E_PlayerType ePlayerType);
+	~CLMjPlayer();
 
+	void init();
+	//////////////////////////////////////////////////////////////////////////
+	// 玩家属性
+	bool isReboot() {return m_ePlayerType != EP_People; }
+
+	void ready() { m_bReady = true; }
+	void cancelReady(){ m_bReady = false; }
+	bool isReady() { return m_bReady; }
+	
+
+	// 摸手牌
 	void dealCards(const CLMjCard arrHandCards[MAX_HAND_COUNT]);
 	void getHandCards(CLMjCard* pArrHandCards);
 
-	//摸牌牌
+	// 定缺
+	CLMjCard::E_MjCardColor thinkDingQue();
+	void selectTBA(CLMjCard::E_MjCardColor eColorTBA);
+	bool isAlreadyTBA(){ return m_eColorTBA > -1 && m_eColorTBA < 3; }
+
+	//摸牌
 	void drawCard(const CLMjCard & card);
+
+	//玩家出牌
+	int outCard(int nPlace);
 
 	//设置别人出的牌
 	void setOtherOutCard(int nCard);
@@ -99,14 +129,11 @@ public:
 	//在已出牌队列中删除一张最近打出的牌
 	void removeListOutCardAtLast();
 
-	//玩家出牌
-	int outCard(int nPlace);
 
-	// 定缺
-	void selectTBA(CLMjCard::E_MjCardColor eColorTBA);
 
-	void setReady(bool bReady);
-	bool isReady() { return m_bReady; }
+
+
+
 
 	//设置胡
 	void setHu(int nCard)
@@ -117,22 +144,14 @@ public:
 	//获得出了的牌队列
 	//vector<int> getOutCard();
 
-	// 返回chair逆时针转1的玩家
-	int antiClockWise(int chair)
-	{
-		return (chair + PLAYER_NUM - 1) % PLAYER_NUM;
-	}
 
-	// 返回chair顺时针转1的玩家
-	int clockwise(int chair)
-	{
-		return (chair + 1) % PLAYER_NUM;
-	}
 
 
 
 private:
-	IAbstractThink* pIAbstractThink;
+	E_PlayerType m_ePlayerType;
+	IAbstractThink* m_pIAbstractThink;
+
 	CLMjLogic m_mjLogic;
 	T_WeaveCardsItem m_arrWeaveCardsItem[4];	// 用户的组合牌
 

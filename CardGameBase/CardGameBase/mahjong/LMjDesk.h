@@ -22,6 +22,17 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// 获取下个玩家的索引 nPlayerCount为实际参与的玩家数
 	static int nextPlayerIndex(int nCurIndex, int nPlayerCount = GAME_MJ_PLAYER_MAX);
+	// 返回chair逆时针转1的玩家
+	int antiClockWise(int chair)
+	{
+		return (chair + PLAYER_NUM - 1) % PLAYER_NUM;
+	}
+
+	// 返回chair顺时针转1的玩家
+	int clockwise(int chair)
+	{
+		return (chair + 1) % PLAYER_NUM;
+	}
 
 	
 	virtual int playerCount() const { return GAME_MJ_PLAYER_MAX; }	// 参与游戏的实际人数， 表示2人玩  3 表示3人玩  4表示4人

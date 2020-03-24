@@ -30,7 +30,7 @@ class CLGameDispatcher;
 class CSiChuanMjDesk : public CLMjDesk
 {
 public:
-	CSiChuanMjDesk(CSiChuanMjDesk* pSiChuanMjDesk = 0);
+	CSiChuanMjDesk();
 	virtual ~CSiChuanMjDesk();
 
 	//////////////////////////////////////////////////////////////////////////
@@ -54,7 +54,6 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	// 广播用户接口
-	void setDeskInstance(CSiChuanMjDesk* pSiChuanMjDesk){ m_pSiChuanMjDeskInstance = pSiChuanMjDesk; }
 	virtual void onMsgBegin(/*用户数据*/) = 0;
 	virtual void onMsgCutCards(int dice1, int dice2) = 0;
 	virtual void onMsgDealCards(CLMjCard pArrCardHand[][14], int nPlayerCount) = 0;
@@ -63,12 +62,13 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	//用户操作接口
+	void onUserEnter(int nChairID);
 	void onUserReady(int nChairID);
 	void onUserTBA(int nCardColor, int nChairID);
 
 protected:
 	CLGameDispatcher* _gameDispatcher;
 	//E_GameState _nGameState;
-	CSiChuanMjDesk* m_pSiChuanMjDeskInstance;
+
 };
 

@@ -1,27 +1,60 @@
 #include "LMjPlayer.h"
+#include "ai/AbstractThink.h"
 
 CLMjPlayer::CLMjPlayer()
-: m_CardNew(CARD_EMPTY)
-, m_ePlayerActiveState(E_PlayerActiveState::p_unActive)
-, m_bIsHu(false)
+: m_ePlayerType(EP_People)
 {
+	init();
+}
 
-	pIAbstractThink = nullptr;
 
-m_nHandNums = 0;
+CLMjPlayer::CLMjPlayer(E_PlayerType ePlayerType)
+: m_ePlayerType(ePlayerType)
+{
+	init();
+}
 
-	CLMjCard m_arrOutedCards[MJ_MAX_OUTED];	
+
+void CLMjPlayer::init()
+{
+	switch (m_ePlayerType)
+	{
+	case CLMjPlayer::EP_People:
+		m_pIAbstractThink = nullptr;
+		break;
+	case CLMjPlayer::EP_CmpEasy:
+		m_pIAbstractThink = nullptr;
+		break;
+	case CLMjPlayer::EP_CmpNormal:
+		m_pIAbstractThink = nullptr;
+		break;
+	case CLMjPlayer::EP_CmpClever:
+		m_pIAbstractThink = nullptr;
+		break;
+	default:
+		break;
+	}
+
+	m_CardNew = CARD_EMPTY;
+	
+		m_bIsHu = false;
+
+	m_nHandNums = 0;
+	m_ePlayerActiveState = E_PlayerActiveState::p_unActive;
+	CLMjCard m_arrOutedCards[MJ_MAX_OUTED];
 	for (int i = 0; i < MJ_MAX_OUTED; i++)
 	{
 		m_arrOutedCards[i] = CARD_EMPTY;
 	}
-m_nOutedTimes = 0;
+	m_nOutedTimes = 0;
 
-m_nDrawTimes = 0;	//抓牌次数
+	m_nDrawTimes = 0;	//抓牌次数
 
-m_bReady = false;
+	m_bReady = false;
 	//E_PlayerStatus m_ePlayerStatus;
 }
+
+
 
 CLMjPlayer::~CLMjPlayer()
 {
@@ -105,6 +138,12 @@ void CLMjPlayer::getHandCards(CLMjCard* pArrHandCards)
 	{
 		pArrHandCards[i] = m_arrHandCards[i];
 	}
+}
+
+
+CLMjCard::E_MjCardColor CLMjPlayer::thinkDingQue()
+{
+	return (CLMjCard::E_MjCardColor)m_pIAbstractThink->thinkDingQue(m_arrHandCards, m_nHandNums);
 }
 
 void CLMjPlayer::selectTBA(CLMjCard::E_MjCardColor eColorTBA)
