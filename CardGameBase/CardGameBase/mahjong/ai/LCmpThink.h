@@ -33,13 +33,24 @@ public:
 	CLCmpThink();
 
 public:
-	virtual void thinkHu(CLMjCard aCards[], unsigned int unCardCount
+	// 思考定缺，返回缺的花色
+	virtual int thinkDingQue(CLMjCard aCards[], unsigned int unCardCount);
+
+	virtual bool thinkHu(CLMjCard aCards[], unsigned int unCardCount
+		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest);
+
+	// 返回真表示要杠
+	virtual bool thinkKong(CLMjCard aCards[], unsigned int unCardCount
+		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest);
+
+	virtual bool thinkPong(CLMjCard aCards[], unsigned int unCardCount
 		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest);
 
 	virtual CLMjCard thinkOutCard(CLMjCard aCards[], unsigned int unCardCount
 		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, int nCardColor = -1);
 
-	void markDingQue(int nCardColor = -1);
+protected:
+	int isExistQue(int nCardColor = -1);
 	void markThree();
 	void markTwo();
 	void markOne();
@@ -48,6 +59,8 @@ public:
 	
 	void addExtraScoreToSingleCard(CLMjCard & handCard);
 	void commitScore();
+	void saveBadlyCardByScore();
+
 	int getMarkNum();
 	void unLockAll();
 

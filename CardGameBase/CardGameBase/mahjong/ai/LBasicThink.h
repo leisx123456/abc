@@ -32,7 +32,7 @@ protected:
 
 	CLMjCard m_cardOut;
 	CLMjCard m_cardNew;
-	CLMjCard m_CardBadly;
+	CLMjCard m_cardBadly;
 
 	bool m_bHavePair;
 

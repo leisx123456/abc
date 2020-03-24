@@ -35,7 +35,7 @@ public:
 	int getColorCount(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize);
 
 	//ÊÇ·ñ»¨Öí
-	bool isFlowerPig(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize);
+	bool isFlowerPig(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, int colorQue = -1);
 
 
 	/* ºúÅÆÅÐ¶Ï */

@@ -211,10 +211,34 @@ int CLMjLogic::getColorCount(CLMjCard aCards[], unsigned int unCardCount, T_Weav
 
 
 
-bool CLMjLogic::isFlowerPig(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize)
+bool CLMjLogic::isFlowerPig(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, int colorQue)
 {
-	// 所有牌的花色种类大于2就是花猪
-	return getColorCount(aCards, unCardCount, aWeaveItem, unItemSize) > 2;
+	// 注:不能通过所有牌的花色种类大于2就是花猪,因为有可能2种颜色，有一种正是缺
+	// 直接判断是否还有定缺牌
+	if (colorQue < 0 || colorQue > 2)
+	{
+		return false;
+	}
+	
+	// 手牌
+	for (int i = 0; i < unCardCount; ++i)
+	{
+		if (aCards[i].color() == colorQue)
+		{
+			return true;
+		}
+	}
+
+	// 组合牌
+	for (int i = 0; i < unItemSize; ++i)
+	{
+		if (aWeaveItem[i].cardCenter.color() == colorQue)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 

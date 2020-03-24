@@ -1,6 +1,6 @@
 
 #include "LCmpThink.h"
-
+#include <assert.h>
 
 CLCmpThink::CLCmpThink()
 {
@@ -25,23 +25,59 @@ CLCmpThink::CLCmpThink()
 }
 
 
+int CLCmpThink::thinkDingQue(CLMjCard aCards[], unsigned int unCardCount)
+{
+	int nColorQue = -1;
+	unsigned int arrColorIndex[3];
+	memset(arrColorIndex, 0, sizeof(unsigned int)* 3);
+
+	for (int i = 0; i < unCardCount; ++i)
+	{
+		assert(aCards[i].color() < 3);
+		arrColorIndex[aCards[i].color()]++;
+	}
+
+	int fewest = 14;
+	for (int i = 0; i < 3; ++i)
+	{
+		if (arrColorIndex[i] < fewest)
+		{
+			fewest = arrColorIndex[i];
+			nColorQue = i;
+		}
+	}
+
+	return nColorQue;
+}
 
 // 一般采用递归删除法
-void CLCmpThink::thinkHu(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest)
+bool CLCmpThink::thinkHu(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest)
 {
 	//m_mjLogic.isCanHu(aCards, unCardCount, aWeaveItem, unItemSize, m_cardOut, m_cardNew);
+	return false;
+}
 
+bool CLCmpThink::thinkKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest)
+{
+	return false;
+}
+
+bool CLCmpThink::thinkPong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest)
+{
+	return false;
 }
 
 CLMjCard CLCmpThink::thinkOutCard(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, int nCardColor)
 {
-	//
-	if (nCardColor > 0 && nCardColor < 3)
+	if (nCardColor > -1 && nCardColor < 3)
 	{
-		markDingQue();
-		// 如果有缺直接返回
+		int pos = isExistQue(nCardColor);
+		if (pos > 0)
+		{
+			// 如果有缺直接返回
+			return m_arrHandCard[pos];
+		}
 
-		return;
 	}
 
 	//
@@ -63,20 +99,27 @@ CLMjCard CLCmpThink::thinkOutCard(CLMjCard aCards[], unsigned int unCardCount, T
 	{
 		thinkNoSingle();
 	}
-
 	markOne();
+
+	//
+	commitScore();
+	saveBadlyCardByScore();
+
+	return m_cardBadly;
 }
 
 
-void CLCmpThink::markDingQue(int nCardColor)
+int CLCmpThink::isExistQue(int nCardColor)
 {
 	for (int i = 0; i < m_nHandNums; ++i)
 	{
 		if (m_arrHandCard[i].color() == nCardColor)
 		{
 			m_arrHandCard->lock(EHC_Tba);
+			return i;
 		}
 	}
+	return -1;
 }
 
 void CLCmpThink::markThree()
@@ -280,7 +323,6 @@ void CLCmpThink::markOne()
 		return;
 	}
 
-
 	// 先添加额外分
 	for (int i = 0; i < m_nHandNums; ++i)
 	{
@@ -298,8 +340,8 @@ void CLCmpThink::markOne()
 			markOne(m_arrHandCard[i]);
 		}
 	}
-	
 
+	
 }
 
 int CLCmpThink::getMarkNum()
@@ -320,15 +362,15 @@ void CLCmpThink::markOne(CLMjCard & card)
 	//如果是一或者九
 	if (card.isYaoJiuOrderNum_19())
 	{
-		card.setRelation(SCORE_Single_Edge);
+		card.lock(SCORE_Single_Edge);
 	}
 	else if (card.isJaing_28())
 	{
-		card.setRelation(SCORE_Single_Middle);
+		card.lock(SCORE_Single_Middle);
 	}
 	else
 	{
-		card.setRelation(SCORE_Single_TwoHead);
+		card.lock(SCORE_Single_TwoHead);
 	}
 }
 
@@ -388,11 +430,32 @@ void CLCmpThink::commitScore()
 	{
 		if (m_arrHandCard[i].isLocked())
 		{
-			m_arrHandCard[i].setScore(m_mapScore[m_arrHandCard[i].getRelation()]);
+			m_arrHandCard[i].addScore(m_mapScore[m_arrHandCard[i].getRelation()]);
 			m_arrHandCard[i].unLock();
 		}
 	}
 }
+
+// 确保已经提交分数解除锁定，锁定状态的牌认为还未提交分数
+void CLCmpThink::saveBadlyCardByScore()
+{
+	int pos = 0;
+	int badlySore = SCORE_Hu;
+	for (int i = 0; i < m_nHandNums; ++i)
+	{
+		if (!m_arrHandCard[i].isLocked())
+		{
+			if (m_arrHandCard[i].getScore() < badlySore)
+			{
+				badlySore = m_arrHandCard[i].getScore();
+				pos = i;
+			}
+			
+		}
+	}
+	m_cardBadly = m_arrHandCard[pos];
+}
+
 
 
 
