@@ -38,6 +38,8 @@ public:
 	// 分配麻将子，四川麻将只需万条筒
 	virtual void allocation();
 	virtual int mjNum() const { return 108; }
+	int surplusCards() { return m_nIndexCurrent > m_nIndexStart 
+		? (m_nIndexCurrent - m_nIndexStart) : (m_nIndexCurrent + mjNum() - m_nIndexStart); }
 
 
 
@@ -54,15 +56,17 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	// 广播用户接口
+	virtual void onMsgReady(int nChairID) = 0;
 	virtual void onMsgBegin(/*用户数据*/) = 0;
 	virtual void onMsgCutCards(int dice1, int dice2) = 0;
-	virtual void onMsgDealCards(CLMjCard pArrCardHand[][14], int nPlayerCount) = 0;
+	virtual void onMsgDealCards(T_MsgDealCards tMsgDealCards) = 0;
 	virtual void onMsgDingQue() = 0;
 
 
 	//////////////////////////////////////////////////////////////////////////
 	//用户操作接口
 	void onUserEnter(int nChairID);
+	//void onUiSitDown();
 	void onUserReady(int nChairID);
 	void onUserTBA(int nCardColor, int nChairID);
 

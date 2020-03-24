@@ -41,7 +41,7 @@ public:
 		return m_nValue;
 	}
 
-	virtual void empty(){ m_nValue == CARD_EMPTY; m_nScore = 0 };
+	virtual void empty(){ m_nValue = 0; m_nScore = 0; };
 
 	// ÅÆµÄÂß¼­Öµ
 	virtual int logicValue(){ return m_nValue; }

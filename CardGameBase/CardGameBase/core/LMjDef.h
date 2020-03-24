@@ -202,5 +202,27 @@ enum E_GameState
 
 
 
+//////////////////////////////////////////////////////////////////////////
+// 麻将数据通信数据结构定义
+
+// 发手牌数据
+struct T_MsgDealCards
+{
+	CLMjCard arrCardHand[4][14];
+	int nPlayerCount;
+	CLMjCard m_arrMjCardWall[4][34];
+	
+};
+
+// 指派活动用户
+struct T_MsgAppointActiveUser
+{
+	int nChairID;		// 活动玩家id
+	int nDrawCardValue;	// 摸牌值，如果是0则表示不需要摸牌
+	CLMjCard m_arrMjCardWall[4][34];
+}; 
+
+
+
 
 #endif // __L_MJ_DEF_H__

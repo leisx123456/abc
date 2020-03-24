@@ -31,13 +31,13 @@ int CLCmpThink::thinkDingQue(CLMjCard aCards[], unsigned int unCardCount)
 	unsigned int arrColorIndex[3];
 	memset(arrColorIndex, 0, sizeof(unsigned int)* 3);
 
-	for (int i = 0; i < unCardCount; ++i)
+	for (unsigned int i = 0; i < unCardCount; ++i)
 	{
 		assert(aCards[i].color() < 3);
 		arrColorIndex[aCards[i].color()]++;
 	}
 
-	int fewest = 14;
+	unsigned int fewest = 14;
 	for (int i = 0; i < 3; ++i)
 	{
 		if (arrColorIndex[i] < fewest)
@@ -377,9 +377,9 @@ void CLCmpThink::markOne(CLMjCard & card)
 void CLCmpThink::addExtraScoreToSingleCard(CLMjCard & card)
 {
 	//如果剩余的牌中有比其少一的牌
-	if (card.value() & MASK_VALUE != 1 && findPosInActiveHandCards(card - 1) != -1)
+	if ((card.value() & MASK_VALUE) != 1 && findPosInActiveHandCards(card - 1) != -1)
 	{
-		if (card.value() & MASK_VALUE != 2)
+		if ((card.value() & MASK_VALUE) != 2)
 		{
 			card.addScore(SCORE_SingleToSingle_TwoHead);
 		}
@@ -389,9 +389,9 @@ void CLCmpThink::addExtraScoreToSingleCard(CLMjCard & card)
 		}
 	}
 	//如果剩余的牌中有比起多一个的牌
-	if (card.value() & MASK_VALUE != 9 && findPosInActiveHandCards(card + 1) != -1)
+	if ((card.value() & MASK_VALUE) != 9 && findPosInActiveHandCards(card + 1) != -1)
 	{
-		if (card.value() & MASK_VALUE != 8)
+		if ((card.value() & MASK_VALUE) != 8)
 		{
 			card.addScore(SCORE_SingleToSingle_TwoHead);
 		}
@@ -401,13 +401,13 @@ void CLCmpThink::addExtraScoreToSingleCard(CLMjCard & card)
 		}
 	}
 	//如果剩余的牌中有比其少二的牌（如3—5,1_3等）
-	if (card.value() & MASK_VALUE > 2 && findPosInActiveHandCards(card - 2) != -1)
+	if ((card.value() & MASK_VALUE) > 2 && findPosInActiveHandCards(card - 2) != -1)
 	{
 		card.addScore(SCORE_SingleToSingle_Middle);
 	}
 
 	//如果剩余的牌中有比其多二的牌
-	if (card.value() & MASK_VALUE < 8 && findPosInActiveHandCards(card + 2) != -1)
+	if ((card.value() & MASK_VALUE) < 8 && findPosInActiveHandCards(card + 2) != -1)
 	{
 		card.addScore(SCORE_SingleToSingle_Middle);
 	}

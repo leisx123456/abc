@@ -119,7 +119,7 @@ template<class CLCard>
 void CLCardOperate<CLCard>::copyCards(CLCard aCardsDest[], unsigned int unDestCount, CLCard aCardsSrc[], unsigned int unSrcCount)
 {
 	unsigned int unCopyCount = unDestCount > unSrcCount ? unSrcCount : unDestCount;
-	for (int i = 0; i < unCopyCount; ++i)
+	for (unsigned int i = 0; i < unCopyCount; ++i)
 	{
 		aCardsDest[i] = aCardsSrc[i];
 	}

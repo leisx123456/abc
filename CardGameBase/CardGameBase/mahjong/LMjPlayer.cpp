@@ -1,5 +1,6 @@
 #include "LMjPlayer.h"
 #include "ai/AbstractThink.h"
+#include "ai/LCmpThink.h"
 
 CLMjPlayer::CLMjPlayer()
 : m_ePlayerType(EP_People)
@@ -20,13 +21,13 @@ void CLMjPlayer::init()
 	switch (m_ePlayerType)
 	{
 	case CLMjPlayer::EP_People:
-		m_pIAbstractThink = nullptr;
+		m_pIAbstractThink = new CLCmpThink();
 		break;
 	case CLMjPlayer::EP_CmpEasy:
 		m_pIAbstractThink = nullptr;
 		break;
 	case CLMjPlayer::EP_CmpNormal:
-		m_pIAbstractThink = nullptr;
+		m_pIAbstractThink = new CLCmpThink();
 		break;
 	case CLMjPlayer::EP_CmpClever:
 		m_pIAbstractThink = nullptr;
@@ -151,10 +152,6 @@ void CLMjPlayer::selectTBA(CLMjCard::E_MjCardColor eColorTBA)
 	m_eColorTBA = eColorTBA;
 }
 
-void CLMjPlayer::setReady(bool bReady)
-{
-	m_bReady = bReady;
-}
 
 
 

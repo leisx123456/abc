@@ -53,15 +53,19 @@ void CSiChuanMjDesk::onEventCutCards()
 
 void CSiChuanMjDesk::onEventDealCards()
 {
-	static CLMjCard arrCardHand[4][14]; // 由于performFunctionInCocosThread是在另一线程，而arrCardHand始终是引用传递数据，
+	//static CLMjCard arrCardHand[4][14]; // 由于performFunctionInCocosThread是在另一线程，而arrCardHand始终是引用传递数据，
 										//导致arrCardHand提前释放，故加入static修饰
+	T_MsgDealCards tMsgDealCards;
 	for (int i = 0; i < 4; i++)
 	{
-		m_mjLogic.emptyCards(arrCardHand[i], 14);
+		m_mjLogic.emptyCards(tMsgDealCards.arrCardHand[i], 14);
 	}
-	dealCards(arrCardHand);
+	dealCards(tMsgDealCards.arrCardHand);
+	tMsgDealCards.nPlayerCount = playerCount();
+	tMsgDealCards.nIndexStart = m_nIndexStart;
+	tMsgDealCards.nIndexCurrent = m_nIndexCurrent;
 
-	onMsgDealCards(arrCardHand, playerCount());
+	onMsgDealCards(tMsgDealCards);
 	_gameDispatcher->start(TIME_ID_TBA);
 }
 
@@ -70,10 +74,10 @@ void CSiChuanMjDesk::onEventDingQue()
 {
 	for (int i = 0; i < playerCount(); i++)
 	{
-		if (m_arrMjPlayer[i].isReboot())
+		if (m_pArrMjPlayer[i]->isReboot())
 		{
-			CLMjCard::E_MjCardColor color = m_arrMjPlayer[i].thinkDingQue();
-			m_arrMjPlayer[i].selectTBA(color);
+			CLMjCard::E_MjCardColor color = m_pArrMjPlayer[i]->thinkDingQue();
+			m_pArrMjPlayer[i]->selectTBA(color);
 		}
 	}
 	
@@ -84,7 +88,11 @@ void CSiChuanMjDesk::onEventDingQue()
 
 void CSiChuanMjDesk::onEventAppointActiveUser()
 {
-
+	T_MsgAppointActiveUser tMsgAppointActiveUser;
+	tMsgAppointActiveUser.nChairID = m_nBanker;
+	tMsgAppointActiveUser.nDrawCardValue = CARD_EMPTY;
+	tMsgAppointActiveUser.nIndexStart = m_nIndexStart;
+	tMsgAppointActiveUser.nIndexCurrent = m_nIndexStart;
 }
 
 
@@ -93,29 +101,32 @@ void CSiChuanMjDesk::onEventAppointActiveUser()
 
 void CSiChuanMjDesk::onUserEnter(int nChairID)
 {
-	if (m_arrMjPlayer[nChairID].isReboot())
+	if (m_pArrMjPlayer[nChairID]->isReboot())
 	{
-		m_arrMjPlayer[nChairID].ready();
+		onUserReady(nChairID);
 	}
 }
 
 
 void CSiChuanMjDesk::onUserReady(int nChairID)
 {
-	if (m_arrMjPlayer[nChairID].isReady())
+	if (m_pArrMjPlayer[nChairID]->isReady())
 	{
 		return;
 	}
-	m_arrMjPlayer[nChairID].ready();
+	m_pArrMjPlayer[nChairID]->ready();
 
 	int nReadyNum = 0;
 	for (int i = 0; i < playerCount(); ++i)
 	{
-		if (m_arrMjPlayer[i].isReady())
+		if (m_pArrMjPlayer[i]->isReady())
 		{
 			nReadyNum++;
 		}
 	}
+
+	// 广播用户准备
+	onMsgReady(nChairID);
 
 	if (playerCount() == nReadyNum)
 	{
@@ -125,15 +136,15 @@ void CSiChuanMjDesk::onUserReady(int nChairID)
 
 void CSiChuanMjDesk::onUserTBA(int nCardColor, int nChairID)
 {
-	if (m_arrMjPlayer[nChairID].isAlreadyTBA())
+	if (m_pArrMjPlayer[nChairID]->isAlreadyTBA())
 	{
 		return;
 	}
-	m_arrMjPlayer[nChairID].selectTBA(CLMjCard::E_MjCardColor(nCardColor));
+	m_pArrMjPlayer[nChairID]->selectTBA(CLMjCard::E_MjCardColor(nCardColor));
 	int nTBANum = 0;
 	for (int i = 0; i < playerCount(); ++i)
 	{
-		if (m_arrMjPlayer[i].isAlreadyTBA())
+		if (m_pArrMjPlayer[i]->isAlreadyTBA())
 		{
 			nTBANum++;
 		}

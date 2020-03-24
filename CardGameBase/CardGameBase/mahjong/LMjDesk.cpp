@@ -8,6 +8,10 @@
 CLMjDesk::CLMjDesk()
 : m_nBanker(EW_South)
 {
+	m_pArrMjPlayer[0] = new CLMjPlayer(CLMjPlayer::EP_People);
+	m_pArrMjPlayer[1] = new CLMjPlayer(CLMjPlayer::EP_CmpNormal);
+	m_pArrMjPlayer[2] = new CLMjPlayer(CLMjPlayer::EP_CmpNormal);
+	m_pArrMjPlayer[3] = new CLMjPlayer(CLMjPlayer::EP_CmpNormal);
 
 m_nMjNumSurplus = GAME_MJ_CARD_COUNT_MAX;
 m_nIndexStart = 0;
@@ -176,10 +180,10 @@ void CLMjDesk::dealCards(CLMjCard pArrCardHand[][14])
 		nIndex = m_nBanker;
 		for (int i = 0; i < nPlayerNum; ++i)
 		{
-			m_arrMjPlayer[nIndex].drawCard(drawCard());
-			m_arrMjPlayer[nIndex].drawCard(drawCard());
-			m_arrMjPlayer[nIndex].drawCard(drawCard());
-			m_arrMjPlayer[nIndex].drawCard(drawCard());
+			m_pArrMjPlayer[nIndex]->drawCard(drawCard());
+			m_pArrMjPlayer[nIndex]->drawCard(drawCard());
+			m_pArrMjPlayer[nIndex]->drawCard(drawCard());
+			m_pArrMjPlayer[nIndex]->drawCard(drawCard());
 			nIndex = nextPlayerIndex(nIndex, nPlayerNum);
 		}
 	}
@@ -189,15 +193,15 @@ void CLMjDesk::dealCards(CLMjCard pArrCardHand[][14])
 	nIndex = m_nBanker;
 	for (int i = 0; i < nPlayerNum; ++i)
 	{
-		m_arrMjPlayer[nIndex].drawCard(drawCard());
+		m_pArrMjPlayer[nIndex]->drawCard(drawCard());
 		nIndex = nextPlayerIndex(nIndex, nPlayerNum);
 	}
 	// 仅限庄家（第14张）
-	m_arrMjPlayer[m_nBanker].drawCard(drawCard());
+	m_pArrMjPlayer[m_nBanker]->drawCard(drawCard());
 
 	//
 	for (int i = 0; i < playerCount(); ++i)
 	{
-		m_arrMjPlayer[i].getHandCards(pArrCardHand[i]);
+		m_pArrMjPlayer[i]->getHandCards(pArrCardHand[i]);
 	}
 }

@@ -26,7 +26,7 @@ public:
 		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest) = 0;
 
 	virtual bool thinkChi(CLMjCard aCards[], unsigned int unCardCount
-		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest) {}
+		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest) {return false;}
 
 	virtual CLMjCard thinkOutCard(CLMjCard aCards[], unsigned int unCardCount
 		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, int nCardColor = -1) = 0;

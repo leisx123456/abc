@@ -14,7 +14,14 @@
 
 using namespace std;
 
-
+enum E_OperatorStatus
+{
+	EO_Choosing,         //选牌中
+	EO_Choosed,				//已选定
+	EO_TBA_Choosing,		//定缺中
+	EO_TBA_Choosed,			//已定缺
+	EO_NULL					//未操作
+};
 
 struct T_UserInfo
 {
@@ -33,7 +40,7 @@ struct T_UserInfo
 	E_OperatorStatus eOperatorStatus;
 
 	T_UserInfo()
-		: strNickname("")
+		: strNickname("12345")
 		, cbScore(0)
 		, bOffline(false)
 		, strHeadPath("")
@@ -79,14 +86,7 @@ public:
 		p_unActive
 	};
 
-	enum E_OperatorStatus
-	{
-		EO_Choosing,         //选牌中
-		EO_Choosed,				//已选定
-		EO_TBA_Choosing,		//定缺中
-		EO_TBA_Choosed,			//已定缺
-		EO_NULL					//未操作
-	};
+
 
 	enum E_Sex
 	{

@@ -74,7 +74,7 @@ protected:
 	CLMjLogic m_mjLogic;
 
 	CLMjCard m_arrMjCard[GAME_MJ_CARD_COUNT_MAX];	// 一副麻将 最多136张
-	CLMjPlayer m_arrMjPlayer[GAME_MJ_PLAYER_MAX];	// 麻将玩家 最多4人
+	CLMjPlayer* m_pArrMjPlayer[GAME_MJ_PLAYER_MAX];	// 麻将玩家 最多4人
 
 	CLDicePair m_mjDicePair;	// 2个麻将骰子
 

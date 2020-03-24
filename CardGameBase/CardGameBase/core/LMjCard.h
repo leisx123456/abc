@@ -103,8 +103,8 @@ public:
 	// 序数值
 	int orderNumValue(){ return m_nValue & MASK_VALUE; }
 	// 是否幺九序数牌，即1,9万 1,9条 1,9同
-	bool isYaoJiuOrderNum_19(){ return m_nValue & MASK_VALUE == 1 || m_nValue & MASK_VALUE == 9; }
-	bool isJaing_28(){ return m_nValue & MASK_VALUE == 2 || m_nValue & MASK_VALUE == 8; }
+	bool isYaoJiuOrderNum_19(){ return (m_nValue & MASK_VALUE) == 1 || (m_nValue & MASK_VALUE) == 9; }
+	bool isJaing_28(){ return (m_nValue & MASK_VALUE) == 2 || (m_nValue & MASK_VALUE) == 8; }
 
 	// 把CLCard申明为类模板后就不用重载这些操作符函数了，这就是类模板的强大
 	//CLMjCard & operator = (const int & nCard);
