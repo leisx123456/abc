@@ -108,6 +108,13 @@ void CSiChuanMjDesk::onEventAppointActiveUser()
 }
 
 
+void CSiChuanMjDesk::onEventResponseToActiveUser()
+{
+
+}
+
+
+
 
 //////////////////////////////////////////////////////////////////////////
 
