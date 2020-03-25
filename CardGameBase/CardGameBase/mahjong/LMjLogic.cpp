@@ -358,7 +358,7 @@ bool CLMjLogic::isPengPeng(CLMjCard aCards[], unsigned int unCardCount, T_WeaveC
 	
 	for (int i = 0; i < unItemSize; i++)
 	{
-		if (aWeaveItem[i].byWeaveKind  & (ACTION_LEFT | ACTION_CENTER | ACTION_RIGHT))
+		if (aWeaveItem[i].byWeaveKind  & (EA_EatLeft | EA_EatCenter | EA_EatRight))
 			return false;
 	}
 	return true;

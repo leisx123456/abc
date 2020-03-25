@@ -37,11 +37,12 @@ public:
 	// 游戏内部逻辑
 	// 分配麻将子，四川麻将只需万条筒
 	virtual void allocation();
-	virtual int mjNum() const { return 108; }
+	virtual int mjNumAllocation() const { return 108; }
 	int surplusCards() { return m_nIndexCurrent > m_nIndexStart 
-		? (m_nIndexCurrent - m_nIndexStart) : (m_nIndexCurrent + mjNum() - m_nIndexStart); }
+		? (m_nIndexCurrent - m_nIndexStart) : (m_nIndexCurrent + mjNumAllocation() - m_nIndexStart); }
 
-
+	bool SelectActInfoFrom(int nResponseUser, int nActiveUser, int byCard, T_MjActInfo* pActInfo
+		, int byFetctCard, unsigned short usIgnoreFlags = 0);
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -61,6 +62,7 @@ public:
 	virtual void onMsgCutCards(int dice1, int dice2) = 0;
 	virtual void onMsgDealCards(T_MsgDealCards tMsgDealCards) = 0;
 	virtual void onMsgDingQue() = 0;
+	virtual void onMsgAppointActiveUser(T_MsgAppointActiveUser tMsgAppointActiveUser) = 0;
 
 
 	//////////////////////////////////////////////////////////////////////////

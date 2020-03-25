@@ -86,84 +86,6 @@ const long COIN_MUL = 200;
 #define	MASK_VALUE					0x0F								//数值掩码
 
 
-//////////////////////////////////////////////////////////////////////////
-//动作定义
-#define ACTION_NULL					0x00								//没有
-#define ACTION_LEFT					0x01								//左吃
-#define ACTION_CENTER					0x02								//中吃
-#define ACTION_RIGHT					0x04								//右吃
-#define ACTION_PENG					0x08								//碰牌
-#define ACTION_GANG					0x10								//杠牌
-#define ACTION_LISTEN					0x20								//听牌
-#define ACTION_CHI_HU					0x40								//吃胡
-#define ACTION_ZI_MO					0x80								//自摸
-
-//////////////////////////////////////////////////////////////////////////
-//胡牌定义
-#define HU_NULL					0x00										//非胡类型
-#define CHK_CHI_HU					0x01										//胡类型
-#define CHR_QIANG_GANG				0x00000001									//抢杠
-#define CHR_GANG_SHANG_PAO			0x00000002									//杠上炮
-#define CHR_GANG_KAI				0x00000004									//杠上花
-#define CHR_TIAN_HU					0x00000008									//天胡
-#define CHR_DI_HU					0x00000010									//地胡
-#define CHR_DA_DUI_ZI				0x00000020									//大对子
-#define CHR_QING_YI_SE				0x00000040									//清一色
-#define CHR_QI_XIAO_DUI				0x00000080									//暗七对
-#define CHR_DAI_YAO					0x00000100									//带幺
-#define CHR_JIANG_DUI				0x00000200									//将对
-#define CHR_SHU_FAN					0x00000400									//素番
-#define CHR_QING_DUI				0x00000800									//清对
-#define CHR_LONG_QI_DUI				0x00001000									//龙七对
-#define CHR_QING_QI_DUI				0x00002000									//清七对
-#define CHR_QING_YAO_JIU			0x00004000									//清幺九
-#define CHR_QING_LONG_QI_DUI		0x00008000									//清龙七对
-
-enum E_HuType
-{
-	EH_Fart,	              //屁胡		1番
-
-	EH_Pong,	             //碰碰胡		2番
-
-	EH_Qing,	            //清一色		3番
-
-	EH_All_19,	              //幺九		3番
-
-	EH_SevenPair,     	      //七对		3番
-
-	EH_PongQing,	          //清碰		4番
-
-	EH_Pong_258,	          //将碰		4番
-
-	EH_DragonSevenPair,	     //龙七对		4番
-
-	EH_QingSevenPair,	      //清七对		5番
-
-	EH_QingAll_19,	          //清幺九		5番
-
-	EH_QingDragonSevenPair,	  //青龙七对	6番
-
-	EH_DayHu,	              //天胡		6番
-
-	EH_LandHu,	               //地胡		6番
-
-	EH_PensonHu	              //人和		6番
-};
-
-enum E_ExtraHuType
-{
-
-	EE_SelfDrawn,	 //自摸加番(地方加底)	1番
-
-	EE_Kong_hua,	 //杠开		1番
-
-	EE_Kong_pao,	 //杠炮		1番
-
-	EE_Kong_qiang,	 //抢杠		1番
-
-	EE_Kong,	    //根（杠）	1番
-};
-
 
 
 
@@ -200,6 +122,163 @@ enum E_GameState
 
 
 
+//玩家的动作详细信息结构////////////////////////////////////////////////////////////////////
+enum E_ActionTypeFlags
+{
+	EA_Wait		= 0x0001L,  //等待动作比较位，玩家请求动作前为0，请求动作后为1
+	EA_Pass		= 0x0002L,  //过
+	EA_Eat		= 0x0004L,  //吃
+	EA_Pong		= 0x0008L,	//碰牌
+	EA_Kong		= 0x0010L,	//杠牌
+	EA_Listen	= 0x0020L,
+	EA_hu		= 0x0040L	//吃
+};
+
+enum E_EatTypeFlags
+{
+	EA_EatLeft		= 0x01,	//左吃
+	EA_EatCenter	= 0x02,	//中吃
+	EA_EatRight		= 0x04, //右吃
+};
+
+struct T_MjActEatInfo
+{
+	int arrEatSelect[3];  //可以吃牌的选择
+	int nEatSelectNums;	  //可以吃牌选择数量
+	unsigned short usEatFlags;	//吃的标志
+};
+
+enum E_KongType
+{
+	EK_KongAn,	//下雨-暗杠
+	EK_KongBa,	//刮风-巴杠,补杠
+	EK_KongDian	//刮风-点杠
+};
+
+struct T_MjActKongInfo
+{
+	int arrKongSelect[12];	  //可以杠的选择
+	int nKongSelectNums;				  //可以杠选择数量		
+	int arrBuGangInPeng[12]; //补杠在建立在那一个碰牌上
+	E_KongType arrKongType[4]; //杠类型
+	//查找杠牌选择的索引
+	int FindGangIndex(int byCard) const
+	{
+		for (int i = 0; i < nKongSelectNums; ++i)
+		{
+			if (byCard == arrKongSelect[i])
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+};
+
+struct T_MjActListenInfo
+{
+	int arrListenSelect[14]; //听，可打出牌听的选择
+	int nListenSelectNums; //听，可打出牌听的选择数量
+	//查找杠牌选择的索引
+	int FindTingIndex(int byCard) const
+	{
+		for (int i = 0; i < nListenSelectNums; ++i)
+		{
+			if (byCard == arrListenSelect[i])
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+};
+
+//胡牌定义
+enum E_MjHuType
+{
+	EH_Unknown = 0,	//未知标记
+	EH_3x_2 = 1,	// 3x+2
+	EH_SevenPair = 2,			//七对
+	EH_ShiSanYao = 3,     //十三幺
+	EH_JiangJiangHu = 4,
+	EH_YouJin = 5,        //游金
+	EH_SanJinDao = 6,		//三金倒,
+
+};
+
+enum E_MjHuName
+{
+	// 基本番型
+	EHN_Ping,			//平胡
+	EHN_Pong,	             //碰碰胡,大对子
+	EHN_Qing,	            //清一色
+	EHN_All_19,	              //幺九
+	EHN_SevenPair,     	      //七对
+	EHN_JinGouDiao,			// 金钩钓
+	// 特殊番型
+	EHN_258_Pong,	          //将碰
+	EHN_Dai_19,	// 带19
+	// 复合番型
+	EHN_QingPong,	          //清碰,清对
+	EHN_DragonSevenPair,	     //龙七对
+	EHN_QingSevenPair,	      //清七对
+	EHN_QingDragonSevenPair,	  //青龙七对
+	EHN_Qing_19,	          //清幺九
+
+	EHN_HuNameMax
+};
+
+enum E_MjHuWay
+{
+	EHW_Unknown,  //未知标记
+	// 普通方式
+	EHW_JiePao,  //接炮
+	EHW_ZiMo,  //自摸
+	// 特殊方式
+	EHW_DayHu,	              //天胡
+	EHW_LandHu,	               //地胡
+	EHW_PensonHu,	              //人和
+	EHW_QiangGang,  //抢杠
+	EHW_DianGangKai,  //点杠杠上开花
+	EHW_AnGangKai,		//暗杠杠上开花
+	EHW_BuGangKai,		//补杠杠上开花
+	EHW_GangChong,  //杠冲
+
+};
+
+
+enum E_MjSuanFenType
+{
+	// E_MjHuWay  + E_MjHuName + 根
+};
+
+struct T_MjActHuInfo
+{
+	int nHuNameNums;	//胡牌类型数量		
+	E_MjHuName arrHuName[EHN_HuNameMax]; //牌型表
+	E_MjHuWay eMjHuWay; //特殊胡类型
+	int  nHuGangIdx;	//抢杠控件的位置(用于抢杠)
+};
+
+
+struct T_MjActInfo
+{
+	unsigned short usActFlags;	//动作标识
+
+	T_MjActEatInfo tMjActEatInfo;
+	T_MjActKongInfo tMjActKongInfo;
+	T_MjActListenInfo tMjActListenInfo;
+	T_MjActHuInfo tMjActHuInfo;
+
+	T_MjActInfo()
+		: usActFlags(0)
+	{
+
+	}
+
+
+};
+
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -210,7 +289,8 @@ struct T_MsgDealCards
 {
 	CLMjCard arrCardHand[4][14];
 	int nPlayerCount;
-	CLMjCard m_arrMjCardWall[4][34];
+	CLMjCard arrMjCardsPair[GAME_MJ_CARD_COUNT_MAX];
+	int nMjNumAllocation;
 	
 };
 
@@ -219,10 +299,22 @@ struct T_MsgAppointActiveUser
 {
 	int nChairID;		// 活动玩家id
 	int nDrawCardValue;	// 摸牌值，如果是0则表示不需要摸牌
-	CLMjCard m_arrMjCardWall[4][34];
+	CLMjCard arrMjCardsPair[GAME_MJ_CARD_COUNT_MAX]; // 一副麻将
+	int nMjNumAllocation;	// 一副麻将分配数
 }; 
 
 
+
+// 响应活动用户
+struct T_MsgResponseToActiveUser
+{
+	int nActiveID;		// 活动玩家id
+	int nResponseID;	// 响应的玩家id，可以是活动玩家自己
+
+	// 响应玩家可以具备哪些动作行为
+	T_MjActInfo tMjActInfo;
+
+};
 
 
 #endif // __L_MJ_DEF_H__

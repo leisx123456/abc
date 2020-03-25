@@ -21,9 +21,9 @@ CSiChuanMjDesk::~CSiChuanMjDesk()
 
 void CSiChuanMjDesk::allocation()
 {
-	for (int i = 0; i < mjNum(); ++i)
+	for (int i = 0; i < mjNumAllocation(); ++i)
 	{
-		m_arrMjCard[i] = g_arrMjCardPair[i];
+		m_arrMjCardsPair[i] = g_arrMjCardPair[i];
 	}
 
 }
@@ -62,9 +62,9 @@ void CSiChuanMjDesk::onEventDealCards()
 	}
 	dealCards(tMsgDealCards.arrCardHand);
 	tMsgDealCards.nPlayerCount = playerCount();
-	tMsgDealCards.nIndexStart = m_nIndexStart;
-	tMsgDealCards.nIndexCurrent = m_nIndexCurrent;
-
+	tMsgDealCards.nMjNumAllocation = mjNumAllocation();
+	m_mjLogic.copyCards(tMsgDealCards.arrMjCardsPair, GAME_MJ_CARD_COUNT_MAX, m_arrMjCardsPair, GAME_MJ_CARD_COUNT_MAX);
+	
 	onMsgDealCards(tMsgDealCards);
 	_gameDispatcher->start(TIME_ID_TBA);
 }
@@ -91,8 +91,16 @@ void CSiChuanMjDesk::onEventAppointActiveUser()
 	T_MsgAppointActiveUser tMsgAppointActiveUser;
 	tMsgAppointActiveUser.nChairID = m_nBanker;
 	tMsgAppointActiveUser.nDrawCardValue = CARD_EMPTY;
-	tMsgAppointActiveUser.nIndexStart = m_nIndexStart;
-	tMsgAppointActiveUser.nIndexCurrent = m_nIndexStart;
+	tMsgAppointActiveUser.nMjNumAllocation = mjNumAllocation();
+	m_mjLogic.copyCards(tMsgAppointActiveUser.arrMjCardsPair, GAME_MJ_CARD_COUNT_MAX, m_arrMjCardsPair, GAME_MJ_CARD_COUNT_MAX);
+	if (surplusCards() == 0)
+	{
+		// 如果牌墙剩余为0，结束
+		return;
+	}
+	
+	
+
 }
 
 

@@ -40,8 +40,8 @@ int CLMjDesk::getSurplusCardsOnWall()
 // 最原始的方法是先从108张中随机抽再从新的牌堆里随机抽出一张，直到抽完出一张，剩下的牌组成新的牌堆
 void CLMjDesk::ruffle()
 {
-	assert(1 < mjNum());
-	m_mjLogic.shuffleCards(m_arrMjCard, mjNum());
+	assert(1 < mjNumAllocation());
+	m_mjLogic.shuffleCards(m_arrMjCardsPair, mjNumAllocation());
 }
 
 /*************************************************************/
@@ -53,8 +53,8 @@ void CLMjDesk::initWall()
 {
 	/* step1 先确定每个牌墙的麻将数量 */
 	// 由于麻将牌墙以双为单位，确定麻将有多少双(顿)
-	assert((mjNum() % 2) == 0); // 麻将不能为奇数
-	int nMjNumPair = mjNum() / 2;
+	assert((mjNumAllocation() % 2) == 0); // 麻将不能为奇数
+	int nMjNumPair = mjNumAllocation() / 2;
 
 	// 四个牌墙中每个牌墙得到的多少双 和 余下多少双
 	int nMjNumPairAWall = nMjNumPair / 4;
@@ -76,25 +76,25 @@ void CLMjDesk::initWall()
 	int nIndexCard = 0;
 	for (int i = 0; i < nMjNumWall1st; ++i)
 	{
-		m_arrMjCardWall[nIndexPlayer][i] = m_arrMjCard[nIndexCard++];
+		m_arrMjCardWall[nIndexPlayer][i] = m_arrMjCardsPair[nIndexCard++];
 	}
 
 	nIndexPlayer = nextPlayerIndex(nIndexPlayer);
 	for (int i = 0; i < nMjNumWall2nd; ++i)
 	{
-		m_arrMjCardWall[nIndexPlayer][i] = m_arrMjCard[nIndexCard++];
+		m_arrMjCardWall[nIndexPlayer][i] = m_arrMjCardsPair[nIndexCard++];
 	}
 
 	nIndexPlayer = nextPlayerIndex(nIndexPlayer);
 	for (int i = 0; i < nMjNumWall3rd; ++i)
 	{
-		m_arrMjCardWall[nIndexPlayer][i] = m_arrMjCard[nIndexCard++];
+		m_arrMjCardWall[nIndexPlayer][i] = m_arrMjCardsPair[nIndexCard++];
 	}
 
 	nIndexPlayer = nextPlayerIndex(nIndexPlayer);
 	for (int i = 0; i < nMjNumWall4th; ++i)
 	{
-		m_arrMjCardWall[nIndexPlayer][i] = m_arrMjCard[nIndexCard++];
+		m_arrMjCardWall[nIndexPlayer][i] = m_arrMjCardsPair[nIndexCard++];
 	}
 }
 
@@ -106,8 +106,8 @@ void CLMjDesk::rockDice()
 
 	/*确定牌墙*/
 	// 由于麻将牌墙以双为单位，确定麻将有多少双(顿)
-	assert((mjNum() % 2) == 0); // 麻将不能为奇数
-	int nMjNumPair = mjNum() / 2;
+	assert((mjNumAllocation() % 2) == 0); // 麻将不能为奇数
+	int nMjNumPair = mjNumAllocation() / 2;
 
 	// 四个牌墙中每个牌墙得到的多少双 和 余下多少双
 	int nMjNumPairAWall = nMjNumPair / 4;
@@ -139,10 +139,10 @@ void CLMjDesk::rockDice()
 
 CLMjCard CLMjDesk::drawCard()
 {
-	CLMjCard card = m_arrMjCard[m_nIndexCurrent];
-	m_arrMjCard[m_nIndexCurrent] = CARD_EMPTY;
+	CLMjCard card = m_arrMjCardsPair[m_nIndexCurrent];
+	m_arrMjCardsPair[m_nIndexCurrent] = CARD_EMPTY;
 	m_nIndexCurrent++;
-	if (m_nIndexCurrent >= mjNum())
+	if (m_nIndexCurrent >= mjNumAllocation())
 	{
 		m_nIndexCurrent = 0;
 	}
