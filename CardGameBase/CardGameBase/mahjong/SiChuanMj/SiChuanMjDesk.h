@@ -52,6 +52,7 @@ public:
 	virtual void onEventDealCards();		// 发手牌
 	virtual void onEventDingQue();			// 定缺
 	virtual void onEventAppointActiveUser();			// 指定活动用户，活动用户可摸牌出牌。
+	virtual void onEventResponseToActiveUser();			// 当前可对活动玩家的动作响应
 
 
 

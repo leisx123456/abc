@@ -1,6 +1,5 @@
 #ifndef __L_MJ_DEF_H__
 #define __L_MJ_DEF_H__
-
 namespace LxMahjone
 {
 
@@ -287,9 +286,9 @@ struct T_MjActInfo
 // 发手牌数据
 struct T_MsgDealCards
 {
-	CLMjCard arrCardHand[4][14];
+	int arrCardHand[4][14];
 	int nPlayerCount;
-	CLMjCard arrMjCardsPair[GAME_MJ_CARD_COUNT_MAX];
+	int arrMjCardsPair[GAME_MJ_CARD_COUNT_MAX];
 	int nMjNumAllocation;
 	
 };
@@ -299,7 +298,7 @@ struct T_MsgAppointActiveUser
 {
 	int nChairID;		// 活动玩家id
 	int nDrawCardValue;	// 摸牌值，如果是0则表示不需要摸牌
-	CLMjCard arrMjCardsPair[GAME_MJ_CARD_COUNT_MAX]; // 一副麻将
+	int arrMjCardsPair[GAME_MJ_CARD_COUNT_MAX]; // 一副麻将
 	int nMjNumAllocation;	// 一副麻将分配数
 }; 
 

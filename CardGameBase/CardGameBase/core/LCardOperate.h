@@ -28,6 +28,8 @@ public:
 
 	// 复制-(由于对象不能memcpy,需要自己定义)
 	void copyCards(CLCard aCardsDest[], unsigned int unDestCount, CLCard aCardsSrc[], unsigned int unSrcCount);
+	void copyCards(CLCard aCardsDest[], unsigned int unDestCount, int aCardsValueSrc[], unsigned int unSrcCount);
+	void copyCards(int aCardsValueDest[], unsigned int unDestCount, CLCard aCardsSrc[], unsigned int unSrcCount);
 	void emptyCards(CLCard aCards[], unsigned int unCardCount);
 
 	// 删除操作
@@ -124,6 +126,29 @@ void CLCardOperate<CLCard>::copyCards(CLCard aCardsDest[], unsigned int unDestCo
 		aCardsDest[i] = aCardsSrc[i];
 	}
 }
+
+
+template<class CLCard>
+void CLCardOperate<CLCard>::copyCards(CLCard aCardsDest[], unsigned int unDestCount, int aCardsValueSrc[], unsigned int unSrcCount)
+{
+	unsigned int unCopyCount = unDestCount > unSrcCount ? unSrcCount : unDestCount;
+	for (unsigned int i = 0; i < unCopyCount; ++i)
+	{
+		aCardsDest[i] = aCardsValueSrc[i];
+	}
+}
+
+
+template<class CLCard>
+void CLCardOperate<CLCard>::copyCards(int aCardsValueDest[], unsigned int unDestCount, CLCard aCardsSrc[], unsigned int unSrcCount)
+{
+	unsigned int unCopyCount = unDestCount > unSrcCount ? unSrcCount : unDestCount;
+	for (unsigned int i = 0; i < unCopyCount; ++i)
+	{
+		aCardsValueDest[i] = aCardsSrc[i].value();
+	}
+}
+
 
 template<class CLCard>
 void CLCardOperate<CLCard>::emptyCards(CLCard aCards[], unsigned int unCardCount)

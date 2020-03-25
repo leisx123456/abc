@@ -56,13 +56,17 @@ void CSiChuanMjDesk::onEventDealCards()
 	//static CLMjCard arrCardHand[4][14]; // 由于performFunctionInCocosThread是在另一线程，而arrCardHand始终是引用传递数据，
 										//导致arrCardHand提前释放，故加入static修饰
 	T_MsgDealCards tMsgDealCards;
-	for (int i = 0; i < 4; i++)
-	{
-		m_mjLogic.emptyCards(tMsgDealCards.arrCardHand[i], 14);
-	}
-	dealCards(tMsgDealCards.arrCardHand);
+	memset(&tMsgDealCards, 0, sizeof(T_MsgDealCards));
+
+	CLMjCard arrCardHand[4][14];
+	dealCards(arrCardHand);
+
 	tMsgDealCards.nPlayerCount = playerCount();
 	tMsgDealCards.nMjNumAllocation = mjNumAllocation();
+	for (int i = 0; i < 4; ++i)
+	{
+		m_mjLogic.copyCards(tMsgDealCards.arrCardHand[i], 14, arrCardHand[i], 14);
+	}
 	m_mjLogic.copyCards(tMsgDealCards.arrMjCardsPair, GAME_MJ_CARD_COUNT_MAX, m_arrMjCardsPair, GAME_MJ_CARD_COUNT_MAX);
 	
 	onMsgDealCards(tMsgDealCards);
