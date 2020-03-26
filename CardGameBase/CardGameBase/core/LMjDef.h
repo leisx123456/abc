@@ -36,6 +36,7 @@ namespace LxMahjone
 
 //游戏事件ID定义,(取值范围从10-49)（定时器的处理）
 
+#define TIME_ID_Ready			9			// 选座
 #define TIME_ID_CHOOSE_A_SEAT			10			// 选座
 #define TIME_ID_CHOOSE_BANKER				11			// 选庄
 #define TIME_ID_SHUFFLE_CARD				13			// 系统洗牌据事件
@@ -119,7 +120,38 @@ enum E_GameState
 	EGS_Over
 };
 
+enum ActiveUserType
+{
+	EA_FristGot,
+	EA_Inherit,
+	EA_Response
+};
+//活动玩家定义
+// 成为活动玩家的来源：1.第一轮系统指定庄家 2. 继承，上个活动玩家出牌没有人响应，由系统按逆时针指定 3.响应，对上个活动玩家出的牌响应了动作。
+// 结束标志:出牌
+struct T_ActiveUser
+{
+	int nActiveUser;
+	ActiveUserType eActiveUserType;
 
+	// 继承型
+	int nNewCard;
+
+	// 响应型
+	int nGotCard;
+	int nFormUser;
+
+	// 自己打出的牌
+	int nOutCard;
+
+	T_ActiveUser()
+		: nActiveUser(0)
+		, eActiveUserType(EA_FristGot)
+	{
+
+	}
+
+};
 
 //玩家的动作详细信息结构////////////////////////////////////////////////////////////////////
 enum E_ActionTypeFlags
@@ -275,6 +307,10 @@ struct T_MjActInfo
 
 	}
 
+	void clear()
+	{
+		memset(this, 0, sizeof(T_MjActInfo));
+	}
 
 };
 
@@ -293,11 +329,11 @@ struct T_MsgDealCards
 	
 };
 
-// 指派活动用户
+// 指派活动用户, 
 struct T_MsgAppointActiveUser
 {
-	int nChairID;		// 活动玩家id
-	int nDrawCardValue;	// 摸牌值，如果是0则表示不需要摸牌
+	T_ActiveUser tActiveUser;
+	T_MjActInfo tMjActInfo;
 	int arrMjCardsPair[GAME_MJ_CARD_COUNT_MAX]; // 一副麻将
 	int nMjNumAllocation;	// 一副麻将分配数
 }; 
@@ -308,10 +344,10 @@ struct T_MsgAppointActiveUser
 struct T_MsgResponseToActiveUser
 {
 	int nActiveID;		// 活动玩家id
-	int nResponseID;	// 响应的玩家id，可以是活动玩家自己
+	int nResponseID[4];	// 响应的玩家id，可以是活动玩家自己
 
 	// 响应玩家可以具备哪些动作行为
-	T_MjActInfo tMjActInfo;
+	T_MjActInfo tMjActInfo[4];
 
 };
 

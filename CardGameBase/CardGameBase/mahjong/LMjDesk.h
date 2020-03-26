@@ -89,6 +89,7 @@ protected:
 	int m_nIndexCurrent;	// 当前抓牌的位置index，index对应m_arrMjCard的下标，小于m_nMjNum
 
 	int m_nBanker;	//庄家 0-3
+	T_ActiveUser m_tActiveUser;
 	
 	//int m_nWhere;								//麻将取到那个位置
 	//int m_nWho;									//该取哪个方向的麻将

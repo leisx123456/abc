@@ -248,11 +248,10 @@ bool CLMjLogic::isCanHu(CLMjCard aCards[]
 	, unsigned int unCardCount
 	, T_WeaveCardsItem aWeaveItem[]
 	, unsigned int unItemSize
-	, const CLMjCard & cardOtherOut/* = CARD_EMPTY*/
-	, const CLMjCard & cardGet/* = CARD_EMPTY*/
+	, const CLMjCard & cardDest/* = CARD_EMPTY*/
 	, bool bMust258Pair /*= false*/)
 {
-	if (cardOtherOut < 0)
+	if (cardDest < 0)
 	{
 		return false;
 	}

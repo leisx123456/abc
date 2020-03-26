@@ -113,9 +113,9 @@ public:
 	void getHandCards(CLMjCard* pArrHandCards);
 
 	// 定缺
-	CLMjCard::E_MjCardColor thinkDingQue();
 	void selectTBA(CLMjCard::E_MjCardColor eColorTBA);
 	bool isAlreadyTBA(){ return m_eColorTBA > -1 && m_eColorTBA < 3; }
+
 
 	//摸牌
 	void drawCard(const CLMjCard & card);
@@ -143,9 +143,16 @@ public:
 
 	//获得出了的牌队列
 	//vector<int> getOutCard();
+//////////////////////////////////////////////////////////////////////////
+// 逻辑判断
+	bool isCanPong();
+	bool isCanKong();
+	bool isCanHu();
 
 
-
+	//////////////////////////////////////////////////////////////////////////
+	// ai思考
+	CLMjCard::E_MjCardColor thinkDingQue();
 
 
 private:
@@ -154,6 +161,7 @@ private:
 
 	CLMjLogic m_mjLogic;
 	T_WeaveCardsItem m_arrWeaveCardsItem[4];	// 用户的组合牌
+	int m_nWeaveItemNums;
 
 	CLMjCard m_arrHandCards[MAX_HAND_COUNT];	//用户的手牌
 	int m_nHandNums;					//用户手牌数量

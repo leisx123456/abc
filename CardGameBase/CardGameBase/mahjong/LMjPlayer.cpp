@@ -155,3 +155,23 @@ void CLMjPlayer::selectTBA(CLMjCard::E_MjCardColor eColorTBA)
 
 
 
+
+//////////////////////////////////////////////////////////////////////////
+bool CLMjPlayer::isCanPong()
+{
+	return m_mjLogic.isCanPong(m_arrHandCards, m_nHandNums, m_CardNew);
+}
+
+bool CLMjPlayer::isCanKong()
+{
+	return m_mjLogic.isCanKong(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, m_CardNew);
+}
+
+bool CLMjPlayer::isCanHu()
+{
+	return m_mjLogic.isCanHu(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums);
+}
+
+
+
+
