@@ -16,6 +16,7 @@ public:
 	int switchToCardData(const unsigned int arrCardIndex[MAX_INDEX], CLMjCard aCards[MAX_HAND_COUNT]);
 	int switchToCardIndex(CLMjCard aCards[], unsigned int unCardCount, unsigned int arrCardIndex[MAX_INDEX]);
 
+	
 	// ÊÇ·ñÄÜÅö
 	bool isCanPong(CLMjCard aCards[], unsigned int unCardCount, const CLMjCard & cardDest);
 
@@ -43,8 +44,7 @@ public:
 		, unsigned int unCardCount
 		, T_WeaveCardsItem aWeaveItem[]
 		, unsigned int unItemSize
-		, const CLMjCard & cardOtherOut = CARD_EMPTY
-		, const CLMjCard & cardGet = CARD_EMPTY
+		, const CLMjCard & cardDest = CARD_EMPTY
 		, bool bMust258Pair = false);
 
 	bool isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair = false);

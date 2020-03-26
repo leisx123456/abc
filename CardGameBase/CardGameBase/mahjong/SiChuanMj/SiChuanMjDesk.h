@@ -41,18 +41,21 @@ public:
 	int surplusCards() { return m_nIndexCurrent > m_nIndexStart 
 		? (m_nIndexCurrent - m_nIndexStart) : (m_nIndexCurrent + mjNumAllocation() - m_nIndexStart); }
 
-	bool SelectActInfoFrom(int nResponseUser, int nActiveUser, int byCard, T_MjActInfo* pActInfo
-		, int byFetctCard, unsigned short usIgnoreFlags = 0);
+	bool selectActInfo(int nResponseUser, int nActiveUser, T_MjActInfo* pActInfo , CLMjCard cardDest, unsigned short usIgnoreFlags = 0);
 
 
 	//////////////////////////////////////////////////////////////////////////
 	// 系统事件
+	virtual void onEventReady();
 	virtual void onEventGameBegin();		// 游戏开始
 	virtual void onEventCutCards();			// 摇骰子切牌
 	virtual void onEventDealCards();		// 发手牌
 	virtual void onEventDingQue();			// 定缺
+
+	virtual void onEventFristGotActiveUser();
+	virtual void onEventAppointDrawCardUser();
 	virtual void onEventAppointActiveUser();			// 指定活动用户，活动用户可摸牌出牌。
-	virtual void onEventResponseToActiveUser();			// 当前可对活动玩家的动作响应
+	//virtual void onEventResponseToActiveUser();			// 当前可对活动玩家的动作响应
 
 
 
@@ -62,13 +65,14 @@ public:
 	virtual void onMsgBegin(/*用户数据*/) = 0;
 	virtual void onMsgCutCards(int dice1, int dice2) = 0;
 	virtual void onMsgDealCards(T_MsgDealCards tMsgDealCards) = 0;
+	virtual void onMsgDingQueBegin() = 0;
 	virtual void onMsgDingQue() = 0;
 	virtual void onMsgAppointActiveUser(T_MsgAppointActiveUser tMsgAppointActiveUser) = 0;
 
 
 	//////////////////////////////////////////////////////////////////////////
 	//用户操作接口
-	void onUserEnter(int nChairID);
+	//void onUserEnter(int nChairID);
 	//void onUiSitDown();
 	void onUserReady(int nChairID);
 	void onUserTBA(int nCardColor, int nChairID);
