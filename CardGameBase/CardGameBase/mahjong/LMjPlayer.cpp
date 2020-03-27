@@ -36,7 +36,7 @@ void CLMjPlayer::init()
 		break;
 	}
 
-	m_CardNew = CARD_EMPTY;
+	//m_CardNew = CARD_EMPTY;
 	
 		m_bIsHu = false;
 
@@ -156,12 +156,12 @@ void CLMjPlayer::selectTBA(CLMjCard::E_MjCardColor eColorTBA)
 //////////////////////////////////////////////////////////////////////////
 bool CLMjPlayer::isCanPong()
 {
-	return m_mjLogic.isCanPong(m_arrHandCards, m_nHandNums, m_CardNew);
+	return m_mjLogic.isCanPong(m_arrHandCards, m_nHandNums, CARD_EMPTY);
 }
 
 bool CLMjPlayer::isCanKong()
 {
-	return m_mjLogic.isCanDianKong(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, m_CardNew);
+	return m_mjLogic.isCanDianKong(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, CARD_EMPTY);
 }
 
 bool CLMjPlayer::isCanHu()
@@ -177,16 +177,16 @@ CLMjCard::E_MjCardColor CLMjPlayer::thinkDingQue()
 	return (CLMjCard::E_MjCardColor)m_pIAbstractThink->thinkDingQue(m_arrHandCards, m_nHandNums);
 }
 
-void CLMjPlayer::think(T_MjActInfo* pActInfo, CLMjCard cardDest, CLMjCard & cardOut)
+void CLMjPlayer::think(T_MjActInfo* pActInfo, CLMjCard cardDest)
 {
 	// ³öÅÆË¼¿¼
-	if (cardDest.isValid())
+	if (isActive())
 	{
-
+		m_pIAbstractThink->think(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, cardDest, m_eColorTBA);
 	}
 	else
 	{
-		m_pIAbstractThink->thinkHu(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, cardDest, m_eColorTBA);
+		
 	}
 }
 

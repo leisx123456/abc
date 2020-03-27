@@ -14,7 +14,7 @@ public:
 
 	// 思考定缺，返回缺的花色
 	virtual int thinkDingQue(CLMjCard aCards[], unsigned int unCardCount) = 0;
-	bool thinkAction(CLMjCard aCards[], unsigned int unCardCount
+	bool think(CLMjCard aCards[], unsigned int unCardCount
 			, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, int nQueColor = -1)
 
 	//virtual bool thinkHu(CLMjCard aCards[], unsigned int unCardCount

@@ -142,10 +142,9 @@ public:
 	//在已出牌队列中删除一张最近打出的牌
 	void removeListOutCardAtLast();
 
-
-
-
-
+	bool isActive() { return m_ePlayerActiveState == P_Active; }
+	void setActive(E_PlayerActiveState ePlayerActiveState){ m_ePlayerActiveState = ePlayerActiveState; }
+	void cancelActive(){ m_ePlayerActiveState = p_unActive; }
 
 
 	//设置胡
@@ -166,7 +165,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// ai思考
 	CLMjCard::E_MjCardColor thinkDingQue();
-	void think(T_MjActInfo* pActInfo, CLMjCard cardDest, CLMjCard & cardOut);
+	void think(T_MjActInfo* pActInfo, CLMjCard cardDest);
 
 
 private:
@@ -180,7 +179,8 @@ private:
 	CLMjCard m_arrHandCards[MAX_HAND_COUNT];	//用户的手牌
 	int m_nHandNums;					//用户手牌数量
 
-	CLMjCard m_CardNew;	// 刚抓起来的牌
+	// --取消，因为玩家手牌设置最大14，新牌已加入到手牌中
+	//CLMjCard m_CardNew;	// 刚抓起来的牌
 
 	CLMjCard m_arrOutedCards[MJ_MAX_OUTED];	//已出牌表(不包含别人拿过去吃碰杠胡的)
 	int m_nOutedTimes;					//玩家已出牌的次数(包含别人拿过去吃碰杠胡的)
@@ -194,7 +194,7 @@ private:
 
 	int m_nDrawTimes;	//抓牌次数
 	
-	E_PlayerActiveState m_ePlayerActiveState;
+	E_PlayerActiveState m_ePlayerActiveState; // 玩家活动状态
 	E_PlayerStatus m_ePlayerStatus;
 
 	CLMjCard::E_MjCardColor m_eColorTBA;	//定缺所用

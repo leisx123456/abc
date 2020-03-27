@@ -171,12 +171,12 @@ void CSiChuanMjDesk::onEventDingQue()
 // 提出来 因为一局只调用一次
 void CSiChuanMjDesk::onEventFristGotActiveUser()
 {
-	T_MjActInfo arrMjActInfo;
+	T_MjActInfo T_MjActInfo;
 	CLMjCard cardOut;
 		// 
 		if (m_pArrMjPlayer[m_nBanker]->isReboot())
 		{
-			m_pArrMjPlayer[m_nBanker]->think(&arrMjActInfo, CARD_EMPTY, cardOut);
+			m_pArrMjPlayer[m_nBanker]->think(&T_MjActInfo, CARD_EMPTY);
 		}
 		else
 		{

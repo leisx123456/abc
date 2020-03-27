@@ -153,7 +153,8 @@ struct T_ActiveUser
 
 };
 
-//玩家的动作详细信息结构////////////////////////////////////////////////////////////////////
+// 玩家的动作详细信息结构////////////////////////////////////////////////////////////////////
+// 枚举所有动作
 enum E_ActionTypeFlags
 {
 	EA_Wait		= 0x0001L,  //等待动作比较位，玩家请求动作前为0，请求动作后为1
@@ -162,7 +163,11 @@ enum E_ActionTypeFlags
 	EA_Pong		= 0x0008L,	//碰牌
 	EA_Kong		= 0x0010L,	//杠牌
 	EA_Listen	= 0x0020L,
-	EA_hu		= 0x0040L	//吃
+	EA_hu		= 0x0040L,	//胡
+
+	// 特殊动作
+	EA_OutCard	= 0x0080L,
+
 };
 
 enum E_EatTypeFlags
@@ -283,6 +288,7 @@ enum E_MjSuanFenType
 	// E_MjHuWay  + E_MjHuName + 根
 };
 
+// 玩家胡牌数据
 struct T_MjActHuInfo
 {
 	int nHuNameNums;	//胡牌类型数量		
@@ -291,7 +297,14 @@ struct T_MjActHuInfo
 	int  nHuGangIdx;	//抢杠控件的位置(用于抢杠)
 };
 
+// 出牌信息
+struct T_MjActOutInfo
+{
+	int nOutCardUser;
+	int nOutCardValue;
+};
 
+// 玩家动作信息
 struct T_MjActInfo
 {
 	unsigned short usActFlags;	//动作标识
@@ -301,6 +314,8 @@ struct T_MjActInfo
 	T_MjActListenInfo tMjActListenInfo;
 	T_MjActHuInfo tMjActHuInfo;
 
+	// 特殊动作
+	T_MjActOutInfo tMjActOutInfo;
 	T_MjActInfo()
 		: usActFlags(0)
 	{
