@@ -1,28 +1,31 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
-// Used by Mahjong.rc
+// Microsoft Visual C++ generated include file.
+// Used by mj.rc
 //
-#define IDD_MAHJONG_DIALOG              102
-#define IDR_MAINFRAME                   128
-#define IDB_BITMAP_Maj                  129
-#define IDB_BITMAP_Bg                   130
-#define IDC_CURSOR_Hand                 132
-#define IDC_CURSOR                      133
-#define IDB_BITMAP_Title                136
-#define IDB_BITMAP_Cout                 137
-#define IDB_BITMAP_Sezi                 141
-#define IDB_BITMAP_Num                  142
-#define IDD_SET_DIALOG                  145
-#define IDC_CHECK_MUSIC                 1000
-#define IDC_CHECK_FRAUD                 1001
 
-// Next default values for new objects
-// 
+#define IDS_APP_TITLE			103
+
+#define IDR_MAINFRAME			128
+#define IDD_MJ_DIALOG	102
+#define IDD_ABOUTBOX			103
+#define IDM_ABOUT				104
+#define IDM_EXIT				105
+#define IDI_MJ			107
+#define IDI_SMALL				108
+#define IDC_MJ			109
+#define IDC_MYICON				2
+#ifndef IDC_STATIC
+#define IDC_STATIC				-1
+#endif
+// 新对象的下一组默认值
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        148
-#define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1002
-#define _APS_NEXT_SYMED_VALUE           101
+
+#define _APS_NO_MFC					130
+#define _APS_NEXT_RESOURCE_VALUE	129
+#define _APS_NEXT_COMMAND_VALUE		32771
+#define _APS_NEXT_CONTROL_VALUE		1000
+#define _APS_NEXT_SYMED_VALUE		110
 #endif
 #endif

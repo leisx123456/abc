@@ -161,7 +161,17 @@ bool CLMjCard::isRelation1()
 
 
 
-T_WeaveCardsItem::T_WeaveCardsItem()
+
+T_WeaveCardsItem & T_WeaveCardsItem::operator=(const T_WeaveCardsItem & rhs)
 {
-	memset(this, 0, sizeof(T_WeaveCardsItem));
+
+	byWeaveKind = rhs.byWeaveKind;
+	cardCenter = rhs.cardCenter;
+	byPublicCard = rhs.byPublicCard;
+	byProvideUser = rhs.byProvideUser;
+	for (int i = 0; i < 4; ++i)
+	{
+		aCards[i] = rhs.aCards[i];
+	}
+	return *this;
 }

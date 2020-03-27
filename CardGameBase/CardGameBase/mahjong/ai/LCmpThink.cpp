@@ -51,27 +51,83 @@ int CLCmpThink::thinkDingQue(CLMjCard aCards[], unsigned int unCardCount)
 }
 
 // 一般采用递归删除法
-bool CLCmpThink::thinkHu(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest)
+bool CLCmpThink::thinkHu(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, int nQueColor)
 {
+	copyCards(aCards, unCardCount, aWeaveItem, unItemSize, cardDest);
 	//m_mjLogic.isCanHu(aCards, unCardCount, aWeaveItem, unItemSize, m_cardOut, m_cardNew);
 	return false;
 }
 
-bool CLCmpThink::thinkKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest)
+bool CLCmpThink::thinkKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, int nQueColor)
 {
-	return false;
-}
-
-bool CLCmpThink::thinkPong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest)
-{
-	return false;
-}
-
-CLMjCard CLCmpThink::thinkOutCard(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, int nCardColor)
-{
-	if (nCardColor > -1 && nCardColor < 3)
+	// 如果要杠的牌是缺
+	if (!cardDest.isValid() && cardDest.color() == nQueColor)
 	{
-		int pos = isExistQue(nCardColor);
+		return false;
+	}
+
+	copyCards(aCards, unCardCount, aWeaveItem, unItemSize, cardDest);
+	// 计算加入杠牌之前的分数
+	think();
+	int nTotalScoreBefore = totalScore();
+
+	if (cardDest.isValid())
+	{
+		// 只能点杠
+		bool bCanKong = m_mjLogic.isCanDianKong(aCards, unCardCount, aWeaveItem, unItemSize, cardDest);
+		if (!bCanKong)
+		{
+			return false;
+		}
+
+		// 移除杠的三张牌
+		m_mjLogic.removeCards(m_arrHandCard, m_nHandNums, cardDest);
+		CLCmpThink *pThinkAfter = clone();
+		pThinkAfter->think();
+		int nTotalScoreAfter = pThinkAfter->totalScore();
+
+		return nTotalScoreAfter >= nTotalScoreBefore - SCORE_Triplet;
+
+	}
+	else
+	{	// 暗杠和补杠
+		CLMjCard cardResult;
+		bool bCanAnKong = m_mjLogic.isCanAnKong(aCards, unCardCount, cardResult);
+		if (bCanAnKong)
+		{
+			m_mjLogic.removeCards(m_arrHandCard, m_nHandNums, cardResult);
+			CLCmpThink *pThinkAfter = clone();
+			pThinkAfter->think();
+			int nTotalScoreAfter = pThinkAfter->totalScore();
+
+			return nTotalScoreAfter >= nTotalScoreBefore - SCORE_Triplet;
+		}
+		
+		//bool bCanBuGang = m_mjLogic.isCanBuKong(aCards, unCardCount, aWeaveItem, unItemSize, cardResult);
+		
+		
+
+	}
+	
+
+
+
+	
+	return false;
+}
+
+bool CLCmpThink::thinkPong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, int nQueColor)
+{
+	copyCards(aCards, unCardCount, aWeaveItem, unItemSize, cardDest);
+	return false;
+}
+
+CLMjCard CLCmpThink::thinkOutCard(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, int nQueColor)
+{
+	copyCards(aCards, unCardCount, aWeaveItem, unItemSize, CARD_EMPTY);
+	if (nQueColor > -1 && nQueColor < 3)
+	{
+		int pos = isExistQue(nQueColor);
 		if (pos > 0)
 		{
 			// 如果有缺直接返回
@@ -80,12 +136,17 @@ CLMjCard CLCmpThink::thinkOutCard(CLMjCard aCards[], unsigned int unCardCount, T
 
 	}
 
-	//
+	think();
+	return m_cardBadly;
+}
+
+
+void CLCmpThink::think()
+{
 	m_nMaxScore = 0;
 	m_nScore = 0;
 	markThree();
-	// 把保存的最佳状态数组拷贝回来
-	m_mjLogic.copyCards(m_arrHandCard, 14, m_arrHandCardTemp, 14);
+	m_mjLogic.copyCards(m_arrHandCard, 14, m_arrHandCardTemp, 14); // 把保存的最佳状态数组拷贝回来
 	m_mjLogic.emptyCards(m_arrHandCardTemp, 14);
 
 	//
@@ -104,9 +165,9 @@ CLMjCard CLCmpThink::thinkOutCard(CLMjCard aCards[], unsigned int unCardCount, T
 	//
 	commitScore();
 	saveBadlyCardByScore();
-
-	return m_cardBadly;
 }
+
+
 
 
 int CLCmpThink::isExistQue(int nCardColor)
@@ -455,6 +516,20 @@ void CLCmpThink::saveBadlyCardByScore()
 	}
 	m_cardBadly = m_arrHandCard[pos];
 }
+
+int CLCmpThink::totalScore()
+{
+	int nTotalScore = 0;
+	for (int i = 0; i < m_nHandNums; ++i)
+	{
+		if (!m_arrHandCard[i].isLocked())
+		{
+			nTotalScore += m_arrHandCard[i].getScore();
+		}
+	}
+	return nTotalScore;
+}
+
 
 
 

@@ -192,5 +192,15 @@ struct T_WeaveCardsItem
 	unsigned char byPublicCard;						//公开标志
 	unsigned char byProvideUser;					//供应用户
 	CLMjCard aCards[4];					//组合数据
-	T_WeaveCardsItem();
+
+	T_WeaveCardsItem()
+		: byWeaveKind(EW_Triplet)
+		, cardCenter(2)
+		, byProvideUser(0)
+	{
+
+	}
+
+	T_WeaveCardsItem & operator = (const T_WeaveCardsItem & rhs);
+
 };

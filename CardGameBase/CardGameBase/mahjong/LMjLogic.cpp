@@ -50,31 +50,65 @@ bool CLMjLogic::isCanPong(CLMjCard aCards[], unsigned int unCardCount, const CLM
 	return getCardsNum(aCards, unCardCount, cardDest) >= 2;
 }
 
-bool CLMjLogic::isCanKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize,
-	CLMjCard cardDest)
+bool CLMjLogic::isCanDianKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest)
 {
 	if (getCardsNum(aCards, unCardCount, cardDest) == 3)
 	{
 		return true;
 	}
 	return false;
+}
+
+
+bool CLMjLogic::isCanAnKong(CLMjCard aCards[], unsigned int unCardCount, CLMjCard & cardResult)
+{
+	unsigned int arrCardIndexTemp[MAX_INDEX];
+	switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
+
+	for (int i = 0; i < MAX_INDEX; i++)
+	{
+		if (arrCardIndexTemp[i] == 4)
+		{
+			cardResult = CLMjCard::switchToCardValue(i);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool CLMjLogic::isCanBuKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard & cardResult)
+{
 	//ÕÒ²¹¸Ü
-	//for (int i = 0; i < iCGPNums; ++i)
+	//for (int i = 0; i < unItemSize; ++i)
 	//{
-	//	if (lstCGP[i].nType == emType::Peng) //ÕÒÅöÅÆ
+	//	if (aWeaveItem[i].byWeaveKind == T_WeaveCardsItem::EW_Triplet)
 	//	{
-	//		//if (byFetchCard == lstCGP[i].val[0])//×ª×ªÂé½«Â©¸Ü²»ÄÜ¸Ü
-	//		if (GetCardNum(byCards, iCardNums, lstCGP[i].val[0])>0)
+	//		if (aWeaveItem[i].cardCenter == cardDest)
 	//		{
-	//			//Ìí¼Ó¸ÜÑ¡Ôñ±í
-	//			pActInfo->byGangSels[pActInfo->iGangNums] = lstCGP[i].val[0];
-	//			pActInfo->nGType[pActInfo->iGangNums] = emGangType::gt_BuGang;
-	//			pActInfo->nBuGangInPeng[pActInfo->iGangNums] = i;
-	//			pActInfo->iGangNums++;
+	//			return true;
 	//		}
 	//	}
 	//}
+	unsigned int arrCardIndexTemp[MAX_INDEX];
+	switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
+
+	for (int i = 0; i < unItemSize; i++)
+	{
+		if (aWeaveItem[i].byWeaveKind == T_WeaveCardsItem::EW_Triplet)
+		{
+			if (arrCardIndexTemp[aWeaveItem[i].cardCenter.switchToCardIndex()] == 1)
+			{
+				cardResult = CLMjCard::switchToCardValue(i);
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
+
+
 
 
 

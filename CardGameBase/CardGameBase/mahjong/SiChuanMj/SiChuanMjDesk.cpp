@@ -171,10 +171,12 @@ void CSiChuanMjDesk::onEventDingQue()
 // 提出来 因为一局只调用一次
 void CSiChuanMjDesk::onEventFristGotActiveUser()
 {
+	T_MjActInfo arrMjActInfo;
+	CLMjCard cardOut;
 		// 
 		if (m_pArrMjPlayer[m_nBanker]->isReboot())
 		{
-
+			m_pArrMjPlayer[m_nBanker]->think(&arrMjActInfo, CARD_EMPTY, cardOut);
 		}
 		else
 		{
@@ -182,7 +184,7 @@ void CSiChuanMjDesk::onEventFristGotActiveUser()
 			m_tActiveUser.eActiveUserType = EA_FristGot;
 			T_MsgAppointActiveUser tMsgAppointActiveUser;
 			tMsgAppointActiveUser.tActiveUser = m_tActiveUser;
-			T_MjActInfo arrMjActInfo;
+			
 			bool bHaveAct = selectActInfo(m_tActiveUser.nActiveUser, m_tActiveUser.nActiveUser, &tMsgAppointActiveUser.tMjActInfo, CARD_EMPTY);
 			//onMsgAppointActiveUser(tMsgAppointActiveUser)
 		}

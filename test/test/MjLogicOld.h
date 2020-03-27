@@ -209,8 +209,6 @@ public:
 	//是否花猪
 	bool IsHuaZhu(const byte cbCardIndex[MAX_INDEX], const T_WeaveItem WeaveItem[], byte cbWeaveCount);
 
-	//杠牌分析
-	byte AnalyseGangCard(const byte cbCardIndex[MAX_INDEX], const CMD_WeaveItem WeaveItem[], byte cbWeaveCount, tagGangCardResult & GangCardResult);
 
 	//转换函数
 public:

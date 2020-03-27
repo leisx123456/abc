@@ -12,6 +12,20 @@ CLBasicThink::~CLBasicThink()
 
 }
 
+
+void CLBasicThink::copyCards(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest)
+{
+	m_nHandNums = unCardCount;
+	m_nWeaveCardsItemNum = unItemSize;
+	m_mjLogic.copyCards(m_arrHandCard, m_nHandNums, aCards, unCardCount);
+	for (int i = 0; i < unItemSize; ++i)
+	{
+		m_arrWeaveCardsItem[i] = aWeaveItem[i];
+	}
+
+}
+
+
 int CLBasicThink::findPosInActiveHandCards(CLMjCard card)
 {
 	for (int i = 0; i < m_nHandNums; ++i)

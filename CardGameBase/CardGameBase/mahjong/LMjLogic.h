@@ -21,8 +21,10 @@ public:
 	bool isCanPong(CLMjCard aCards[], unsigned int unCardCount, const CLMjCard & cardDest);
 
 	// 是否能杠
-	bool isCanKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize,
+	bool isCanDianKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize,
 		CLMjCard cardDest);
+	bool isCanAnKong(CLMjCard aCards[], unsigned int unCardCount, CLMjCard & cardResult);
+	bool isCanBuKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard & cardResult);
 
 	// 消除一组刻子(包含起始位置的牌)
 	bool removeTriplet(CLMjCard aCards[], unsigned int unCardCount, int nBeginPos = 0);

@@ -142,10 +142,7 @@ void CLMjPlayer::getHandCards(CLMjCard* pArrHandCards)
 }
 
 
-CLMjCard::E_MjCardColor CLMjPlayer::thinkDingQue()
-{
-	return (CLMjCard::E_MjCardColor)m_pIAbstractThink->thinkDingQue(m_arrHandCards, m_nHandNums);
-}
+
 
 void CLMjPlayer::selectTBA(CLMjCard::E_MjCardColor eColorTBA)
 {
@@ -164,12 +161,33 @@ bool CLMjPlayer::isCanPong()
 
 bool CLMjPlayer::isCanKong()
 {
-	return m_mjLogic.isCanKong(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, m_CardNew);
+	return m_mjLogic.isCanDianKong(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, m_CardNew);
 }
 
 bool CLMjPlayer::isCanHu()
 {
 	return m_mjLogic.isCanHu(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums);
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////
+CLMjCard::E_MjCardColor CLMjPlayer::thinkDingQue()
+{
+	return (CLMjCard::E_MjCardColor)m_pIAbstractThink->thinkDingQue(m_arrHandCards, m_nHandNums);
+}
+
+void CLMjPlayer::think(T_MjActInfo* pActInfo, CLMjCard cardDest, CLMjCard & cardOut)
+{
+	// ³öÅÆË¼¿¼
+	if (cardDest.isValid())
+	{
+
+	}
+	else
+	{
+		m_pIAbstractThink->thinkHu(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, cardDest, m_eColorTBA);
+	}
 }
 
 

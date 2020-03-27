@@ -57,6 +57,19 @@ struct T_UserInfo
 	}
 };
 
+// 手牌基本数据
+struct T_UserCardsData
+{
+	CLMjCard arrHandCards[MAX_HAND_COUNT];
+	int nHandNums;
+
+	T_WeaveCardsItem arrWeaveCardsItem[4];
+	int nWeaveItemNums;
+
+	int nColorQue;
+	CLMjCard cardNew;
+};
+
 class IAbstractThink;
 
 class CLMjPlayer
@@ -153,6 +166,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// ai思考
 	CLMjCard::E_MjCardColor thinkDingQue();
+	void think(T_MjActInfo* pActInfo, CLMjCard cardDest, CLMjCard & cardOut);
 
 
 private:

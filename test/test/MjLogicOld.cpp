@@ -564,38 +564,7 @@ byte MjLogic::AnalyseGangCard(const byte cbCardIndex[MAX_INDEX], const T_WeaveIt
 }
 
 
-byte MjLogic::AnalyseGangCard(const byte cbCardIndex[MAX_INDEX], const CMD_WeaveItem WeaveItem[], byte cbWeaveCount, tagGangCardResult & GangCardResult)
-{
-	//设置变量
-	byte cbActionMask = ACTION_NULL;
-	zeromemory(&GangCardResult, sizeof(GangCardResult));
 
-	//手上杠牌
-	for (byte i = 0; i<MAX_INDEX; i++)
-	{
-		if (i == m_cbMagicIndex) continue;
-		if (cbCardIndex[i] == 4)
-		{
-			cbActionMask |= ACTION_GANG;
-			GangCardResult.cbCardData[GangCardResult.cbCardCount++] = SwitchToCardData(i);
-		}
-	}
-
-	//组合杠牌
-	for (byte i = 0; i<cbWeaveCount; i++)
-	{
-		if (WeaveItem[i].cbWeaveKind == ACTION_PENG)
-		{
-			if (cbCardIndex[SwitchToCardIndex(WeaveItem[i].cbCenterCard)] == 1)
-			{
-				cbActionMask |= ACTION_GANG;
-				GangCardResult.cbCardData[GangCardResult.cbCardCount++] = WeaveItem[i].cbCenterCard;
-			}
-		}
-	}
-
-	return cbActionMask;
-}
 
 //扑克转换
 byte MjLogic::SwitchToCardData(byte cbCardIndex)

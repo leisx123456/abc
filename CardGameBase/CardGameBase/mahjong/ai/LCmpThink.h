@@ -33,21 +33,25 @@ public:
 	CLCmpThink();
 
 public:
+	CLCmpThink* clone() const { return new CLCmpThink(*this); }
+
 	// 思考定缺，返回缺的花色
 	virtual int thinkDingQue(CLMjCard aCards[], unsigned int unCardCount);
 
 	virtual bool thinkHu(CLMjCard aCards[], unsigned int unCardCount
-		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest);
+		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, int nQueColor = -1);
 
 	// 返回真表示要杠
 	virtual bool thinkKong(CLMjCard aCards[], unsigned int unCardCount
-		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest);
+		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, int nQueColor = -1);
 
 	virtual bool thinkPong(CLMjCard aCards[], unsigned int unCardCount
-		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest);
+		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, int nQueColor = -1);
 
 	virtual CLMjCard thinkOutCard(CLMjCard aCards[], unsigned int unCardCount
-		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, int nCardColor = -1);
+		, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, int nQueColor = -1);
+
+	void think();
 
 protected:
 	int isExistQue(int nCardColor = -1);
@@ -60,13 +64,14 @@ protected:
 	void addExtraScoreToSingleCard(CLMjCard & handCard);
 	void commitScore();
 	void saveBadlyCardByScore();
+	int totalScore();
 
 	int getMarkNum();
 	void unLockAll();
 
 
 private:
-	CLMjLogic m_mjLogic;
+	
 	std::map<int, int> m_mapScore;
 	
 };
