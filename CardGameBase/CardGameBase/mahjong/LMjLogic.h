@@ -21,6 +21,7 @@ public:
 	bool isCanPong(CLMjCard aCards[], unsigned int unCardCount, const CLMjCard & cardDest);
 
 	// ÊÇ·ñÄÜ¸Ü
+	bool isCanKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, T_MjActKongInfo & tMjActKongInfo);
 	bool isCanDianKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize,
 		CLMjCard cardDest);
 	bool isCanAnKong(CLMjCard aCards[], unsigned int unCardCount, CLMjCard & cardResult);

@@ -81,6 +81,7 @@ protected:
 	CLDicePair m_mjDicePair;	// 2个麻将骰子
 
 	CLMjCard m_arrMjCardWall[4][34];	// 牌墙，从m_arrMjCard的下标0开始派牌，庄家最先派牌
+	CLMjCard m_cardOut;
 
 
 
@@ -89,6 +90,9 @@ protected:
 	int m_nIndexCurrent;	// 当前抓牌的位置index，index对应m_arrMjCard的下标，小于m_nMjNum
 
 	int m_nBanker;	//庄家 0-3
+	int m_nActiveUser;	//当前活动用户 0-3
+
+
 	T_ActiveUser m_tActiveUser;
 	
 	//int m_nWhere;								//麻将取到那个位置

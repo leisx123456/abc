@@ -16,6 +16,8 @@ CLMjDesk::CLMjDesk()
 m_nMjNumSurplus = GAME_MJ_CARD_COUNT_MAX;
 m_nIndexStart = 0;
 m_nIndexCurrent = 0;
+m_nBanker = 0;
+m_nActiveUser = 0;
 
 }
 

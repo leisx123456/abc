@@ -50,6 +50,51 @@ bool CLMjLogic::isCanPong(CLMjCard aCards[], unsigned int unCardCount, const CLM
 	return getCardsNum(aCards, unCardCount, cardDest) >= 2;
 }
 
+
+bool CLMjLogic::isCanKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[]
+	, unsigned int unItemSize, CLMjCard cardOut, T_MjActKongInfo & tMjActKongInfo)
+{
+	tMjActKongInfo.clear();
+	if (cardOut.isValid())
+	{
+		if (getCardsNum(aCards, unCardCount, cardOut) == 3)
+		{
+			tMjActKongInfo.arrKongSelect[tMjActKongInfo.nKongSelectNums] = cardOut;
+			tMjActKongInfo.arrKongType[tMjActKongInfo.nKongSelectNums] = EK_KongDian;
+			tMjActKongInfo.nKongSelectNums++;
+		}
+	}
+	else
+	{
+		unsigned int arrCardIndexTemp[MAX_INDEX];
+		switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
+		for (int i = 0; i < MAX_INDEX; i++)
+		{
+			if (arrCardIndexTemp[i] == 4)
+			{
+				tMjActKongInfo.arrKongSelect[tMjActKongInfo.nKongSelectNums] = CLMjCard::switchToCardValue(i).value();
+				tMjActKongInfo.arrKongType[tMjActKongInfo.nKongSelectNums] = EK_KongAn;
+				tMjActKongInfo.nKongSelectNums++;
+			}
+		}
+		for (int i = 0; i < unItemSize; i++)
+		{
+			if (aWeaveItem[i].byWeaveKind == T_WeaveCardsItem::EW_Triplet)
+			{
+				if (arrCardIndexTemp[aWeaveItem[i].cardCenter.switchToCardIndex()] == 1)
+				{
+					tMjActKongInfo.arrKongSelect[tMjActKongInfo.nKongSelectNums] = CLMjCard::switchToCardValue(i).value();
+					tMjActKongInfo.arrKongType[tMjActKongInfo.nKongSelectNums] = EK_KongBa;
+					tMjActKongInfo.nKongSelectNums++;
+				}
+			}
+		}
+	}
+	return tMjActKongInfo.nKongSelectNums > 0;
+	
+}
+
+
 bool CLMjLogic::isCanDianKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest)
 {
 	if (getCardsNum(aCards, unCardCount, cardDest) == 3)

@@ -30,9 +30,8 @@ namespace LxMahjone
 #define MAX_HAND_COUNT				14									//最大数目
 #define MJ_MAX_OUTED				30									//最大数目
 #define CARD_TOTAL_NUM				108									//最大库存
-#define PLAYER_NUM		    4
-#define HOLD_CARD_NUM		13
-#define ALL_TYPE_NUM		27		// 所有类型牌的个数
+#define CARD_EMPTY					0
+
 
 //游戏事件ID定义,(取值范围从10-49)（定时器的处理）
 
@@ -61,23 +60,12 @@ namespace LxMahjone
 #define TIME_ID_AUTO_ACT_NO			26			//没有托管自动执行动作
 #define TIME_ID_AUTO_OUTCARD_NO		27			//没有托管自动出牌
 
-#define TIME_ID_FETCH_GUI              28          //抓赖子
-
 
 
 const int SCORE_BASE = 5;
 const int MAX_FAN = 3;
 const long COIN_MUL = 200;
 
-
-
-//麻将牌定义
-#define CARD_BACK_VALUE 0x31    //牌背面值
-#define CARD_STAND_VALUE 0x99      //立牌值
-#define CARD_EMPTY	0x00				//无效牌值,数组占位
-
-#define SPACE_WEAVE_MY		10		//每组组合牌之间的间隔-自己
-#define SPACE_WEAVE_OTHER	4		//每组组合牌之间的间隔-其他
 
 //////////////////////////////////////////////////////////////////////////
 //逻辑掩码
@@ -120,6 +108,19 @@ enum E_GameState
 	EGS_Over
 };
 
+//一个栏牌结点
+struct TMjCGPNode
+{
+	int nType; //结点类型
+	int val[4]; //栏牌数值
+	int from;	//栏牌的来源
+	int  nIdx;  //栏牌的位置
+	TMjCGPNode()
+	{
+		memset(this, 0, sizeof(TMjCGPNode));
+	}
+};
+
 enum ActiveUserType
 {
 	EA_FristGot,
@@ -134,7 +135,7 @@ struct T_ActiveUser
 	int nActiveUser;
 	ActiveUserType eActiveUserType;
 
-	// 继承型
+	// 继承型,当前活动玩家摸的牌
 	int nNewCard;
 
 	// 响应型
@@ -193,10 +194,13 @@ enum E_KongType
 
 struct T_MjActKongInfo
 {
-	int arrKongSelect[12];	  //可以杠的选择
+	int arrKongSelect[MAX_WEAVE];	  //可以杠的选择
 	int nKongSelectNums;				  //可以杠选择数量		
-	int arrBuGangInPeng[12]; //补杠在建立在那一个碰牌上
+	int arrBuGangInPeng[MAX_WEAVE]; //补杠在建立在那一个碰牌上
 	E_KongType arrKongType[4]; //杠类型
+
+	int nCurSelectIndex;
+
 	//查找杠牌选择的索引
 	int FindGangIndex(int byCard) const
 	{
@@ -208,6 +212,11 @@ struct T_MjActKongInfo
 			}
 		}
 		return -1;
+	}
+
+	void clear()
+	{
+		memset(this, 0, sizeof(T_MjActKongInfo));
 	}
 };
 
@@ -302,6 +311,8 @@ struct T_MjActOutInfo
 {
 	int nOutCardUser;
 	int nOutCardValue;
+
+	int m_nOutedNums; // 出牌数，不包含别人拿去碰杠胡的牌， 用于刷新界面出牌
 };
 
 // 玩家动作信息
@@ -313,6 +324,8 @@ struct T_MjActInfo
 	T_MjActKongInfo tMjActKongInfo;
 	T_MjActListenInfo tMjActListenInfo;
 	T_MjActHuInfo tMjActHuInfo;
+
+	
 
 	// 特殊动作
 	T_MjActOutInfo tMjActOutInfo;
@@ -328,6 +341,8 @@ struct T_MjActInfo
 	}
 
 };
+
+
 
 
 
@@ -366,5 +381,39 @@ struct T_MsgResponseToActiveUser
 
 };
 
+
+
+// 动作结果
+struct T_MsgActResultInfo
+{
+	unsigned short	usActFlags;				//动作类型
+	int	arrActUsers[4];	//动作所属者表,在吃、碰、杠、听动作中，动作一般只属一个玩家，只用byUsers[0]，但也有动作由多玩家执行，如一炮多响。
+	int nActUserNums;				//动作所属者人数
+
+	int	byFromUser;				//动作的触发者，该成员只用于胡牌类型，吃、碰、杠中该值无效，FromUser可从CGPNode中取得
+	int	byHands[14]; //执行动作后人变化后的手牌
+	int iHandNums;		 //变化后的手牌数量
+
+	TMjCGPNode CGPNode;		//如果有拦牌，在此处取数据
+
+	bool bQGang;			//如果是抢杠胡，在此处取数据
+	int nQGangIdx;		//抢那一个杠控件
+
+	T_MsgActResultInfo()
+	{
+		::memset(this, 0, sizeof(T_MsgActResultInfo));
+	}
+};
+
+
+/* client --> server*/
+struct T_ActRequest
+{
+	unsigned short	usActFlags;
+
+	int nKongCardValue;
+	// 特殊动作
+	T_MjActOutInfo tMjActOutInfo;
+};
 
 #endif // __L_MJ_DEF_H__

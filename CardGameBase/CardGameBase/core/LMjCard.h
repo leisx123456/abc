@@ -188,10 +188,11 @@ struct T_WeaveCardsItem
 	bool isKong() { return byWeaveKind == EW_KongAn || byWeaveKind == EW_KongBa || byWeaveKind == EW_KongDian; }
 
 	unsigned char byWeaveKind;						//组合类型
-	CLMjCard cardCenter;						//中心扑克
-	unsigned char byPublicCard;						//公开标志
-	unsigned char byProvideUser;					//供应用户
 	CLMjCard aCards[4];					//组合数据
+	CLMjCard cardCenter;						//中心牌
+	CLMjCard cardPublic;						//目标牌
+	
+	unsigned char byProvideUser;					//供应用户
 
 	T_WeaveCardsItem()
 		: byWeaveKind(EW_Triplet)

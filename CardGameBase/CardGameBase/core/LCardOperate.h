@@ -40,7 +40,7 @@ public:
 	// 普通删除
 	bool removeCard(CLCard aCards[], unsigned int unCardCount, CLCard cardRemove);
 	bool removeCards(CLCard aCards[], unsigned int unCardCount, const CLCard aRemoveCards[], unsigned int unRemoveCount);
-	unsigned char removeCards(CLCard aCards[], unsigned int unCardCount, CLCard cardRemove);
+	unsigned char removeCards(CLCard aCards[], unsigned int unCardCount, CLCard cardRemove, unsigned int unRemoveCount = 1);
 
 	// 查找
 	// 返回找到该牌的数组下标
@@ -205,9 +205,14 @@ bool CLCardOperate<CLCard>::removeCards(CLCard aCards[], unsigned int unCardCoun
 
 
 template<class CLCard>
-unsigned char CLCardOperate<CLCard>::removeCards(CLCard aCards[], unsigned int unCardCount, CLCard cardRemove)
+unsigned char CLCardOperate<CLCard>::removeCards(CLCard aCards[], unsigned int unCardCount, CLCard cardRemove, unsigned int unRemoveCount/* =1*/)
 {
-	int unRemoveCount = getCardsNum(aCards, unCardCount, cardRemove);
+	int unRemoveCountTotal = getCardsNum(aCards, unCardCount, cardRemove);
+	if (unRemoveCountTotal < unRemoveCount)
+	{
+		return 0;
+	}
+	
 	for (int i = 0; i < unRemoveCount; i++)
 	{
 		removeCard(aCards, unCardCount--, cardRemove);

@@ -41,7 +41,8 @@ public:
 	int surplusCards() { return m_nIndexCurrent > m_nIndexStart 
 		? (m_nIndexCurrent - m_nIndexStart) : (m_nIndexCurrent + mjNumAllocation() - m_nIndexStart); }
 
-	bool selectActInfo(int nResponseUser, int nActiveUser, T_MjActInfo* pActInfo , CLMjCard cardDest, unsigned short usIgnoreFlags = 0);
+
+	void updateUser();
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -51,10 +52,9 @@ public:
 	virtual void onEventCutCards();			// 摇骰子切牌
 	virtual void onEventDealCards();		// 发手牌
 	virtual void onEventDingQue();			// 定缺
-
-	virtual void onEventFristGotActiveUser();
-	virtual void onEventAppointDrawCardUser();
-	virtual void onEventAppointActiveUser();			// 指定活动用户，活动用户可摸牌出牌。
+	virtual void onEventFristBankerActive();
+	virtual void onEventDrawCard();	// 中间是一个摸牌打牌,摸牌打牌的过程再加一些判断处理
+	//virtual void onEventAppointActiveUser();			// 指定活动用户，活动用户可摸牌出牌。
 	//virtual void onEventResponseToActiveUser();			// 当前可对活动玩家的动作响应
 
 
@@ -67,7 +67,10 @@ public:
 	virtual void onMsgDealCards(T_MsgDealCards tMsgDealCards) = 0;
 	virtual void onMsgDingQueBegin() = 0;
 	virtual void onMsgDingQue() = 0;
-	virtual void onMsgAppointActiveUser(T_MsgAppointActiveUser tMsgAppointActiveUser) = 0;
+	//virtual void onMsgAppointActiveUser(T_MsgAppointActiveUser tMsgAppointActiveUser) = 0;
+	virtual void onMsgActNotify(T_MjActInfo tMjActInfo) = 0;
+	virtual void onMsgOutCard(T_MjActOutInfo tMjActOutInfo) = 0;
+	virtual void onMsgActResult(T_MsgActResultInfo tMsgActResultInfo) = 0;
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -76,6 +79,8 @@ public:
 	//void onUiSitDown();
 	void onUserReady(int nChairID);
 	void onUserTBA(int nCardColor, int nChairID);
+	void onUserOutCard(int nChairID, T_MjActOutInfo tMjActOutInfo);
+	void OnUserActRequest(int nChairID, T_ActRequest tActRequest);
 
 protected:
 	CLGameDispatcher* _gameDispatcher;

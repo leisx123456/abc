@@ -71,10 +71,7 @@ void CLMjPlayer::drawCard(const CLMjCard & card)
 
 
 
-void CLMjPlayer::setOtherOutCard(int nCard)
-{
-	m_nOtherOutCard = nCard;
-}
+
 
 
 
@@ -103,24 +100,63 @@ void CLMjPlayer::removeListOutCardAtLast()
 //}
 
 
-int CLMjPlayer::outCard(int nPlace)
+bool CLMjPlayer::outCard(const CLMjCard & card)
 {
-	//if (nPlace == 14)
-	//{
-	//	m_lstCardOut.push_back(m_CardNew);
-	//}
-	//else
-	//{
-	//	m_lstCardOut.push_back(m_arrHandCard[nPlace].getCard());
-	//	m_arrHandCard[nPlace].setCard(m_CardNew);
-	//}
-	//sortCards(m_nStartCard);
-	//m_CardNew = -1;
-	//m_nOtherOutCard = -1;
-	//m_ePlayerActiveState = E_PlayerActiveState::p_unActive;
-	return m_lstCardOut.back();
+	if (!m_mjLogic.removeCard(m_arrHandCards, m_nHandNums, card))
+	{
+		return false;
+	}
+	m_nHandNums--;
+
+		//重新排列手牌
+	m_mjLogic.sortCards(m_arrHandCards, m_nHandNums);
+
+		//向出牌表中添加该牌
+	m_arrOutedCards[m_nOutedNums++] = card;
+
+		//更新出牌计数
+	m_nOutedTimes++;
+
+	return true;
 }
 
+void CLMjPlayer::execAction(T_ActRequest tActRequest)
+{
+	if (EA_Pong == tActRequest.usActFlags)
+	{
+		//为玩家执行过操作
+		//ExecuteGuoAct(bDeskStation);
+
+	}
+	else if (EA_Kong == tActRequest.usActFlags)
+	{
+		//为玩家执行杠操作
+		//ExecuteGangAct(m_byTokenUser, byCanActUsers[0]);
+	}
+	else if (EA_hu == tActRequest.usActFlags)
+	{
+		//为玩家执行胡操作
+		//ExecuteHuAct(m_byTokenUser, byCanActUsers, iAtOnceCounter);
+	}
+
+}
+
+
+bool CLMjPlayer::execPong(const CLMjCard & cardOut)
+{
+	if (m_mjLogic.removeCards(m_arrHandCards, m_nHandNums, cardOut, 2) != 2)
+	{
+		return false;
+	}
+	m_nHandNums -= 2;
+
+	T_WeaveCardsItem tWeaveCardsItem;
+	tWeaveCardsItem.byWeaveKind = T_WeaveCardsItem::EW_Triplet;
+	tWeaveCardsItem.cardCenter = cardOut;
+	tWeaveCardsItem.cardPublic = cardOut;
+	//tWeaveCardsItem.byProvideUser = 0;
+	m_arrWeaveCardsItem[m_nWeaveItemNums++] = tWeaveCardsItem;
+}
 
 
 
@@ -154,19 +190,59 @@ void CLMjPlayer::selectTBA(CLMjCard::E_MjCardColor eColorTBA)
 
 
 //////////////////////////////////////////////////////////////////////////
-bool CLMjPlayer::isCanPong()
+
+bool CLMjPlayer::selectActInfo(T_MjActInfo* pActInfo, CLMjCard cardOut, unsigned short usIgnoreFlags /*= 0*/)
 {
-	return m_mjLogic.isCanPong(m_arrHandCards, m_nHandNums, CARD_EMPTY);
+	if (isActive())
+	{
+		//自己摸牌肯定不能吃碰
+		usIgnoreFlags |= E_ActionTypeFlags::EA_Eat;
+		usIgnoreFlags |= E_ActionTypeFlags::EA_Pong;
+	}
+
+	if (!(usIgnoreFlags & E_ActionTypeFlags::EA_Pong))
+	{
+		if (isCanPong(cardOut))
+		{
+			pActInfo->usActFlags |= (E_ActionTypeFlags::EA_Pong | E_ActionTypeFlags::EA_Pass);
+
+		}
+	}
+
+	if (!(usIgnoreFlags & E_ActionTypeFlags::EA_Kong))
+	{
+		if (isCanKong(cardOut, pActInfo))
+		{
+			pActInfo->usActFlags |= (E_ActionTypeFlags::EA_Kong | E_ActionTypeFlags::EA_Pass);
+
+		}
+	}
+
+	if (!(usIgnoreFlags & E_ActionTypeFlags::EA_hu))
+	{
+		if (isCanHu(cardOut))
+		{
+			pActInfo->usActFlags |= (E_ActionTypeFlags::EA_hu | E_ActionTypeFlags::EA_Pass);
+		}
+	}
+
+	return (pActInfo->usActFlags > 0);
 }
 
-bool CLMjPlayer::isCanKong()
+
+bool CLMjPlayer::isCanPong(CLMjCard cardOut)
 {
-	return m_mjLogic.isCanDianKong(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, CARD_EMPTY);
+	return m_mjLogic.isCanPong(m_arrHandCards, m_nHandNums, cardOut);
 }
 
-bool CLMjPlayer::isCanHu()
+bool CLMjPlayer::isCanKong(CLMjCard cardOut, T_MjActInfo* pActInfo)
 {
-	return m_mjLogic.isCanHu(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums);
+	return m_mjLogic.isCanKong(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, cardOut, pActInfo->tMjActKongInfo);
+}
+
+bool CLMjPlayer::isCanHu(CLMjCard cardOut)
+{
+	return m_mjLogic.isCanHu(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, cardOut);
 }
 
 
@@ -177,18 +253,14 @@ CLMjCard::E_MjCardColor CLMjPlayer::thinkDingQue()
 	return (CLMjCard::E_MjCardColor)m_pIAbstractThink->thinkDingQue(m_arrHandCards, m_nHandNums);
 }
 
-void CLMjPlayer::think(T_MjActInfo* pActInfo, CLMjCard cardDest)
+void CLMjPlayer::think(T_ActRequest* pActRequest, CLMjCard cardDest, unsigned short usIgnoreFlags)
 {
 	// 出牌思考
-	if (isActive())
-	{
-		m_pIAbstractThink->think(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, cardDest, m_eColorTBA);
-	}
-	else
-	{
-		
-	}
+	
+	m_pIAbstractThink->think(pActRequest, m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, cardDest, m_eColorTBA);
 }
+
+
 
 
 

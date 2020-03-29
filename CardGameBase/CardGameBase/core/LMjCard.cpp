@@ -167,7 +167,7 @@ T_WeaveCardsItem & T_WeaveCardsItem::operator=(const T_WeaveCardsItem & rhs)
 
 	byWeaveKind = rhs.byWeaveKind;
 	cardCenter = rhs.cardCenter;
-	byPublicCard = rhs.byPublicCard;
+	cardPublic = rhs.cardPublic;
 	byProvideUser = rhs.byProvideUser;
 	for (int i = 0; i < 4; ++i)
 	{

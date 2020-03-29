@@ -9,7 +9,7 @@ public:
 	CLBasicThink();
 	virtual ~CLBasicThink();
 
-	void copyCards(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest);
+	void copyCards(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, int nQueColor = -1);
 	int findPosInActiveHandCards(CLMjCard handCard);
 
 	// 下面函数确保card为锁定状态
@@ -32,8 +32,10 @@ protected:
 	T_WeaveCardsItem m_arrWeaveCardsItem[4];
 	int m_nWeaveCardsItemNum;
 
+	int m_colorQue;
+
 	CLMjCard m_cardOut;
-	CLMjCard m_cardNew;
+	//CLMjCard m_cardNew;
 	CLMjCard m_cardBadly;
 
 	bool m_bHavePair;

@@ -50,91 +50,184 @@ int CLCmpThink::thinkDingQue(CLMjCard aCards[], unsigned int unCardCount)
 	return nColorQue;
 }
 
-// 一般采用递归删除法
-bool CLCmpThink::thinkHu(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, int nQueColor)
-{
-	copyCards(aCards, unCardCount, aWeaveItem, unItemSize, cardDest);
-	//m_mjLogic.isCanHu(aCards, unCardCount, aWeaveItem, unItemSize, m_cardOut, m_cardNew);
-	return false;
-}
 
-bool CLCmpThink::thinkKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, int nQueColor)
+void CLCmpThink::think(T_ActRequest* pActRequest, CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[]
+	, unsigned int unItemSize, CLMjCard cardOut, int nQueColor /*= -1*/, unsigned short usIgnoreFlags /*= 0*/)
 {
 	// 如果要杠的牌是缺
-	if (!cardDest.isValid() && cardDest.color() == nQueColor)
+	if (cardOut.isValid && cardOut.color() == nQueColor)
 	{
-		return false;
+		return;
 	}
 
-	copyCards(aCards, unCardCount, aWeaveItem, unItemSize, cardDest);
-	// 计算加入杠牌之前的分数
-	think();
-	int nTotalScoreBefore = totalScore();
+	// 拷贝数据
+	copyCards(aCards, unCardCount, aWeaveItem, unItemSize, cardOut, nQueColor);
 
-	if (cardDest.isValid())
+	//
+	think();
+	
+	// 首先先思考能不能胡
+	if (!(usIgnoreFlags & E_ActionTypeFlags::EA_hu))
+	{
+		if (thinkHu())
+		{
+			pActRequest->usActFlags |= (E_ActionTypeFlags::EA_hu);
+		}
+	}
+	else if (!(usIgnoreFlags & E_ActionTypeFlags::EA_Kong))
+	{
+		CLMjCard cardKong;
+		if (thinkKong(cardKong))
+		{
+			pActRequest->usActFlags |= (E_ActionTypeFlags::EA_Kong);
+			pActRequest->nKongCardValue = cardKong.value();
+		}
+	}
+	else if (!(usIgnoreFlags & E_ActionTypeFlags::EA_Pong))
+	{
+		if (thinkPong())
+		{
+			pActRequest->usActFlags |= (E_ActionTypeFlags::EA_Pong);
+		}
+	}
+	else
+	{
+		pActRequest->tMjActOutInfo.nOutCardValue = thinkOutCard();
+	}
+	
+}
+
+
+
+// 一般采用递归删除法
+bool CLCmpThink::thinkHu()
+{
+	return m_mjLogic.isCanHu(m_arrHandCard, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveCardsItemNum, m_cardOut);
+
+}
+
+bool CLCmpThink::thinkKong(CLMjCard & cardKong)
+{
+	CLCmpThink *pThinkAfter = nullptr;
+	bool bThinkCanKong = false;
+	if (m_cardOut.isValid())
 	{
 		// 只能点杠
-		bool bCanKong = m_mjLogic.isCanDianKong(aCards, unCardCount, aWeaveItem, unItemSize, cardDest);
+		bool bCanKong = m_mjLogic.isCanDianKong(m_arrHandCard, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveCardsItemNum, m_cardOut);
 		if (!bCanKong)
 		{
 			return false;
 		}
-
-		// 移除杠的三张牌
-		m_mjLogic.removeCards(m_arrHandCard, m_nHandNums, cardDest);
-		CLCmpThink *pThinkAfter = clone();
-		pThinkAfter->think();
-		int nTotalScoreAfter = pThinkAfter->totalScore();
-
-		return nTotalScoreAfter >= nTotalScoreBefore - SCORE_Triplet;
+		pThinkAfter = clone();
+		bThinkCanKong = (pThinkAfter->thinkAfterKong() >= totalScore() - SCORE_Kong);
 
 	}
 	else
 	{	// 暗杠和补杠
-		CLMjCard cardResult;
-		bool bCanAnKong = m_mjLogic.isCanAnKong(aCards, unCardCount, cardResult);
+		bool bCanAnKong = m_mjLogic.isCanAnKong(m_arrHandCard, m_nHandNums, cardKong);
+		bool bCanBuKong = m_mjLogic.isCanBuKong(m_arrHandCard, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveCardsItemNum, cardKong);
 		if (bCanAnKong)
 		{
-			m_mjLogic.removeCards(m_arrHandCard, m_nHandNums, cardResult);
-			CLCmpThink *pThinkAfter = clone();
-			pThinkAfter->think();
-			int nTotalScoreAfter = pThinkAfter->totalScore();
-
-			return nTotalScoreAfter >= nTotalScoreBefore - SCORE_Triplet;
+			pThinkAfter = clone();
+			bThinkCanKong = pThinkAfter->thinkAfterKong(cardKong) >= totalScore() - SCORE_Kong;
 		}
-		
-		//bool bCanBuGang = m_mjLogic.isCanBuKong(aCards, unCardCount, aWeaveItem, unItemSize, cardResult);
-		
-		
-
+		else if (bCanBuKong)
+		{
+			pThinkAfter = clone();
+			bThinkCanKong = pThinkAfter->thinkAfterKong(cardKong) >= totalScore() - SCORE_Kong;
+		}
+		else
+		{
+			return false;
+		}
 	}
-	
 
-
-
-	
-	return false;
+	delete pThinkAfter;
+	return bThinkCanKong;
 }
 
-bool CLCmpThink::thinkPong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, int nQueColor)
-{
-	copyCards(aCards, unCardCount, aWeaveItem, unItemSize, cardDest);
-	return false;
-}
 
-CLMjCard CLCmpThink::thinkOutCard(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, int nQueColor)
+int CLCmpThink::thinkAfterKong(CLMjCard & cardKong)
 {
-	copyCards(aCards, unCardCount, aWeaveItem, unItemSize, CARD_EMPTY);
-	if (nQueColor > -1 && nQueColor < 3)
+	int nScore;
+
+	if (m_cardOut.isValid())
 	{
-		int pos = isExistQue(nQueColor);
+		// 移除杠的三张牌
+		m_mjLogic.removeCards(m_arrHandCard, m_nHandNums, m_cardOut, 3);
+		think();
+		nScore = totalScore();
+	}
+	else
+	{
+		bool bCanAnKong = m_mjLogic.isCanAnKong(m_arrHandCard, m_nHandNums, cardKong);
+		bool bCanBuKong = m_mjLogic.isCanBuKong(m_arrHandCard, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveCardsItemNum, cardKong);
+		if (bCanAnKong)
+		{
+			m_mjLogic.removeCards(m_arrHandCard, m_nHandNums, cardKong, 4);
+			think();
+			nScore = totalScore();
+		}
+		else if (bCanBuKong)
+		{
+			m_mjLogic.removeCards(m_arrHandCard, m_nHandNums, cardKong, 1);
+			think();
+			nScore = totalScore();
+		}
+	}
+
+	return nScore;
+}
+
+
+
+bool CLCmpThink::thinkPong()
+{
+	
+	if (!m_cardOut.isValid())
+	{
+		return false;
+	}
+
+	bool bCanPong = m_mjLogic.isCanPong(m_arrHandCard, m_nHandNums, m_cardOut);
+	if (!bCanPong)
+	{
+		return false;
+	}
+
+	bool bThinkCanPong = false;
+	CLCmpThink *pThinkAfter = clone();
+	bThinkCanPong = (pThinkAfter->thinkAfterPong() >= totalScore() - SCORE_Kong);
+
+	delete pThinkAfter;
+	return bThinkCanPong;
+}
+
+
+int CLCmpThink::thinkAfterPong()
+{
+	int nScore;
+
+		// 移除杠的三张牌
+		m_mjLogic.removeCards(m_arrHandCard, m_nHandNums, m_cardOut);
+		think();
+		nScore = totalScore();
+
+		return nScore;
+}
+
+
+
+
+CLMjCard CLCmpThink::thinkOutCard()
+{
+
+		int pos = isExistQue(m_colorQue);
 		if (pos > 0)
 		{
 			// 如果有缺直接返回
 			return m_arrHandCard[pos];
 		}
-
-	}
 
 	think();
 	return m_cardBadly;

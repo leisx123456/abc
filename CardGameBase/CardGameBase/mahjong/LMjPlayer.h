@@ -116,10 +116,20 @@ public:
 	// 玩家属性
 	bool isReboot() {return m_ePlayerType != EP_People; }
 
+
+	//////////////////////////////////////////////////////////////////////////
+	// 玩家状态
 	void ready() { m_bReady = true; }
 	void cancelReady(){ m_bReady = false; }
 	bool isReady() { return m_bReady; }
 	
+	bool isActive() { return m_ePlayerActiveState == P_Active; }
+	void setActive(E_PlayerActiveState ePlayerActiveState){ m_ePlayerActiveState = ePlayerActiveState; }
+	void cancelActive(){ m_ePlayerActiveState = p_unActive; }
+
+
+	//////////////////////////////////////////////////////////////////////////
+	// 玩家动作及操作
 
 	// 摸手牌
 	void dealCards(const CLMjCard arrHandCards[MAX_HAND_COUNT]);
@@ -134,17 +144,20 @@ public:
 	void drawCard(const CLMjCard & card);
 
 	//玩家出牌
-	int outCard(int nPlace);
+	bool outCard(const CLMjCard & card);
 
-	//设置别人出的牌
-	void setOtherOutCard(int nCard);
+	// 玩家动作
+	void execAction(T_ActRequest tActRequest);
+	bool execPong(const CLMjCard & cardOut);
+	bool execKong();
+	bool execHu();
+
+
 
 	//在已出牌队列中删除一张最近打出的牌
 	void removeListOutCardAtLast();
 
-	bool isActive() { return m_ePlayerActiveState == P_Active; }
-	void setActive(E_PlayerActiveState ePlayerActiveState){ m_ePlayerActiveState = ePlayerActiveState; }
-	void cancelActive(){ m_ePlayerActiveState = p_unActive; }
+
 
 
 	//设置胡
@@ -157,15 +170,19 @@ public:
 	//vector<int> getOutCard();
 //////////////////////////////////////////////////////////////////////////
 // 逻辑判断
-	bool isCanPong();
-	bool isCanKong();
-	bool isCanHu();
+
+	// 获取玩家对于自己手牌(自己是活动状态) 或别人出的牌(别人是活动状态) 可以选择的动作
+	bool selectActInfo(T_MjActInfo* pActInfo, CLMjCard cardOut, unsigned short usIgnoreFlags = 0);
+
+	bool isCanPong(CLMjCard cardOut);
+	bool isCanKong(CLMjCard cardOut, T_MjActInfo* pActInfo);
+	bool isCanHu(CLMjCard cardOut);
 
 
 	//////////////////////////////////////////////////////////////////////////
 	// ai思考
 	CLMjCard::E_MjCardColor thinkDingQue();
-	void think(T_MjActInfo* pActInfo, CLMjCard cardDest);
+	void think(T_ActRequest* pActRequest, CLMjCard cardDest, unsigned short usIgnoreFlags = 0);
 
 
 private:
@@ -184,7 +201,7 @@ private:
 
 	CLMjCard m_arrOutedCards[MJ_MAX_OUTED];	//已出牌表(不包含别人拿过去吃碰杠胡的)
 	int m_nOutedTimes;					//玩家已出牌的次数(包含别人拿过去吃碰杠胡的)
-	//int m_nOutedNums;					//已出的牌数(不包含别人拿过去吃碰杠胡的)
+	int m_nOutedNums;					//已出的牌数(不包含别人拿过去吃碰杠胡的)
 
 	vector<CLMjCard> m_vecTing;	//听牌队列
 	vector<CLMjCard> m_vecHu;	//胡牌队列，扩展到血流成河
@@ -200,7 +217,6 @@ private:
 	CLMjCard::E_MjCardColor m_eColorTBA;	//定缺所用
 
 	
-	int	m_nOtherOutCard;	//别人出的牌
 
 	bool m_bIsHu;						//是否已经胡了
 	

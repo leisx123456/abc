@@ -13,7 +13,7 @@ CLBasicThink::~CLBasicThink()
 }
 
 
-void CLBasicThink::copyCards(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest)
+void CLBasicThink::copyCards(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, int nQueColor)
 {
 	m_nHandNums = unCardCount;
 	m_nWeaveCardsItemNum = unItemSize;
@@ -22,7 +22,8 @@ void CLBasicThink::copyCards(CLMjCard aCards[], unsigned int unCardCount, T_Weav
 	{
 		m_arrWeaveCardsItem[i] = aWeaveItem[i];
 	}
-
+	m_cardOut = cardDest;
+	m_colorQue = nQueColor;
 }
 
 
