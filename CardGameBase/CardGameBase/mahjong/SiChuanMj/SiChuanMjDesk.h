@@ -66,8 +66,8 @@ public:
 	virtual void onMsgCutCards(int dice1, int dice2) = 0;
 	virtual void onMsgDealCards(T_MsgDealCards tMsgDealCards) = 0;
 	virtual void onMsgDingQueBegin() = 0;
-	virtual void onMsgDingQue() = 0;
-	//virtual void onMsgAppointActiveUser(T_MsgAppointActiveUser tMsgAppointActiveUser) = 0;
+	virtual void onMsgDingQue(T_MsgDingQue tMsgDingQue) = 0;
+	virtual void onMsgAppointActiveUser(T_MsgAppointActiveUser tMsgAppointActiveUser) = 0;
 	virtual void onMsgActNotify(T_MjActInfo tMjActInfo) = 0;
 	virtual void onMsgOutCard(T_MjActOutInfo tMjActOutInfo) = 0;
 	virtual void onMsgActResult(T_MsgActResultInfo tMsgActResultInfo) = 0;
@@ -78,7 +78,7 @@ public:
 	//void onUserEnter(int nChairID);
 	//void onUiSitDown();
 	void onUserReady(int nChairID);
-	void onUserTBA(int nCardColor, int nChairID);
+	void onUserTBA(int nChairID, int nCardColor);
 	void onUserOutCard(int nChairID, T_MjActOutInfo tMjActOutInfo);
 	void OnUserActRequest(int nChairID, T_ActRequest tActRequest);
 

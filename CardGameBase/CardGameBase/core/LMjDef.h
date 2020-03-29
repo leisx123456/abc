@@ -1,5 +1,6 @@
 #ifndef __L_MJ_DEF_H__
 #define __L_MJ_DEF_H__
+#include <iostream>
 namespace LxMahjone
 {
 
@@ -325,14 +326,12 @@ struct T_MjActInfo
 	T_MjActListenInfo tMjActListenInfo;
 	T_MjActHuInfo tMjActHuInfo;
 
-	
-
 	// 特殊动作
 	T_MjActOutInfo tMjActOutInfo;
-	T_MjActInfo()
-		: usActFlags(0)
-	{
 
+	T_MjActInfo()
+	{
+		clear();
 	}
 
 	void clear()
@@ -357,6 +356,13 @@ struct T_MsgDealCards
 	int arrMjCardsPair[GAME_MJ_CARD_COUNT_MAX];
 	int nMjNumAllocation;
 	
+};
+
+// 定缺结果
+struct T_MsgDingQue
+{
+	int arrCardColor[4];
+
 };
 
 // 指派活动用户, 

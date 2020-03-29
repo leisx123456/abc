@@ -25,13 +25,13 @@ public:
 	// 返回chair逆时针转1的玩家
 	int antiClockWise(int chair)
 	{
-		return (chair + PLAYER_NUM - 1) % PLAYER_NUM;
+		return (chair + GAME_MJ_PLAYER_MAX - 1) % GAME_MJ_PLAYER_MAX;
 	}
 
 	// 返回chair顺时针转1的玩家
 	int clockwise(int chair)
 	{
-		return (chair + 1) % PLAYER_NUM;
+		return (chair + 1) % GAME_MJ_PLAYER_MAX;
 	}
 
 	

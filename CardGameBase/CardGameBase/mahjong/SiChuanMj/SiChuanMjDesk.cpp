@@ -38,7 +38,7 @@ void CSiChuanMjDesk::updateUser()
 {
 	for (int i = 0; i < playerCount(); i++)
 	{
-		if (i == m_tActiveUser.nActiveUser)
+		if (i == m_nActiveUser)
 		{
 			m_pArrMjPlayer[i]->setActive(CLMjPlayer::P_Active);
 		}
@@ -224,97 +224,97 @@ void CSiChuanMjDesk::onEventDrawCard()
 }
 
 
-void CSiChuanMjDesk::onEventAppointActiveUser()
-{
-
-	if (m_tActiveUser.eActiveUserType == EA_FristGot)
-	{
-		// nothing to do
-	}
-	else if (m_tActiveUser.eActiveUserType == EA_Inherit)
-	{
-		if (surplusCards() == 0)
-		{
-			// 如果牌墙剩余为0，结束
-			return;
-		}
-		CLMjCard card = drawCard();
-		m_pArrMjPlayer[m_tActiveUser.nActiveUser]->drawCard(card);
-		m_tActiveUser.nNewCard = card.value();
-	}
-	else
-	{
-
-	}
-
-	T_MsgAppointActiveUser tMsgAppointActiveUser;
-	tMsgAppointActiveUser.tActiveUser = m_tActiveUser;
-	tMsgAppointActiveUser.nMjNumAllocation = mjNumAllocation();
-	m_mjLogic.copyCards(tMsgAppointActiveUser.arrMjCardsPair, GAME_MJ_CARD_COUNT_MAX, m_arrMjCardsPair, GAME_MJ_CARD_COUNT_MAX);
-
-	onMsgAppointActiveUser(tMsgAppointActiveUser);
-	//onEventResponseToActiveUser();
-
-}
-
-
-void CSiChuanMjDesk::onEventResponseToActiveUser()
-{
-	int nResponseUser;
-	if (m_tActiveUser.eActiveUserType == EA_FristGot)
-	{
-		nResponseUser = m_tActiveUser.nActiveUser;
-		
-	}
-	else if (m_tActiveUser.eActiveUserType == EA_Inherit)
-	{
-		if (surplusCards() == 0)
-		{
-			// 如果牌墙剩余为0，结束
-			return;
-		}
-		CLMjCard card = drawCard();
-		m_pArrMjPlayer[m_tActiveUser.nActiveUser]->drawCard(card);
-		m_tActiveUser.nNewCard = card.value();
-
-		nResponseUser = m_tActiveUser.nActiveUser;
-	}
-	else
-	{
-		// 自动为电脑选择吃碰杠胡
-		for (int i = 0; i < playerCount(); i++)
-		{
-			if (m_pArrMjPlayer[i]->isReboot())
-			{
-				// 如果是机器人直接处理动作信息 并获取机器人的动作请求
-				T_ActRequest tActRequest;
-				m_pArrMjPlayer[i]->think(&tActRequest, m_cardOut, 0);
-				if (tActRequest.usActFlags)
-				{
-					OnUserActRequest(i, tActRequest);
-				}
-				else
-				{
-					onUserOutCard(i, tActRequest.tMjActOutInfo);
-				}
-			}
-			else
-			{
-				// 当且仅当该玩家有动作信息时向该玩家发送动作通知，交给该玩家处理
-				T_MjActInfo tMjActInfo;
-				bool bHaveAct = m_pArrMjPlayer[i]->selectActInfo(&tMjActInfo, CARD_EMPTY, 0);
-				if (bHaveAct)
-				{
-					onMsgActNotify(tMjActInfo);
-				}
-				
-			}
-		}
-	}
-
-
-
-}
+//void CSiChuanMjDesk::onEventAppointActiveUser()
+//{
+//
+//	if (m_tActiveUser.eActiveUserType == EA_FristGot)
+//	{
+//		// nothing to do
+//	}
+//	else if (m_tActiveUser.eActiveUserType == EA_Inherit)
+//	{
+//		if (surplusCards() == 0)
+//		{
+//			// 如果牌墙剩余为0，结束
+//			return;
+//		}
+//		CLMjCard card = drawCard();
+//		m_pArrMjPlayer[m_tActiveUser.nActiveUser]->drawCard(card);
+//		m_tActiveUser.nNewCard = card.value();
+//	}
+//	else
+//	{
+//
+//	}
+//
+//	T_MsgAppointActiveUser tMsgAppointActiveUser;
+//	tMsgAppointActiveUser.tActiveUser = m_tActiveUser;
+//	tMsgAppointActiveUser.nMjNumAllocation = mjNumAllocation();
+//	m_mjLogic.copyCards(tMsgAppointActiveUser.arrMjCardsPair, GAME_MJ_CARD_COUNT_MAX, m_arrMjCardsPair, GAME_MJ_CARD_COUNT_MAX);
+//
+//	onMsgAppointActiveUser(tMsgAppointActiveUser);
+//	//onEventResponseToActiveUser();
+//
+//}
+//
+//
+//void CSiChuanMjDesk::onEventResponseToActiveUser()
+//{
+//	int nResponseUser;
+//	if (m_tActiveUser.eActiveUserType == EA_FristGot)
+//	{
+//		nResponseUser = m_tActiveUser.nActiveUser;
+//		
+//	}
+//	else if (m_tActiveUser.eActiveUserType == EA_Inherit)
+//	{
+//		if (surplusCards() == 0)
+//		{
+//			// 如果牌墙剩余为0，结束
+//			return;
+//		}
+//		CLMjCard card = drawCard();
+//		m_pArrMjPlayer[m_tActiveUser.nActiveUser]->drawCard(card);
+//		m_tActiveUser.nNewCard = card.value();
+//
+//		nResponseUser = m_tActiveUser.nActiveUser;
+//	}
+//	else
+//	{
+//		// 自动为电脑选择吃碰杠胡
+//		for (int i = 0; i < playerCount(); i++)
+//		{
+//			if (m_pArrMjPlayer[i]->isReboot())
+//			{
+//				// 如果是机器人直接处理动作信息 并获取机器人的动作请求
+//				T_ActRequest tActRequest;
+//				m_pArrMjPlayer[i]->think(&tActRequest, m_cardOut, 0);
+//				if (tActRequest.usActFlags)
+//				{
+//					OnUserActRequest(i, tActRequest);
+//				}
+//				else
+//				{
+//					onUserOutCard(i, tActRequest.tMjActOutInfo);
+//				}
+//			}
+//			else
+//			{
+//				// 当且仅当该玩家有动作信息时向该玩家发送动作通知，交给该玩家处理
+//				T_MjActInfo tMjActInfo;
+//				bool bHaveAct = m_pArrMjPlayer[i]->selectActInfo(&tMjActInfo, CARD_EMPTY, 0);
+//				if (bHaveAct)
+//				{
+//					onMsgActNotify(tMjActInfo);
+//				}
+//				
+//			}
+//		}
+//	}
+//
+//
+//
+//}
 
 
 
@@ -353,7 +353,7 @@ void CSiChuanMjDesk::onUserReady(int nChairID)
 	}
 }
 
-void CSiChuanMjDesk::onUserTBA(int nCardColor, int nChairID)
+void CSiChuanMjDesk::onUserTBA(int nChairID, int nCardColor)
 {
 	if (m_pArrMjPlayer[nChairID]->isAlreadyTBA())
 	{
@@ -369,18 +369,24 @@ void CSiChuanMjDesk::onUserTBA(int nCardColor, int nChairID)
 		}
 	}
 
-	// 广播用户定缺结果
-	onMsgDingQue();
-
+	// 需要等待所有人定缺完成
 	if (playerCount() == nTBANum)
 	{
+		// 广播定缺结果
+		T_MsgDingQue tMsgDingQue;
+		for (int i = 0; i < playerCount(); ++i)
+		{
+			tMsgDingQue.arrCardColor[i] = m_pArrMjPlayer[i]->getDingQueColor();
+		}
+		onMsgDingQue(tMsgDingQue);
 		
+		// 更新状态
 		m_nActiveUser = m_nBanker;
 		m_cardOut = CARD_EMPTY;
 		updateUser();
 
-		// 需要等待所有人定缺完成
-		//onEventAppointActiveUser(); // 要不要吧他变成出牌
+		
+		// 指定活动玩家
 		onEventFristBankerActive();
 	}
 }
@@ -397,6 +403,7 @@ void CSiChuanMjDesk::onUserOutCard(int nChairID, T_MjActOutInfo tMjActOutInfo)
 	bool bHaveAct = false;
 	for (int i = 0; i < playerCount(); ++i)
 	{
+		T_MjActInfo tMjActInfo;
 		if (i != m_nActiveUser) //非出牌都才可能有动作
 		{
 			if (m_pArrMjPlayer[i]->selectActInfo(&tMjActInfo, m_cardOut, 0))
@@ -432,6 +439,7 @@ void CSiChuanMjDesk::OnUserActRequest(int nChairID, T_ActRequest tActRequest)
 
 	m_nActiveUser = nChairID;
 }
+
 
 
 

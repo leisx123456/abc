@@ -55,7 +55,7 @@ void CLCmpThink::think(T_ActRequest* pActRequest, CLMjCard aCards[], unsigned in
 	, unsigned int unItemSize, CLMjCard cardOut, int nQueColor /*= -1*/, unsigned short usIgnoreFlags /*= 0*/)
 {
 	// 如果要杠的牌是缺
-	if (cardOut.isValid && cardOut.color() == nQueColor)
+	if (cardOut.isValid() && cardOut.color() == nQueColor)
 	{
 		return;
 	}
@@ -119,7 +119,7 @@ bool CLCmpThink::thinkKong(CLMjCard & cardKong)
 			return false;
 		}
 		pThinkAfter = clone();
-		bThinkCanKong = (pThinkAfter->thinkAfterKong() >= totalScore() - SCORE_Kong);
+		bThinkCanKong = (pThinkAfter->thinkAfterKong(cardKong) >= totalScore() - SCORE_Kong);
 
 	}
 	else

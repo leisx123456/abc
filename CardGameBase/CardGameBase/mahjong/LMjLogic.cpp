@@ -54,7 +54,6 @@ bool CLMjLogic::isCanPong(CLMjCard aCards[], unsigned int unCardCount, const CLM
 bool CLMjLogic::isCanKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[]
 	, unsigned int unItemSize, CLMjCard cardOut, T_MjActKongInfo & tMjActKongInfo)
 {
-	tMjActKongInfo.clear();
 	if (cardOut.isValid())
 	{
 		if (getCardsNum(aCards, unCardCount, cardOut) == 3)
@@ -350,7 +349,7 @@ bool CLMjLogic::isCanHu(CLMjCard aCards[]
 // µÝ¹éÉ¾³ý·¨
 bool CLMjLogic::isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair /*= false*/)
 {
-	assert(unCardCount > MAX_HAND_COUNT || unCardCount <= 0);
+	assert(unCardCount > 0 && unCardCount <= MAX_HAND_COUNT);
 	if (unCardCount % 3 != 2)
 	{
 		return false;

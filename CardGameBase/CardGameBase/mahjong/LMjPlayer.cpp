@@ -48,11 +48,12 @@ void CLMjPlayer::init()
 		m_arrOutedCards[i] = CARD_EMPTY;
 	}
 	m_nOutedTimes = 0;
+	m_nOutedNums = 0;
 
 	m_nDrawTimes = 0;	//×¥ÅÆ´ÎÊý
 
 	m_bReady = false;
-	//E_PlayerStatus m_ePlayerStatus;
+	m_eColorTBA = CLMjCard::EM_Invalid_Color;
 }
 
 
@@ -180,10 +181,6 @@ void CLMjPlayer::getHandCards(CLMjCard* pArrHandCards)
 
 
 
-void CLMjPlayer::selectTBA(CLMjCard::E_MjCardColor eColorTBA)
-{
-	m_eColorTBA = eColorTBA;
-}
 
 
 

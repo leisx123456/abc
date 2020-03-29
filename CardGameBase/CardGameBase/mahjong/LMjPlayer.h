@@ -136,8 +136,9 @@ public:
 	void getHandCards(CLMjCard* pArrHandCards);
 
 	// ¶¨È±
-	void selectTBA(CLMjCard::E_MjCardColor eColorTBA);
+	void selectTBA(CLMjCard::E_MjCardColor eColorTBA) { m_eColorTBA = eColorTBA; }
 	bool isAlreadyTBA(){ return m_eColorTBA > -1 && m_eColorTBA < 3; }
+	int getDingQueColor() { return m_eColorTBA; }
 
 
 	//ÃþÅÆ
