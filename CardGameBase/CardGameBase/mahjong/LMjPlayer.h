@@ -27,11 +27,13 @@ struct T_UserInfo
 {
 	string strNickname;
 	unsigned short cbScore;
-	bool bOffline;
 	string strHeadPath;
-	bool bBanker;
+
+	bool bOffline;
 	bool bHouseOwner;
-	//		img_dingque
+
+	bool bBanker;
+	bool bQingUue;
 	bool bReady;
 	bool bBaoJiao;
 	bool bHu;
@@ -146,6 +148,8 @@ public:
 
 	//玩家出牌
 	bool outCard(const CLMjCard & card);
+	CLMjCard getLatestOutCard();
+	void getOutCardsValue(int* pArrOutCardsValue, int & nOutCardNums);
 
 	// 玩家动作
 	void execAction(T_ActRequest tActRequest);
@@ -153,10 +157,6 @@ public:
 	bool execKong();
 	bool execHu();
 
-
-
-	//在已出牌队列中删除一张最近打出的牌
-	void removeListOutCardAtLast();
 
 
 
@@ -187,9 +187,12 @@ public:
 
 
 private:
+	//////////////////////////////////////////////////////////////////////////
+	// ai
 	E_PlayerType m_ePlayerType;
 	IAbstractThink* m_pIAbstractThink;
 
+	// 
 	CLMjLogic m_mjLogic;
 	T_WeaveCardsItem m_arrWeaveCardsItem[4];	// 用户的组合牌
 	int m_nWeaveItemNums;
@@ -200,13 +203,11 @@ private:
 	// --取消，因为玩家手牌设置最大14，新牌已加入到手牌中
 	//CLMjCard m_CardNew;	// 刚抓起来的牌
 
-	CLMjCard m_arrOutedCards[MJ_MAX_OUTED];	//已出牌表(不包含别人拿过去吃碰杠胡的)
-	int m_nOutedTimes;					//玩家已出牌的次数(包含别人拿过去吃碰杠胡的)
-	int m_nOutedNums;					//已出的牌数(不包含别人拿过去吃碰杠胡的)
+	vector<CLMjCard> m_vecCardOut;	//已出牌表(不包含别人拿过去吃碰杠胡的)
+	int m_nOutedTimes;					//已出的牌数(不包含别人拿过去吃碰杠胡的)
 
 	vector<CLMjCard> m_vecTing;	//听牌队列
 	vector<CLMjCard> m_vecHu;	//胡牌队列，扩展到血流成河
-	vector<CLMjCard> m_lstCardOut;	//出牌列
 	vector<CLMjCard> m_vecCardsLouHu;	// 漏胡的牌
 	
 
@@ -226,8 +227,7 @@ private:
 	bool m_bReady;
 
 
-	// 当player设置为机器人时使用AI出牌
-	//CLMjAI m_mjAI;
+
 };
 
 #endif //_L_MJ_PLAYER_H_

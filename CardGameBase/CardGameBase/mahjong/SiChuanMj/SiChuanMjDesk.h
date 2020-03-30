@@ -33,6 +33,14 @@ public:
 	CSiChuanMjDesk();
 	virtual ~CSiChuanMjDesk();
 
+	enum E_ActNotifyType
+	{
+		EA_BankerFirstGot,
+		EA_DarwCard,
+		EA_OutCard,
+		EA_OtherAct
+	};
+
 	//////////////////////////////////////////////////////////////////////////
 	// 游戏内部逻辑
 	// 分配麻将子，四川麻将只需万条筒
@@ -53,9 +61,11 @@ public:
 	virtual void onEventDealCards();		// 发手牌
 	virtual void onEventDingQue();			// 定缺
 	virtual void onEventFristBankerActive();
-	virtual void onEventDrawCard();	// 中间是一个摸牌打牌,摸牌打牌的过程再加一些判断处理
+	virtual void onEventDrawCard();
+	virtual void onEventJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyType);
 	//virtual void onEventAppointActiveUser();			// 指定活动用户，活动用户可摸牌出牌。
 	//virtual void onEventResponseToActiveUser();			// 当前可对活动玩家的动作响应
+	virtual void onEventGameFinshed();
 
 
 
@@ -69,7 +79,7 @@ public:
 	virtual void onMsgDingQue(T_MsgDingQue tMsgDingQue) = 0;
 	virtual void onMsgAppointActiveUser(T_MsgAppointActiveUser tMsgAppointActiveUser) = 0;
 	virtual void onMsgActNotify(T_MjActInfo tMjActInfo) = 0;
-	virtual void onMsgOutCard(T_MjActOutInfo tMjActOutInfo) = 0;
+	virtual void onMsgOutCard(T_MsgOutCard tMsgOutCard) = 0;
 	virtual void onMsgActResult(T_MsgActResultInfo tMsgActResultInfo) = 0;
 
 
@@ -79,7 +89,7 @@ public:
 	//void onUiSitDown();
 	void onUserReady(int nChairID);
 	void onUserTBA(int nChairID, int nCardColor);
-	void onUserOutCard(int nChairID, T_MjActOutInfo tMjActOutInfo);
+	void onUserOutCardRequest(int nChairID, T_MjActOutInfo tMjActOutInfo);
 	void OnUserActRequest(int nChairID, T_ActRequest tActRequest);
 
 protected:

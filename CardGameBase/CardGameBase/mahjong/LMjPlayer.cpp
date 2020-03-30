@@ -48,7 +48,6 @@ void CLMjPlayer::init()
 		m_arrOutedCards[i] = CARD_EMPTY;
 	}
 	m_nOutedTimes = 0;
-	m_nOutedNums = 0;
 
 	m_nDrawTimes = 0;	//抓牌次数
 
@@ -77,10 +76,8 @@ void CLMjPlayer::drawCard(const CLMjCard & card)
 
 
 
-void CLMjPlayer::removeListOutCardAtLast()
-{
-	m_lstCardOut.pop_back();
-}
+
+
 
 
 
@@ -113,13 +110,32 @@ bool CLMjPlayer::outCard(const CLMjCard & card)
 	m_mjLogic.sortCards(m_arrHandCards, m_nHandNums);
 
 		//向出牌表中添加该牌
-	m_arrOutedCards[m_nOutedNums++] = card;
+	m_vecCardOut.push_back(card);
 
 		//更新出牌计数
 	m_nOutedTimes++;
 
 	return true;
 }
+
+CLMjCard CLMjPlayer::getLatestOutCard()
+{
+	CLMjCard card = m_vecCardOut.back();
+	m_vecCardOut.pop_back();
+	return card;
+}
+
+
+void CLMjPlayer::getOutCardsValue(int* pArrOutCardsValue, int & nOutCardNums)
+{
+	for (int i = 0; i < m_vecCardOut.size(); ++i)
+	{
+		pArrOutCardsValue[i] = m_vecCardOut[i].value();
+	}
+	nOutCardNums = m_vecCardOut.size();
+}
+
+
 
 void CLMjPlayer::execAction(T_ActRequest tActRequest)
 {

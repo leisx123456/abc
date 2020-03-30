@@ -26,10 +26,33 @@ CLMjDesk::~CLMjDesk()
 {
 }
 
-
-int CLMjDesk::nextPlayerIndex(int nCurIndex, int nPlayerCount /*= GAME_MJ_PLAYER_MAX*/)
+// 获取下nUnit个单位的索引 
+//@param-in nCurIndex 当前的索引
+//@param-in nPlayerCount为实际参与的玩家数
+//@param-in bClockWise顺时针, antiClockWise 逆时针
+//@param-in nUnit多少个单位
+int CLMjDesk::nextPlayerIndex(int nCurIndex, int nPlayerCount /*= GAME_MJ_PLAYER_MAX*/, bool bClockWise /*= true*/, int nUnit /*= 1*/)
 {
-	int nNextIndex = (nCurIndex + 1) % nPlayerCount;
+	if (nUnit < 1)
+	{
+		return nCurIndex;
+	}
+	int nNextIndex = nCurIndex;
+	if (bClockWise)
+	{
+		for (int i = 0; i < nUnit; ++i)
+		{
+			nNextIndex = (nPlayerCount + nNextIndex - 1) % nPlayerCount;
+		}
+	}
+	else
+	{
+		for (int i = 0; i < nUnit; ++i)
+		{
+			nNextIndex = (nPlayerCount + nNextIndex + 1) % nPlayerCount;
+		}
+	}
+
 	return nNextIndex;
 }
 
@@ -207,3 +230,5 @@ void CLMjDesk::dealCards(CLMjCard pArrCardHand[][14])
 		m_pArrMjPlayer[i]->getHandCards(pArrCardHand[i]);
 	}
 }
+
+

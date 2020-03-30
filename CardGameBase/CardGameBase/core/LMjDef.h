@@ -370,7 +370,7 @@ struct T_MsgAppointActiveUser
 {
 	T_ActiveUser tActiveUser;
 	T_MjActInfo tMjActInfo;
-	int arrMjCardsPair[GAME_MJ_CARD_COUNT_MAX]; // 一副麻将
+	int arrMjCardsPair[GAME_MJ_CARD_COUNT_MAX]; // 用于更新牌墙
 	int nMjNumAllocation;	// 一副麻将分配数
 }; 
 
@@ -387,6 +387,15 @@ struct T_MsgResponseToActiveUser
 
 };
 
+// 出牌结果
+struct T_MsgOutCard
+{
+	int nOutCardUser;
+	int nOutCardValue;
+
+	int arrOutCard[MJ_MAX_OUTED];
+	int nOutedNums; // 出牌数，不包含别人拿去碰杠胡的牌， 用于刷新界面出牌
+};
 
 
 // 动作结果

@@ -27,6 +27,18 @@
 // 1.递归得到3张组合（顺子，刻字）最大数组合数的牌标记，锁定，余下未锁定的牌进入步骤2
 // 2.递归得到2张组合（门子）最大数组合数的牌标记，锁定，余下未锁定的牌进入步骤3
 // 3.
+
+struct T_ThinkResult
+{
+	unsigned short	usActFlags;
+
+	// 如果是杠需要指明杠的牌
+	int nKongCardValue;
+
+	// 如果是出牌需要指出的那张的牌
+	int nOutCardValue;
+};
+
 class CLCmpThink:public CLBasicThink
 {
 public:	

@@ -20,21 +20,8 @@ public:
 
 	// 常用函数
 	//////////////////////////////////////////////////////////////////////////
-	// 获取下个玩家的索引 nPlayerCount为实际参与的玩家数
-	static int nextPlayerIndex(int nCurIndex, int nPlayerCount = GAME_MJ_PLAYER_MAX);
-	// 返回chair逆时针转1的玩家
-	int antiClockWise(int chair)
-	{
-		return (chair + GAME_MJ_PLAYER_MAX - 1) % GAME_MJ_PLAYER_MAX;
-	}
-
-	// 返回chair顺时针转1的玩家
-	int clockwise(int chair)
-	{
-		return (chair + 1) % GAME_MJ_PLAYER_MAX;
-	}
-
-	
+	// 获取下nUnit个单位的索引 
+	static int nextPlayerIndex(int nCurIndex, int nPlayerCount = GAME_MJ_PLAYER_MAX, bool bClockWise = true, int nUnit = 1);
 	virtual int playerCount() const { return GAME_MJ_PLAYER_MAX; }	// 参与游戏的实际人数， 表示2人玩  3 表示3人玩  4表示4人
 
 
@@ -92,17 +79,7 @@ protected:
 	int m_nBanker;	//庄家 0-3
 	int m_nActiveUser;	//当前活动用户 0-3
 
-
-	T_ActiveUser m_tActiveUser;
 	
-	//int m_nWhere;								//麻将取到那个位置
-	//int m_nWho;									//该取哪个方向的麻将
-	//int m_nTailWho;								//最开始拿的哪家的牌,用于记录
 
-	//CLMjCard m_nHandCard[4][MAX_HAND_COUNT];
-	//int m_nHandCardCount[4];
-	//T_WeaveItem m_nWeaveItemArray[4][MAX_WEAVE];		//组合扑克
-	//byte m_nWeaveCount[4];					//组合数目
-	//std::vector<CLMjCard>  m_vecOutCard[4];
 };
 
