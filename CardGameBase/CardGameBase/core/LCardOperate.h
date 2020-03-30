@@ -13,6 +13,7 @@ CLCardOperate 牌操作容器类， 即对多数量的牌管理操作, 由于是用的数组而非stl容器，
 /************************************************************************/
 
 // 声明为类模板，因为还不知道对确切的哪一种牌操作
+// 主模板
 template<class CLCard>
 class CLCardOperate
 {
@@ -91,6 +92,17 @@ void CLCardOperate<CLCard>::shuffleCards(CLCard aCards[], unsigned int unCardCou
 		cbCardDataTemp[cbPosition] = cbCardDataTemp[unCardCount - cbRandCount];
 	} while (cbRandCount < unCardCount);
 
+	// 其原型为:
+	//Card  tempCard;
+	//int  index = 0;
+	////不断交换其中两张牌，如此54次
+	//for (int i = 0; i < 54; ++i)
+	//{
+	//	index = rand() % 54;
+	//	tempCard = m_cCard[0];
+	//	m_cCard[0] = m_cCard[index];
+	//	m_cCard[index] = tempCard;
+	//}
 	delete []cbCardDataTemp;
 }
 
@@ -115,6 +127,27 @@ void CLCardOperate<CLCard>::sortCards(CLCard aCards[], unsigned int unCardCount)
 		}
 	}
 }
+
+/* 需要掌握的 */
+// 类模板成员特化 int
+//template<>
+//void CLCardOperate<int>::sortCards(int aCards[], unsigned int unCardCount)
+//{
+//	int cardTemp;
+//	for (int i = 0; i < unCardCount - 1; ++i)
+//	{
+//		for (int j = i + 1; j < unCardCount; ++j)
+//		{
+//			if (aCards[i] > aCards[j])
+//			{
+//				cardTemp = aCards[i];
+//				aCards[i] = aCards[j];
+//				aCards[j] = cardTemp;
+//			}
+//		}
+//	}
+//}
+//
 
 
 template<class CLCard>
@@ -301,3 +334,45 @@ bool CLCardOperate<CLCard>::isCardInArray(CLCard const aCards[], unsigned int un
 	}
 	return false;
 }
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////
+//模板局部特化 
+/*
+template<class CLCard>
+class CLCardOperate<CLCard*> //(需要用到指针)
+{
+public:
+	CLCardOperate();
+	virtual ~CLCardOperate();
+
+
+	// 理牌
+	void sortCards(CLCard* aCards[], unsigned int unCardCount);// 如果是指针时不能只是简单交换指针，而是交互值
+};
+
+
+template<class CLCard>
+void CLCardOperate<CLCard*>::sortCards(CLCard* aCards[], unsigned int unCardCount)
+{
+	CLCard cardTemp;
+	for (int i = 0; i < unCardCount - 1; ++i)
+	{
+		for (int j = i + 1; j < unCardCount; ++j)
+		{
+			if (*aCards[i] > *aCards[j])
+			{
+				cardTemp = *aCards[i];
+				*aCards[i] = *aCards[j];
+				*aCards[j] = cardTemp;
+			}
+		}
+	}
+}
+*/

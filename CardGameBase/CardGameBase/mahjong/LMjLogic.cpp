@@ -10,6 +10,9 @@ CLMjLogic::CLMjLogic()
 }
 
 
+
+
+
 int CLMjLogic::switchToCardData(const unsigned int arrCardIndex[MAX_INDEX], CLMjCard aCards[MAX_HAND_COUNT])
 {
 	int cbPosition = 0;

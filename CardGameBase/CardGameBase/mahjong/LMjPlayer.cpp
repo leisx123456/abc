@@ -41,6 +41,7 @@ void CLMjPlayer::init()
 		m_bIsHu = false;
 
 	m_nHandNums = 0;
+	m_nWeaveItemNums = 0;
 	m_ePlayerActiveState = E_PlayerActiveState::p_unActive;
 	CLMjCard m_arrOutedCards[MJ_MAX_OUTED];
 	for (int i = 0; i < MJ_MAX_OUTED; i++)
