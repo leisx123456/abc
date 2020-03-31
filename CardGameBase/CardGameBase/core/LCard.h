@@ -20,6 +20,7 @@
 ///2、Q:为什么C++赋值运算符重载函数不能被继承？  A:编译器会自动生成一个隐含和默认的“赋值运算符重载函数”
 //, 如果不重新实现会被默认的覆盖， 需要依赖模板实现
 // 犯了严重的错误， 模板函数右值m_nValue写成了m_nCardValue编译器没有检查出来，导致致命错误
+//类的命名推荐用"名词"或"形容词＋名词"的形式，例如："CAnalyzer", "CFastVector"
 template<class T>
 class CLCard
 {
@@ -149,30 +150,17 @@ public:
 	}
 
 	// operator <
+	// 把实现写在类外
 	bool operator < (int nCard) const;
 
 	bool operator < (T rhs)
 	{
 		return m_nValue < rhs.m_nValue;
 	}
+	// 以上都是将操作符重载实现为类的成员函数
+	//操作符重载实现为非类的成员函数（即全局函数），需要定义在类外部
 
-	//// operator ^
-	//CLCard operator ^ (CLCard rhs)
-	//{
-	//	m_nValue ^ rhs.m_nValue;
-	//}
 
-	//// operator /
-	//int operator / (int nVar)
-	//{
-	//	return m_nValue / nVar;
-	//}
-
-	//// operator %
-	//int operator % (int nVar)
-	//{
-	//	return m_nValue % nVar;
-	//}
 
 protected:
 	int m_nValue;		// 牌值
@@ -244,5 +232,12 @@ bool CLCard<T>::operator<(int nCard) const
 {
 	return m_nValue < nCard;
 }
+
+// 操作符重载实现为非类的成员函数（即全局函数）
+//template<class T>
+//bool operator < (T const & lts, T const & rhs)
+//{
+//	return lts.m_nValue < rhs.m_nValue;
+//}
 
 #endif //_L_CARD_H_

@@ -1,30 +1,13 @@
 #ifndef __L_MJ_DEF_H__
 #define __L_MJ_DEF_H__
 #include <iostream>
-namespace LxMahjone
-{
 
-}
-
+// 麻将通用定义
 //////////////////////////////////////////////////////////////////////////
 //公共宏定义
-
-#define KIND_ID						324									//游戏 I D
-
-#define GAME_MJ_CARD_COUNT_MAX					144		// 一副麻将最大张数							//游戏人数
-#define GAME_MJ_PLAYER_MAX					4									//游戏人数
-#define GAME_NAME					TEXT("成都麻将")					//游戏名字
-#define GAME_GENRE					(GAME_GENRE_SCORE|GAME_GENRE_MATCH|GAME_GENRE_GOLD)	//游戏类型
-
-//游戏状态
-#define GS_MJ_FREE					GS_FREE								//空闲状态
-#define GS_MJ_PLAY					(GS_PLAYING+1)						//游戏状态
-
-#define INVALID_CHAIR				0xFFFF								//无效椅子
-#define INVALID_TABLE				0xFFFF								//无效桌子
-
-//常量定义
-#define MAX_WEAVE					4									//最大组合
+#define MJ_MAX_CARD_COUNT					144		// 一副麻将最大张数							//游戏人数
+#define MJ_MAX_PLAYER					4									//游戏人数
+#define MJ_MAX_WEAVE					4									//最大组合
 #define MAX_INDEX					42									//最大索引
 //#define MAX_INDEX					34									//最大索引
 //#define MAX_INDEX					27									//最大索引
@@ -195,9 +178,9 @@ enum E_KongType
 
 struct T_MjActKongInfo
 {
-	int arrKongSelect[MAX_WEAVE];	  //可以杠的选择
+	int arrKongSelect[MJ_MAX_WEAVE];	  //可以杠的选择
 	int nKongSelectNums;				  //可以杠选择数量		
-	int arrBuGangInPeng[MAX_WEAVE]; //补杠在建立在那一个碰牌上
+	int arrBuGangInPeng[MJ_MAX_WEAVE]; //补杠在建立在那一个碰牌上
 	E_KongType arrKongType[4]; //杠类型
 
 	int nCurSelectIndex;
@@ -341,6 +324,35 @@ struct T_MjActInfo
 
 };
 
+//////////////////////////////////////////////////////////////////////////
+
+struct T_UserResultInfo
+{
+	bool bHu;
+
+	// 胡了的情况
+	int nHuIndex;	// 第几个胡
+	unsigned char byFangPaoUser;					//放炮玩家
+
+
+	E_MjHuWay eMjHuWay;
+	E_MjHuName eMjHuName;
+	int nGeng;	// 根
+
+	// 
+	int nTotalFan;
+	int nTotalScore;	
+	int nRealScore;	//实际得失分
+	int nChangdScore; //本局所变动的分数
+
+	void calculate()
+	{
+		if (!bHu)
+		{
+		}
+	}
+};
+
 
 
 
@@ -353,7 +365,7 @@ struct T_MsgDealCards
 {
 	int arrCardHand[4][14];
 	int nPlayerCount;
-	int arrMjCardsPair[GAME_MJ_CARD_COUNT_MAX];
+	int arrMjCardsPair[MJ_MAX_CARD_COUNT];
 	int nMjNumAllocation;
 	
 };
@@ -370,7 +382,7 @@ struct T_MsgAppointActiveUser
 {
 	T_ActiveUser tActiveUser;
 	T_MjActInfo tMjActInfo;
-	int arrMjCardsPair[GAME_MJ_CARD_COUNT_MAX]; // 用于更新牌墙
+	int arrMjCardsPair[MJ_MAX_CARD_COUNT]; // 用于更新牌墙
 	int nMjNumAllocation;	// 一副麻将分配数
 }; 
 
@@ -429,6 +441,19 @@ struct T_ActRequest
 	int nKongCardValue;
 	// 特殊动作
 	T_MjActOutInfo tMjActOutInfo;
+};
+
+
+struct T_MsgResult
+{
+	bool bHuangZhuang;				//是否荒庄
+
+	T_UserResultInfo tUserResultInfo[4];
+	T_MsgResult()
+	{
+		::memset(this, 0, sizeof(T_MsgResult));
+
+	}
 };
 
 #endif // __L_MJ_DEF_H__

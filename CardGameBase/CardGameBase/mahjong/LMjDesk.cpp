@@ -13,7 +13,7 @@ CLMjDesk::CLMjDesk()
 	m_pArrMjPlayer[2] = new CLMjPlayer(CLMjPlayer::EP_CmpNormal);
 	m_pArrMjPlayer[3] = new CLMjPlayer(CLMjPlayer::EP_CmpNormal);
 
-m_nMjNumSurplus = GAME_MJ_CARD_COUNT_MAX;
+m_nMjNumSurplus = MJ_MAX_CARD_COUNT;
 m_nIndexStart = 0;
 m_nIndexCurrent = 0;
 m_nBanker = 0;

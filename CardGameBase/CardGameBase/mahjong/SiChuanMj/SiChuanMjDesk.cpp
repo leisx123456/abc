@@ -104,7 +104,7 @@ void CSiChuanMjDesk::onEventDealCards()
 	{
 		m_mjLogic.copyCards(tMsgDealCards.arrCardHand[i], 14, arrCardHand[i], 14);
 	}
-	m_mjLogic.copyCards(tMsgDealCards.arrMjCardsPair, GAME_MJ_CARD_COUNT_MAX, m_arrMjCardsPair, GAME_MJ_CARD_COUNT_MAX);
+	m_mjLogic.copyCards(tMsgDealCards.arrMjCardsPair, MJ_MAX_CARD_COUNT, m_arrMjCardsPair, MJ_MAX_CARD_COUNT);
 
 	onMsgDealCards(tMsgDealCards);
 	_gameDispatcher->start(TIME_ID_TBA);

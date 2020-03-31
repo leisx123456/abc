@@ -79,6 +79,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\LayerMahjong.h" />
+    <ClInclude Include="..\..\LayerPlayer.h" />
     <ClInclude Include="MJDefine.h" />
     <ClInclude Include="MjLogic.h" />
     <ClInclude Include="MjLogicOld.h" />
@@ -86,6 +88,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\LayerMahjong.cpp" />
+    <ClCompile Include="..\..\LayerPlayer.cpp" />
     <ClCompile Include="MjLogic.cpp" />
     <ClCompile Include="MjLogicOld.cpp" />
     <ClCompile Include="stdafx.cpp">

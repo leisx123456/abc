@@ -25,6 +25,7 @@ enum E_OperatorStatus
 
 struct T_UserInfo
 {
+	// 用户信息
 	string strNickname;
 	unsigned short cbScore;
 	string strHeadPath;

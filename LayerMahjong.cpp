@@ -80,13 +80,19 @@ void LayerMahjong::onTouchEnded(Touch *touch, Event *unused_event)
 		{
 			if (_cardSelected == _sptArrHandCard[0][i])
 			{
-				// 说明要出这张牌，请求服务器出牌
-				T_MjActOutInfo tMjActOutInfo;
-				tMjActOutInfo.nOutCardValue = _cardSelected->value();
-				tMjActOutInfo.nOutCardUser = 0;
-				SceneDesk * desk = (SceneDesk *)getParent();	// 如果有两层需要2次getParent()
-				desk->onUserOutCardRequest(0, tMjActOutInfo);
-				return;
+				if (bActive)
+				{
+					_sptArrHandCard[0][i]->onTouched();
+
+					// 说明要出这张牌，请求服务器出牌
+					T_MjActOutInfo tMjActOutInfo;
+					tMjActOutInfo.nOutCardValue = _cardSelected->value();
+					tMjActOutInfo.nOutCardUser = 0;
+					SceneDesk * desk = (SceneDesk *)getParent();	// 如果有两层需要2次getParent()
+					desk->onUserOutCardRequest(0, tMjActOutInfo);
+					return;
+				}
+
 			}
 			else
 			{
@@ -134,6 +140,7 @@ void LayerMahjong::SortCard(byte wviewid)
 	//BYTE cardIndex[MAX_INDEX] = { 0 };
 	//MjLogic::getInstance()->SwitchToCardIndex(m_pLocal->m_kHandCardData, m_pLocal->m_kHandCardCout, cardIndex);
 }
+
 
 
 void LayerMahjong::sortCards(CSpriteMjCard* aCards[], unsigned int unCardCount)
@@ -492,10 +499,20 @@ void LayerMahjong::outCard(byte cbViewId, byte cbCard)
 		_sptArrOutCard[0][nOutCardIndex]->setPosition(ptStart);
 		_sptArrOutCard[0][nOutCardIndex]->runAction(MoveTo::create(0.3, ptEnd));
 
-		_cardSelected->empty();
-		_cardSelected->updateCard();
-		_cardSelected->popDown();
-		sortCards(_sptArrHandCard[0], 14);
+		// 玩家出牌的时候要把第14张新牌位置的牌插入到出牌的那个位置，然后整理前13张牌
+		if (_sptArrOutCard[0][13]->isValid())
+		{
+			_cardSelected->setValue(_sptArrOutCard[0][13]->value());
+			_cardSelected->popDown();
+			_cardSelected = nullptr;
+
+			_sptArrOutCard[0][13]->empty();
+
+		}
+
+		//sortCards(_sptArrHandCard[0], 13);
+		// 整理数据 整理实际的数目
+		// 再给精灵赋值
 		
 	}
 	else

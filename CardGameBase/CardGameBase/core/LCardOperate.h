@@ -344,7 +344,6 @@ bool CLCardOperate<CLCard>::isCardInArray(CLCard const aCards[], unsigned int un
 
 //////////////////////////////////////////////////////////////////////////
 //模板局部特化 
-/*
 template<class CLCard>
 class CLCardOperate<CLCard*> //(需要用到指针)
 {
@@ -353,7 +352,7 @@ public:
 	virtual ~CLCardOperate();
 
 
-	// 理牌
+	// 理牌 使用方法CLCardOperate<A*> opeA; opeA.sortCards(A* a[], 5)
 	void sortCards(CLCard* aCards[], unsigned int unCardCount);// 如果是指针时不能只是简单交换指针，而是交互值
 };
 
@@ -375,4 +374,3 @@ void CLCardOperate<CLCard*>::sortCards(CLCard* aCards[], unsigned int unCardCoun
 		}
 	}
 }
-*/

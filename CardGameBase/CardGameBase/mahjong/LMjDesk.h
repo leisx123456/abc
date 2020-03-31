@@ -21,15 +21,15 @@ public:
 	// 常用函数
 	//////////////////////////////////////////////////////////////////////////
 	// 获取下nUnit个单位的索引 
-	static int nextPlayerIndex(int nCurIndex, int nPlayerCount = GAME_MJ_PLAYER_MAX, bool bClockWise = true, int nUnit = 1);
-	virtual int playerCount() const { return GAME_MJ_PLAYER_MAX; }	// 参与游戏的实际人数， 表示2人玩  3 表示3人玩  4表示4人
+	static int nextPlayerIndex(int nCurIndex, int nPlayerCount = MJ_MAX_PLAYER, bool bClockWise = true, int nUnit = 1);
+	virtual int playerCount() const { return MJ_MAX_PLAYER; }	// 参与游戏的实际人数， 表示2人玩  3 表示3人玩  4表示4人
 
 
 
 	// shuffle洗牌,cut切牌,deal发牌,sort理牌,draw摸牌,play打出,discard弃牌shuffle：本意是指调换顺序,这里调换牌的顺序,也就是“洗牌”.
 	//cut：切牌.作弊的时候常用一招“假切牌”,看起来好像切了,实际上没有改过牌的...
 	virtual void allocation() = 0; // 分配麻将子，这里的数量是具体麻将游戏实际加入的牌,如四川麻将只需万条筒
-	virtual int mjNumAllocation() const { return GAME_MJ_CARD_COUNT_MAX; }	// 分配麻将子数，这里的数量是具体麻将游戏实际加入的牌数，如有的只加入万条筒就是108
+	virtual int mjNumAllocation() const { return MJ_MAX_CARD_COUNT; }	// 分配麻将子数，这里的数量是具体麻将游戏实际加入的牌数，如有的只加入万条筒就是108
 
 	void ruffle();	//洗牌
 	void initWall(); //按四个方向摆放牌墙
@@ -62,8 +62,8 @@ public:
 protected:
 	CLMjLogic m_mjLogic;
 
-	CLMjCard m_arrMjCardsPair[GAME_MJ_CARD_COUNT_MAX];	// 一副麻将
-	CLMjPlayer* m_pArrMjPlayer[GAME_MJ_PLAYER_MAX];	// 麻将玩家 最多4人
+	CLMjCard m_arrMjCardsPair[MJ_MAX_CARD_COUNT];	// 一副麻将
+	CLMjPlayer* m_pArrMjPlayer[MJ_MAX_PLAYER];	// 麻将玩家 最多4人
 
 	CLDicePair m_mjDicePair;	// 2个麻将骰子
 
