@@ -13,8 +13,8 @@ public:
 	//bool isExistPair(CLMjCard aCards[]);
 
 	// //×ª»»
-	int switchToCardData(const unsigned int arrCardIndex[MAX_INDEX], CLMjCard aCards[MAX_HAND_COUNT]);
-	int switchToCardIndex(CLMjCard aCards[], unsigned int unCardCount, unsigned int arrCardIndex[MAX_INDEX]);
+	int switchToCardData(const unsigned int arrCardIndex[MJ_MAX_INDEX], CLMjCard aCards[MJ_MAX_HAND_COUNT]);
+	int switchToCardIndex(CLMjCard aCards[], unsigned int unCardCount, unsigned int arrCardIndex[MJ_MAX_INDEX]);
 
 	
 	// ÊÇ·ñÄÜÅö

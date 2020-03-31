@@ -13,17 +13,17 @@ CLMjLogic::CLMjLogic()
 
 
 
-int CLMjLogic::switchToCardData(const unsigned int arrCardIndex[MAX_INDEX], CLMjCard aCards[MAX_HAND_COUNT])
+int CLMjLogic::switchToCardData(const unsigned int arrCardIndex[MJ_MAX_INDEX], CLMjCard aCards[MJ_MAX_HAND_COUNT])
 {
 	int cbPosition = 0;
 
-	for (int index = 0; index < MAX_INDEX; index++)
+	for (int index = 0; index < MJ_MAX_INDEX; index++)
 	{
 		if (aCards[index] != 0)	// aCards[index] 最大位4张
 		{
 			for (int j = 0; j < arrCardIndex[index]; j++)
 			{
-				assert(cbPosition < MAX_HAND_COUNT);
+				assert(cbPosition < MJ_MAX_HAND_COUNT);
 				aCards[cbPosition++] = CLMjCard::switchToCardValue(index);
 			}
 		}
@@ -33,9 +33,9 @@ int CLMjLogic::switchToCardData(const unsigned int arrCardIndex[MAX_INDEX], CLMj
 }
 
 
-int CLMjLogic::switchToCardIndex(CLMjCard aCards[], unsigned int unCardCount, unsigned int arrCardIndex[MAX_INDEX])
+int CLMjLogic::switchToCardIndex(CLMjCard aCards[], unsigned int unCardCount, unsigned int arrCardIndex[MJ_MAX_INDEX])
 {
-	memset(arrCardIndex, 0, sizeof(unsigned int) * MAX_INDEX);
+	memset(arrCardIndex, 0, sizeof(unsigned int) * MJ_MAX_INDEX);
 
 	for (int i = 0; i < unCardCount; i++)
 	{
@@ -68,9 +68,9 @@ bool CLMjLogic::isCanKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCa
 	}
 	else
 	{
-		unsigned int arrCardIndexTemp[MAX_INDEX];
+		unsigned int arrCardIndexTemp[MJ_MAX_INDEX];
 		switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
-		for (int i = 0; i < MAX_INDEX; i++)
+		for (int i = 0; i < MJ_MAX_INDEX; i++)
 		{
 			if (arrCardIndexTemp[i] == 4)
 			{
@@ -109,10 +109,10 @@ bool CLMjLogic::isCanDianKong(CLMjCard aCards[], unsigned int unCardCount, T_Wea
 
 bool CLMjLogic::isCanAnKong(CLMjCard aCards[], unsigned int unCardCount, CLMjCard & cardResult)
 {
-	unsigned int arrCardIndexTemp[MAX_INDEX];
+	unsigned int arrCardIndexTemp[MJ_MAX_INDEX];
 	switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
 
-	for (int i = 0; i < MAX_INDEX; i++)
+	for (int i = 0; i < MJ_MAX_INDEX; i++)
 	{
 		if (arrCardIndexTemp[i] == 4)
 		{
@@ -137,7 +137,7 @@ bool CLMjLogic::isCanBuKong(CLMjCard aCards[], unsigned int unCardCount, T_Weave
 	//		}
 	//	}
 	//}
-	unsigned int arrCardIndexTemp[MAX_INDEX];
+	unsigned int arrCardIndexTemp[MJ_MAX_INDEX];
 	switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
 
 	for (int i = 0; i < unItemSize; i++)
@@ -339,7 +339,7 @@ bool CLMjLogic::isCanHu(CLMjCard aCards[]
 
 	// 复制牌组
 	unsigned int unCardNumTemp = unCardCount;
-	CLMjCard aCardsTemp[MAX_HAND_COUNT];
+	CLMjCard aCardsTemp[MJ_MAX_HAND_COUNT];
 	copyCards(aCardsTemp, unCardNumTemp, aCards, unCardCount);
 
 	// 理牌
@@ -352,7 +352,7 @@ bool CLMjLogic::isCanHu(CLMjCard aCards[]
 // 递归删除法
 bool CLMjLogic::isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair /*= false*/)
 {
-	assert(unCardCount > 0 && unCardCount <= MAX_HAND_COUNT);
+	assert(unCardCount > 0 && unCardCount <= MJ_MAX_HAND_COUNT);
 	if (unCardCount % 3 != 2)
 	{
 		return false;
@@ -373,7 +373,7 @@ bool CLMjLogic::isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bM
 	}
 
 	// 重新拷贝一份，以此递归失败时恢复起始点
-	CLMjCard aCardsTemp[MAX_HAND_COUNT];
+	CLMjCard aCardsTemp[MJ_MAX_HAND_COUNT];
 	copyCards(aCardsTemp, unCardCount, aCards, unCardCount);
 
 	// 剔除刻子
@@ -396,7 +396,7 @@ bool CLMjLogic::isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bM
 
 bool CLMjLogic::isCanHu_7Pair(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair /*= false*/)
 {
-	assert(unCardCount > MAX_HAND_COUNT || unCardCount <= 0);
+	assert(unCardCount > MJ_MAX_HAND_COUNT || unCardCount <= 0);
 	if (unCardCount % 3 != 2)
 	{
 		return false;
@@ -406,11 +406,11 @@ bool CLMjLogic::isCanHu_7Pair(CLMjCard aCards[], unsigned int unCardCount, bool 
 	int cbReplaceCount = 0;
 
 	//临时数据
-	unsigned int arrCardIndexTemp[MAX_INDEX];
+	unsigned int arrCardIndexTemp[MJ_MAX_INDEX];
 	switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
 
 	//计算单牌
-	for (int i = 0; i < MAX_INDEX; i++)
+	for (int i = 0; i < MJ_MAX_INDEX; i++)
 	{
 		int cbCardCount = arrCardIndexTemp[i];
 

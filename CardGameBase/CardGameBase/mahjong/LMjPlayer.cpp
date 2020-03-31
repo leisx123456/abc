@@ -43,8 +43,8 @@ void CLMjPlayer::init()
 	m_nHandNums = 0;
 	m_nWeaveItemNums = 0;
 	m_ePlayerActiveState = E_PlayerActiveState::p_unActive;
-	CLMjCard m_arrOutedCards[MJ_MAX_OUTED];
-	for (int i = 0; i < MJ_MAX_OUTED; i++)
+	CLMjCard m_arrOutedCards[MJ_MAX_OUTED_COUNT];
+	for (int i = 0; i < MJ_MAX_OUTED_COUNT; i++)
 	{
 		m_arrOutedCards[i] = CARD_EMPTY;
 	}
@@ -178,9 +178,9 @@ bool CLMjPlayer::execPong(const CLMjCard & cardOut)
 
 
 
-void CLMjPlayer::dealCards(const CLMjCard arrHandCards[MAX_HAND_COUNT])
+void CLMjPlayer::dealCards(const CLMjCard arrHandCards[MJ_MAX_HAND_COUNT])
 {
-	for (int i = 0; i < MAX_HAND_COUNT; ++i)
+	for (int i = 0; i < MJ_MAX_HAND_COUNT; ++i)
 	{
 		m_arrHandCards[i] = arrHandCards[i];
 	}
@@ -189,7 +189,7 @@ void CLMjPlayer::dealCards(const CLMjCard arrHandCards[MAX_HAND_COUNT])
 void CLMjPlayer::getHandCards(CLMjCard* pArrHandCards)
 {
 	//pArrHandCards = m_arrHandCards;
-	for (int i = 0; i < MAX_HAND_COUNT; ++i)
+	for (int i = 0; i < MJ_MAX_HAND_COUNT; ++i)
 	{
 		pArrHandCards[i] = m_arrHandCards[i];
 	}

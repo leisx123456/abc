@@ -80,7 +80,7 @@ int CLMjCard::switchToCardIndex()
 
 CLMjCard CLMjCard::switchToCardValue(int nCardIndex)
 {
-	assert(nCardIndex < MAX_INDEX);
+	assert(nCardIndex < MJ_MAX_INDEX);
 	return CLMjCard(((nCardIndex / 9) << 4) | (nCardIndex % 9 + 1));
 }
 

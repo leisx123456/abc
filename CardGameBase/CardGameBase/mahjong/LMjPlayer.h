@@ -63,7 +63,7 @@ struct T_UserInfo
 // 手牌基本数据
 struct T_UserCardsData
 {
-	CLMjCard arrHandCards[MAX_HAND_COUNT];
+	CLMjCard arrHandCards[MJ_MAX_HAND_COUNT];
 	int nHandNums;
 
 	T_WeaveCardsItem arrWeaveCardsItem[4];
@@ -135,7 +135,7 @@ public:
 	// 玩家动作及操作
 
 	// 摸手牌
-	void dealCards(const CLMjCard arrHandCards[MAX_HAND_COUNT]);
+	void dealCards(const CLMjCard arrHandCards[MJ_MAX_HAND_COUNT]);
 	void getHandCards(CLMjCard* pArrHandCards);
 
 	// 定缺
@@ -198,7 +198,7 @@ private:
 	T_WeaveCardsItem m_arrWeaveCardsItem[4];	// 用户的组合牌
 	int m_nWeaveItemNums;
 
-	CLMjCard m_arrHandCards[MAX_HAND_COUNT];	//用户的手牌
+	CLMjCard m_arrHandCards[MJ_MAX_HAND_COUNT];	//用户的手牌
 	int m_nHandNums;					//用户手牌数量
 
 	// --取消，因为玩家手牌设置最大14，新牌已加入到手牌中

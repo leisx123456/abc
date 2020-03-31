@@ -222,6 +222,7 @@ void CSiChuanMjDesk::onEventJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyT
 			}
 			else
 			{
+				// 摸牌与打牌之间要预留一些时间显示动画
 				onUserOutCardRequest(m_nActiveUser, tActRequest.tMjActOutInfo);
 			}
 		}
@@ -239,6 +240,8 @@ void CSiChuanMjDesk::onEventJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyT
 	}
 	else if (eActiveNotifyType == EA_OutCard)
 	{
+		// 检测是否有动作
+		bool bHaveAct = false;
 		for (int i = 0; i < playerCount(); ++i)
 		{
 			if (i == m_nActiveUser)
@@ -252,32 +255,29 @@ void CSiChuanMjDesk::onEventJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyT
 				m_pArrMjPlayer[m_nActiveUser]->think(&tActRequest, CARD_EMPTY, usIgnoreFlags);
 				if (tActRequest.usActFlags)
 				{
+					bHaveAct = true;
 					OnUserActRequest(m_nActiveUser, tActRequest);
-				}
-				else
-				{
-					onUserOutCardRequest(m_nActiveUser, tActRequest.tMjActOutInfo);
 				}
 			}
 			else
 			{
 				
 				T_MjActInfo tMjActInfo;
-				bool bHaveAct = m_pArrMjPlayer[i]->selectActInfo(&tMjActInfo, m_cardOut, 0);
-				if (bHaveAct)
+				if (m_pArrMjPlayer[i]->selectActInfo(&tMjActInfo, m_cardOut, 0))
 				{
 					//动作流转向////////////////////////////////////////////////////////////////////////////////////////////
 					//即可能会断流，活动状态流转到执行动作的玩家
+					bHaveAct = true;
 					onMsgActNotify(tMjActInfo);
 				}
-				else
-				{
-					onEventDrawCard();
-				}
-
 			}
 
+		}
 
+		// 都没有动作信息
+		if (!bHaveAct)
+		{
+			onEventDrawCard();
 		}
 
 	}

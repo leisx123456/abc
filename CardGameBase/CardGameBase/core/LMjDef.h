@@ -5,15 +5,14 @@
 // 麻将通用定义
 //////////////////////////////////////////////////////////////////////////
 //公共宏定义
-#define MJ_MAX_CARD_COUNT					144		// 一副麻将最大张数							//游戏人数
+#define MJ_MAX_CARD_COUNT				144									// 一副麻将最大张数	
 #define MJ_MAX_PLAYER					4									//游戏人数
 #define MJ_MAX_WEAVE					4									//最大组合
-#define MAX_INDEX					42									//最大索引
-//#define MAX_INDEX					34									//最大索引
-//#define MAX_INDEX					27									//最大索引
-#define MAX_HAND_COUNT				14									//最大数目
-#define MJ_MAX_OUTED				30									//最大数目
-#define CARD_TOTAL_NUM				108									//最大库存
+#define MJ_MAX_INDEX					42									//最大索引
+#define MJ_MAX_HAND_COUNT				14									//最大数目
+#define MJ_MAX_OUTED_COUNT				30									//最大数目
+#define MJ_TOTAL_CARD_NUM				108									//最大库存
+
 #define CARD_EMPTY					0
 
 
@@ -405,7 +404,7 @@ struct T_MsgOutCard
 	int nOutCardUser;
 	int nOutCardValue;
 
-	int arrOutCard[MJ_MAX_OUTED];
+	int arrOutCard[MJ_MAX_OUTED_COUNT];
 	int nOutedNums; // 出牌数，不包含别人拿去碰杠胡的牌， 用于刷新界面出牌
 };
 
@@ -441,6 +440,11 @@ struct T_ActRequest
 	int nKongCardValue;
 	// 特殊动作
 	T_MjActOutInfo tMjActOutInfo;
+
+	T_ActRequest()
+	{
+		memset(this, 0, sizeof(T_ActRequest));
+	}
 };
 
 
