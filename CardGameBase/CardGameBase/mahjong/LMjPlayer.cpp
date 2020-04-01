@@ -121,9 +121,7 @@ bool CLMjPlayer::outCard(const CLMjCard & card)
 
 CLMjCard CLMjPlayer::getLatestOutCard()
 {
-	CLMjCard card = m_vecCardOut.back();
-	m_vecCardOut.pop_back();
-	return card;
+	return m_vecCardOut.back();
 }
 
 
@@ -137,44 +135,114 @@ void CLMjPlayer::getOutCardsValue(int* pArrOutCardsValue, int & nOutCardNums)
 }
 
 
-
-void CLMjPlayer::execAction(T_ActRequest tActRequest)
+void CLMjPlayer::removeLatestOutCard()
 {
-	if (EA_Pong == tActRequest.usActFlags)
-	{
-		//为玩家执行过操作
-		//ExecuteGuoAct(bDeskStation);
-
-	}
-	else if (EA_Kong == tActRequest.usActFlags)
-	{
-		//为玩家执行杠操作
-		//ExecuteGangAct(m_byTokenUser, byCanActUsers[0]);
-	}
-	else if (EA_hu == tActRequest.usActFlags)
-	{
-		//为玩家执行胡操作
-		//ExecuteHuAct(m_byTokenUser, byCanActUsers, iAtOnceCounter);
-	}
-
+	m_vecCardOut.pop_back();
 }
 
 
-bool CLMjPlayer::execPong(const CLMjCard & cardOut)
+
+
+
+bool CLMjPlayer::execPong(unsigned char byProvideUser, const CLMjCard & cardOut)
 {
+	// 更新手牌
 	if (m_mjLogic.removeCards(m_arrHandCards, m_nHandNums, cardOut, 2) != 2)
 	{
 		return false;
 	}
 	m_nHandNums -= 2;
 
+	// 更新组合牌
 	T_WeaveCardsItem tWeaveCardsItem;
 	tWeaveCardsItem.byWeaveKind = T_WeaveCardsItem::EW_Triplet;
 	tWeaveCardsItem.cardCenter = cardOut;
 	tWeaveCardsItem.cardPublic = cardOut;
-	//tWeaveCardsItem.byProvideUser = 0;
+	tWeaveCardsItem.byProvideUser = byProvideUser;
+	for (int i = 0; i < 3; i++)
+	{
+		tWeaveCardsItem.aCards[i] = cardOut;
+	}
 	m_arrWeaveCardsItem[m_nWeaveItemNums++] = tWeaveCardsItem;
+
+	return true;
 }
+
+
+bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut, int nCurSelectIndex)
+{
+	E_KongType eKongType = m_tMjActInfo.tMjActKongInfo.arrKongType[nCurSelectIndex];
+
+	if (eKongType == EK_KongDian)
+	{
+		// 更新手牌
+		if (m_mjLogic.removeCards(m_arrHandCards, m_nHandNums, cardOut, 3) != 3)
+		{
+			return false;
+		}
+		m_nHandNums -= 3;
+
+		// 更新组合牌
+		T_WeaveCardsItem tWeaveCardsItem;
+		tWeaveCardsItem.byWeaveKind = T_WeaveCardsItem::EW_KongDian;
+		tWeaveCardsItem.cardCenter = cardOut;
+		tWeaveCardsItem.cardPublic = cardOut;
+		tWeaveCardsItem.byProvideUser = byProvideUser;
+		for (int i = 0; i < 4; i++)
+		{
+			tWeaveCardsItem.aCards[i] = cardOut;
+		}
+		m_arrWeaveCardsItem[m_nWeaveItemNums++] = tWeaveCardsItem;
+	}
+	else if (eKongType == EK_KongAn)
+	{
+		//取得要杠的牌
+		int byGangCard = m_tMjActInfo.tMjActKongInfo.arrKongSelect[nCurSelectIndex];
+
+		// 更新手牌
+		if (m_mjLogic.removeCards(m_arrHandCards, m_nHandNums, cardOut, 4) != 4)
+		{
+			return false;
+		}
+		m_nHandNums -= 4;
+
+		// 更新组合牌
+		T_WeaveCardsItem tWeaveCardsItem;
+		tWeaveCardsItem.byWeaveKind = T_WeaveCardsItem::EW_KongAn;
+		tWeaveCardsItem.cardCenter = byGangCard;
+		tWeaveCardsItem.cardPublic = byGangCard;
+		for (int i = 0; i < 4; i++)
+		{
+			tWeaveCardsItem.aCards[i] = byGangCard;
+		}
+		m_arrWeaveCardsItem[m_nWeaveItemNums++] = tWeaveCardsItem;
+	}
+	else if (eKongType == EK_KongBa)
+	{
+		//取得要杠的牌
+		int byGangCard = m_tMjActInfo.tMjActKongInfo.arrKongSelect[nCurSelectIndex];
+		// 更新手牌
+		if (m_mjLogic.removeCards(m_arrHandCards, m_nHandNums, cardOut, 1) != 1)
+		{
+			return false;
+		}
+		m_nHandNums--;
+
+		// 更新组合牌
+		T_WeaveCardsItem tWeaveCardsItem;
+		tWeaveCardsItem.byWeaveKind = T_WeaveCardsItem::EW_KongBa;
+		tWeaveCardsItem.cardCenter = byGangCard;
+		tWeaveCardsItem.cardPublic = byGangCard;
+		for (int i = 0; i < 4; i++)
+		{
+			tWeaveCardsItem.aCards[i] = byGangCard;
+		}
+		m_arrWeaveCardsItem[m_nWeaveItemNums++] = tWeaveCardsItem;
+	}
+
+	return true;
+}
+
 
 
 
@@ -205,8 +273,11 @@ void CLMjPlayer::getHandCards(CLMjCard* pArrHandCards)
 
 //////////////////////////////////////////////////////////////////////////
 
-bool CLMjPlayer::selectActInfo(T_MjActInfo* pActInfo, CLMjCard cardOut, unsigned short usIgnoreFlags /*= 0*/)
+bool CLMjPlayer::selectActInfo(CLMjCard cardOut, unsigned short usIgnoreFlags /*= 0*/)
 {
+	// 清除动作信息
+	m_tMjActInfo.clear();
+
 	if (isActive())
 	{
 		//自己摸牌肯定不能吃碰
@@ -218,16 +289,16 @@ bool CLMjPlayer::selectActInfo(T_MjActInfo* pActInfo, CLMjCard cardOut, unsigned
 	{
 		if (isCanPong(cardOut))
 		{
-			pActInfo->usActFlags |= (E_ActionTypeFlags::EA_Pong | E_ActionTypeFlags::EA_Pass);
+			m_tMjActInfo.usActFlags |= (E_ActionTypeFlags::EA_Pong | E_ActionTypeFlags::EA_Pass);
 
 		}
 	}
 
 	if (!(usIgnoreFlags & E_ActionTypeFlags::EA_Kong))
 	{
-		if (isCanKong(cardOut, pActInfo))
+		if (isCanKong(cardOut, &m_tMjActInfo))
 		{
-			pActInfo->usActFlags |= (E_ActionTypeFlags::EA_Kong | E_ActionTypeFlags::EA_Pass);
+			m_tMjActInfo.usActFlags |= (E_ActionTypeFlags::EA_Kong | E_ActionTypeFlags::EA_Pass);
 
 		}
 	}
@@ -236,11 +307,11 @@ bool CLMjPlayer::selectActInfo(T_MjActInfo* pActInfo, CLMjCard cardOut, unsigned
 	{
 		if (isCanHu(cardOut))
 		{
-			pActInfo->usActFlags |= (E_ActionTypeFlags::EA_hu | E_ActionTypeFlags::EA_Pass);
+			m_tMjActInfo.usActFlags |= (E_ActionTypeFlags::EA_hu | E_ActionTypeFlags::EA_Pass);
 		}
 	}
 
-	return (pActInfo->usActFlags > 0);
+	return (m_tMjActInfo.usActFlags > 0);
 }
 
 
@@ -267,11 +338,11 @@ CLMjCard::E_MjCardColor CLMjPlayer::thinkDingQue()
 	return (CLMjCard::E_MjCardColor)m_pIAbstractThink->thinkDingQue(m_arrHandCards, m_nHandNums);
 }
 
-void CLMjPlayer::think(T_ActRequest* pActRequest, CLMjCard cardDest, unsigned short usIgnoreFlags)
+void CLMjPlayer::think(CLMjCard cardDest, unsigned short usIgnoreFlags)
 {
 	// 出牌思考
 	
-	m_pIAbstractThink->think(pActRequest, m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, cardDest, m_eColorTBA);
+	m_pIAbstractThink->think(&m_tActRequestAI, m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, cardDest, m_eColorTBA);
 }
 
 

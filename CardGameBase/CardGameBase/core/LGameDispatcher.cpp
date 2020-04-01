@@ -44,6 +44,29 @@ void CLGameDispatcher::runTimer(T_GameDispatcherTask tGameDispatcherTask)
 }
 
 
+void CLGameDispatcher::delayExec(int nTaskId, int nChairID)
+{
+	if (m_mapDelayFun.empty())
+	{
+		return;
+	}
+
+	std::map<int, T_DelayExec>::iterator iter = m_mapDelayFun.find(nTaskId);
+	if (iter == m_mapDelayFun.end())
+	{
+		return;
+	}
+
+	T_DelayExec tDelayExec = m_mapDelayFun.at(nTaskId);
+	std::thread([=](){
+		std::this_thread::sleep_for(std::chrono::milliseconds(tDelayExec.unElapseMs));
+		tDelayExec.fnDelay(nChairID);
+	}).detach();
+
+}
+
+
+
 //void CLGameDispatcher::pause()
 //{
 //

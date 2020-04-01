@@ -32,7 +32,7 @@ public:
 	virtual void initCard();
 
 	// ÊÇ·ñÓÐÐ§
-	virtual bool isValid()
+	virtual bool isValid() const
 	{
 		return m_nValue > 1;
 	}

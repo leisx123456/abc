@@ -61,7 +61,7 @@ CLMjCard::CLMjCard(E_CardResType eCardResType, E_ViewDirection eViewDirection, i
 
 
 
-bool CLMjCard::isValid()
+bool CLMjCard::isValid() const
 {
 	unsigned char cbValue = (m_nValue & MASK_VALUE);
 	unsigned char cbColor = (m_nValue & MASK_COLOR) >> 4;

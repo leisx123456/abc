@@ -87,7 +87,7 @@ public:
 	CLMjCard(int nCard);
 	CLMjCard(E_CardResType eCardResType, E_ViewDirection eViewDirection, int nCard);
 
-	virtual bool isValid();
+	virtual bool isValid() const;
 	virtual void empty();
 
 	virtual int logicValue(){ return m_nValue & MASK_VALUE; }

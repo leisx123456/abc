@@ -48,10 +48,12 @@ public:
 	virtual int mjNumAllocation() const { return 108; }
 	int surplusCards() { return m_nIndexCurrent > m_nIndexStart 
 		? (m_nIndexCurrent - m_nIndexStart) : (m_nIndexCurrent + mjNumAllocation() - m_nIndexStart); }
-
-
 	void updateUser();
-
+	int selectActAtOnceUsers(int byUsers[], unsigned short & usActFlag);
+	bool execActPass(int nFromUser);
+	bool execActPong(int nFromUser, int nToUser);
+	bool execActKong(int nFromUser, int nToUser);
+	bool execActHu(int nFromUser, int arrToUser[], int nUserNums);
 
 	//////////////////////////////////////////////////////////////////////////
 	// 系统事件
@@ -61,12 +63,16 @@ public:
 	virtual void onEventDealCards();		// 发手牌
 	virtual void onEventDingQue();			// 定缺
 	virtual void onEventFristBankerActive();
-	virtual void onEventDrawCard();
-	virtual void onEventJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyType);
-	//virtual void onEventAppointActiveUser();			// 指定活动用户，活动用户可摸牌出牌。
-	//virtual void onEventResponseToActiveUser();			// 当前可对活动玩家的动作响应
+	virtual void onEventDrawCard();	// 摸牌包含了指定活动玩家
+	//virtual void onEventAppointActiveUser();			// 指定活动用户
+	//virtual void onEventAppointResponseUsers();			// 指定响应用户
 	virtual void onEventGameFinshed();
-
+	// 由于电脑思考执行动作比较快，需要延迟执行
+	void onDelayExecActRequest(int nChairID);
+	void onDelayExecOutCardRequest(int nChairID);
+	//////////////////////////////////////////////////////////////////////////
+	// 系统判定
+	virtual void onSysJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyType);
 
 
 	//////////////////////////////////////////////////////////////////////////

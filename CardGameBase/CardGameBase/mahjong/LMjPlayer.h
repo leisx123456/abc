@@ -129,6 +129,7 @@ public:
 	bool isActive() { return m_ePlayerActiveState == P_Active; }
 	void setActive(E_PlayerActiveState ePlayerActiveState){ m_ePlayerActiveState = ePlayerActiveState; }
 	void cancelActive(){ m_ePlayerActiveState = p_unActive; }
+	bool isAlreadyHu() { return m_bIsHu; }
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -151,11 +152,12 @@ public:
 	bool outCard(const CLMjCard & card);
 	CLMjCard getLatestOutCard();
 	void getOutCardsValue(int* pArrOutCardsValue, int & nOutCardNums);
+	void removeLatestOutCard();
 
 	// 玩家动作
 	void execAction(T_ActRequest tActRequest);
-	bool execPong(const CLMjCard & cardOut);
-	bool execKong();
+	bool execPong(unsigned char byProvideUser, const CLMjCard & cardOut);
+	bool execKong(unsigned char byProvideUser, const CLMjCard & cardOut, int nCurSelectIndex);
 	bool execHu();
 
 
@@ -174,7 +176,8 @@ public:
 // 逻辑判断
 
 	// 获取玩家对于自己手牌(自己是活动状态) 或别人出的牌(别人是活动状态) 可以选择的动作
-	bool selectActInfo(T_MjActInfo* pActInfo, CLMjCard cardOut, unsigned short usIgnoreFlags = 0);
+	bool selectActInfo(CLMjCard cardOut, unsigned short usIgnoreFlags = 0);
+	T_MjActInfo* actInfo() { return &m_tMjActInfo; }
 
 	bool isCanPong(CLMjCard cardOut);
 	bool isCanKong(CLMjCard cardOut, T_MjActInfo* pActInfo);
@@ -184,14 +187,19 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// ai思考
 	CLMjCard::E_MjCardColor thinkDingQue();
-	void think(T_ActRequest* pActRequest, CLMjCard cardDest, unsigned short usIgnoreFlags = 0);
-
+	void think(CLMjCard cardOut, unsigned short usIgnoreFlags = 0);
+	T_ActRequest* aiActRequest() { return &m_tActRequestAI; }
 
 private:
 	//////////////////////////////////////////////////////////////////////////
-	// ai
+	// 玩家性质 ai or people
 	E_PlayerType m_ePlayerType;
+
+	// ai
 	IAbstractThink* m_pIAbstractThink;
+	T_ActRequest m_tActRequestAI;	// 保存AI思考后的动作结果
+
+	T_MjActInfo m_tMjActInfo;		// 保存玩家当前可以执行的那些动作(电脑玩家通用)
 
 	// 
 	CLMjLogic m_mjLogic;

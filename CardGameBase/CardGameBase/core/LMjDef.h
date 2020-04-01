@@ -18,30 +18,24 @@
 
 //游戏事件ID定义,(取值范围从10-49)（定时器的处理）
 
-#define TIME_ID_Ready			9			// 选座
+#define TIME_ID_Ready					9			// 准备
 #define TIME_ID_CHOOSE_A_SEAT			10			// 选座
-#define TIME_ID_CHOOSE_BANKER				11			// 选庄
-#define TIME_ID_SHUFFLE_CARD				13			// 系统洗牌据事件
-#define TIME_ID_ROCK_DICE			12			// 系统确定起牌方向及起牌墩数据事件
-#define TIME_ID_FETCH_HANDCARDS		14			//系统发手牌事件
-#define TIME_ID_TIAO_CARDS				15			//为各玩家跳牌事件
-#define TIME_ID_TBA         16          
-//#define TIME_ID_BU_HUAS				16			//为各玩家补花事件
-#define TIME_ID_GIVE_NEXT_TOKEN		17			//系统为某个玩家下发令牌事件,得令牌者抓牌出牌
-#define TIME_ID_GANG_HUA				18			//系统为某个玩家执行杠花事件
+#define TIME_ID_CHOOSE_BANKER			11			// 选庄
+#define TIME_ID_SHUFFLE_CARD			13			// 系统洗牌据事件
+#define TIME_ID_ROCK_DICE				12			// 系统确定起牌方向及起牌墩数据事件
+#define TIME_ID_FETCH_HANDCARDS			14			//系统发手牌事件
+#define TIME_ID_TBA						16          
+#define TIME_DRAW_CARD					17			//系统为某个玩家下发令牌事件,得令牌者抓牌出牌
 #define TIME_ID_RESULT					19			//游戏结算事件
 #define TIME_ID_ROUND_FINISH			20			//一回合完成/事件
 
-//dong add
-#define TIME_ID_FETCH_BIRD				21			//抓鸟
-#define TIME_ID_PIAO					22			//加飘
-
-#define TIME_ID_NT_MORE                23          //保护机制
+#define TIME_ID_COMPUTER_THINK_ACT		21			// 电脑思考吃碰杠胡
+#define TIME_ID_COMPUTER_THINK_OUT_CARD	22			// 电脑思考出牌
 
 #define TIME_ID_AUTO_ACT				24			//自动执行动作
 #define TIME_ID_AUTO_OUTCARD			25			//自动出牌
-#define TIME_ID_AUTO_ACT_NO			26			//没有托管自动执行动作
-#define TIME_ID_AUTO_OUTCARD_NO		27			//没有托管自动出牌
+#define TIME_ID_AUTO_ACT_NO				26			//没有托管自动执行动作
+#define TIME_ID_AUTO_OUTCARD_NO			27			//没有托管自动出牌
 
 
 
@@ -148,9 +142,6 @@ enum E_ActionTypeFlags
 	EA_Kong		= 0x0010L,	//杠牌
 	EA_Listen	= 0x0020L,
 	EA_hu		= 0x0040L,	//胡
-
-	// 特殊动作
-	EA_OutCard	= 0x0080L,
 
 };
 
@@ -285,7 +276,7 @@ struct T_MjActHuInfo
 {
 	int nHuNameNums;	//胡牌类型数量		
 	E_MjHuName arrHuName[EHN_HuNameMax]; //牌型表
-	E_MjHuWay eMjHuWay; //特殊胡类型
+	E_MjHuWay eMjHuWay; // 胡牌方式
 	int  nHuGangIdx;	//抢杠控件的位置(用于抢杠)
 };
 
