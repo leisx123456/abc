@@ -111,7 +111,7 @@ public:
 	};
 
 	CLMjPlayer();
-	CLMjPlayer(E_PlayerType ePlayerType);
+	CLMjPlayer(E_PlayerType ePlayerType, int nChairID);
 	~CLMjPlayer();
 
 	void init();
@@ -155,10 +155,10 @@ public:
 	void removeLatestOutCard();
 
 	// 玩家动作
-	void execAction(T_ActRequest tActRequest);
+
 	bool execPong(unsigned char byProvideUser, const CLMjCard & cardOut);
 	bool execKong(unsigned char byProvideUser, const CLMjCard & cardOut, int nCurSelectIndex);
-	bool execHu();
+	//bool execHu();
 
 
 
@@ -236,6 +236,9 @@ private:
 	bool m_bReady;
 
 
+	//////////////////////////////////////////////////////////////////////////
+	// 玩家属性
+	int m_nChairID;
 
 };
 

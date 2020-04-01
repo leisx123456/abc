@@ -63,7 +63,7 @@ public:
 	virtual void onEventDealCards();		// 发手牌
 	virtual void onEventDingQue();			// 定缺
 	virtual void onEventFristBankerActive();
-	virtual void onEventDrawCard();	// 摸牌包含了指定活动玩家
+	virtual void onEventDrawCard();	// 摸牌
 	//virtual void onEventAppointActiveUser();			// 指定活动用户
 	//virtual void onEventAppointResponseUsers();			// 指定响应用户
 	virtual void onEventGameFinshed();
@@ -72,7 +72,8 @@ public:
 	void onDelayExecOutCardRequest(int nChairID);
 	//////////////////////////////////////////////////////////////////////////
 	// 系统判定
-	virtual void onSysJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyType);
+	void onSysAppointActiveUser(int nChairID);
+	void onSysJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyType);
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -84,6 +85,7 @@ public:
 	virtual void onMsgDingQueBegin() = 0;
 	virtual void onMsgDingQue(T_MsgDingQue tMsgDingQue) = 0;
 	virtual void onMsgAppointActiveUser(T_MsgAppointActiveUser tMsgAppointActiveUser) = 0;
+	virtual void onMsgDrawCard(T_MsgDrawCard tMsgDrawCard) = 0;
 	virtual void onMsgActNotify(T_MjActInfo tMjActInfo) = 0;
 	virtual void onMsgOutCard(T_MsgOutCard tMsgOutCard) = 0;
 	virtual void onMsgActResult(T_MsgActResultInfo tMsgActResultInfo) = 0;

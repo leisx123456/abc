@@ -1,8 +1,74 @@
-﻿生成启动时间为 2020/4/1 0:07:47。
+﻿生成启动时间为 2020/4/2 0:12:45。
      1>项目“F:\work\pro\LxGame\LxGameBase\CardGameBase\CardGameBase\CardGameBase.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I. /Z7 /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _WINDOWS /D _USRDLL /D CARDGAMEBASE_EXPORTS /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt mahjong\SiChuanMj\SiChuanMjDesk.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I. /Z7 /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _WINDOWS /D _USRDLL /D CARDGAMEBASE_EXPORTS /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt mahjong\LMjDesk.cpp mahjong\LMjPlayer.cpp mahjong\SiChuanMj\SiChuanMjDesk.cpp
+         LMjDesk.cpp
+         LMjPlayer.cpp
          SiChuanMjDesk.cpp
+     1>mahjong\LMjPlayer.cpp(131): warning C4018: “<”: 有符号/无符号不匹配
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(80): warning C4018: “<”: 有符号/无符号不匹配 (mahjong\LMjDesk.cpp)
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(74): 编译类 模板 成员函数“void CLCardOperate<CLMjCard>::shuffleCards(CLCard [],unsigned int)”时
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 mahjong\LMjDesk.cpp(69): 参见对正在编译的函数 模板 实例化“void CLCardOperate<CLMjCard>::shuffleCards(CLCard [],unsigned int)”的引用
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\LMjLogic.h(9): 参见对正在编译的类 模板 实例化“CLCardOperate<CLMjCard>”的引用
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(93): warning C4018: “<”: 有符号/无符号不匹配 (mahjong\LMjDesk.cpp)
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(117): warning C4018: “<”: 有符号/无符号不匹配 (mahjong\LMjPlayer.cpp)
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(111): 编译类 模板 成员函数“void CLCardOperate<CLMjCard>::sortCards(CLCard [],unsigned int)”时
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 mahjong\LMjPlayer.cpp(112): 参见对正在编译的函数 模板 实例化“void CLCardOperate<CLMjCard>::sortCards(CLCard [],unsigned int)”的引用
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\LMjLogic.h(9): 参见对正在编译的类 模板 实例化“CLCardOperate<CLMjCard>”的引用
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(119): warning C4018: “<”: 有符号/无符号不匹配 (mahjong\LMjPlayer.cpp)
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(200): warning C4018: “<”: 有符号/无符号不匹配 (mahjong\LMjPlayer.cpp)
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(199): 编译类 模板 成员函数“bool CLCardOperate<CLMjCard>::removeCard(CLCard [],unsigned int,CLCard)”时
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 mahjong\LMjPlayer.cpp(105): 参见对正在编译的函数 模板 实例化“bool CLCardOperate<CLMjCard>::removeCard(CLCard [],unsigned int,CLCard)”的引用
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(204): warning C4018: “<”: 有符号/无符号不匹配 (mahjong\LMjPlayer.cpp)
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(244): warning C4018: “<”: 有符号/无符号不匹配 (mahjong\LMjPlayer.cpp)
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(242): 编译类 模板 成员函数“unsigned char CLCardOperate<CLMjCard>::removeCards(CLCard [],unsigned int,CLCard,unsigned int)”时
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 mahjong\LMjPlayer.cpp(151): 参见对正在编译的函数 模板 实例化“unsigned char CLCardOperate<CLMjCard>::removeCards(CLCard [],unsigned int,CLCard,unsigned int)”的引用
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(249): warning C4018: “<”: 有符号/无符号不匹配 (mahjong\LMjPlayer.cpp)
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(310): warning C4018: “<”: 有符号/无符号不匹配 (mahjong\LMjPlayer.cpp)
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(308): 编译类 模板 成员函数“int CLCardOperate<CLMjCard>::getCardsNum(CLCard [],unsigned int,CLCard)”时
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(243): 参见对正在编译的函数 模板 实例化“int CLCardOperate<CLMjCard>::getCardsNum(CLCard [],unsigned int,CLCard)”的引用
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(69): 编译类 模板 成员函数“CLCardOperate<CLMjCard>::~CLCardOperate(void)”时
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\ai/LCmpThink.h(92): 参见对正在编译的函数 模板 实例化“CLCardOperate<CLMjCard>::~CLCardOperate(void)”的引用
        Lib:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"F:\work\pro\LxGame\LxMahjone\LxSiChuanMahjong\proj.win32\Debug\CardGameBase.lib" /NOLOGO Debug\LCard.obj
          Debug\LCardOperate.obj
@@ -30,4 +96,4 @@
 
 生成成功。
 
-已用时间 00:00:00.83
+已用时间 00:00:01.01

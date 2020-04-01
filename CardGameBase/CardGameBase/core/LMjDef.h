@@ -370,10 +370,8 @@ struct T_MsgDingQue
 // 指派活动用户, 
 struct T_MsgAppointActiveUser
 {
-	T_ActiveUser tActiveUser;
-	T_MjActInfo tMjActInfo;
-	int arrMjCardsPair[MJ_MAX_CARD_COUNT]; // 用于更新牌墙
-	int nMjNumAllocation;	// 一副麻将分配数
+	int nActiveUser;
+
 }; 
 
 
@@ -387,6 +385,15 @@ struct T_MsgResponseToActiveUser
 	// 响应玩家可以具备哪些动作行为
 	T_MjActInfo tMjActInfo[4];
 
+};
+
+// 摸牌消息
+struct T_MsgDrawCard
+{
+	int nDrawCardUser;
+	int nNewCard;
+	int arrMjCardsPair[MJ_MAX_CARD_COUNT]; // 更新牌墙
+	int nMjNumAllocation;	// 一副麻将分配数
 };
 
 // 出牌结果

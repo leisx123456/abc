@@ -74,7 +74,7 @@ void CLCmpThink::think(T_ActRequest* pActRequest, CLMjCard aCards[], unsigned in
 			pActRequest->usActFlags |= (E_ActionTypeFlags::EA_hu);
 		}
 	}
-	else if (!(usIgnoreFlags & E_ActionTypeFlags::EA_Kong))
+	if (!(usIgnoreFlags & E_ActionTypeFlags::EA_Kong))
 	{
 		CLMjCard cardKong;
 		if (thinkKong(cardKong))
@@ -83,17 +83,15 @@ void CLCmpThink::think(T_ActRequest* pActRequest, CLMjCard aCards[], unsigned in
 			pActRequest->nKongCardValue = cardKong.value();
 		}
 	}
-	else if (!(usIgnoreFlags & E_ActionTypeFlags::EA_Pong))
+	if (!(usIgnoreFlags & E_ActionTypeFlags::EA_Pong))
 	{
 		if (thinkPong())
 		{
 			pActRequest->usActFlags |= (E_ActionTypeFlags::EA_Pong);
 		}
 	}
-	else
-	{
+
 		pActRequest->tMjActOutInfo.nOutCardValue = thinkOutCard();
-	}
 	
 }
 

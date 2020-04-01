@@ -9,8 +9,9 @@ CLMjPlayer::CLMjPlayer()
 }
 
 
-CLMjPlayer::CLMjPlayer(E_PlayerType ePlayerType)
+CLMjPlayer::CLMjPlayer(E_PlayerType ePlayerType, int nChairID)
 : m_ePlayerType(ePlayerType)
+, m_nChairID(nChairID)
 {
 	init();
 }
@@ -341,8 +342,9 @@ CLMjCard::E_MjCardColor CLMjPlayer::thinkDingQue()
 void CLMjPlayer::think(CLMjCard cardDest, unsigned short usIgnoreFlags)
 {
 	// ³öÅÆË¼¿¼
-	
-	m_pIAbstractThink->think(&m_tActRequestAI, m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, cardDest, m_eColorTBA);
+	m_tActRequestAI.tMjActOutInfo.nOutCardUser = m_nChairID;
+	m_pIAbstractThink->think(&m_tActRequestAI, m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem
+		, m_nWeaveItemNums, cardDest, m_eColorTBA, usIgnoreFlags);
 }
 
 
