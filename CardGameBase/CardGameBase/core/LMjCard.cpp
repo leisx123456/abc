@@ -200,4 +200,5 @@ T_WeaveCardsItem::operator T_WeaveCardsValueItem()
 	{
 		tWeaveCardsValueItem.byWeaveKind = aCards[i];
 	}
+	return tWeaveCardsValueItem;
 }

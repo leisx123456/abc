@@ -153,6 +153,7 @@ int CLCmpThink::thinkAfterKong(CLMjCard & cardKong)
 	{
 		// 移除杠的三张牌
 		m_mjLogic.removeCards(m_arrHandCard, m_nHandNums, m_cardOut, 3);
+		m_nHandNums -= 3;
 		think();
 		nScore = totalScore();
 	}
@@ -163,12 +164,14 @@ int CLCmpThink::thinkAfterKong(CLMjCard & cardKong)
 		if (bCanAnKong)
 		{
 			m_mjLogic.removeCards(m_arrHandCard, m_nHandNums, cardKong, 4);
+			m_nHandNums -= 4;
 			think();
 			nScore = totalScore();
 		}
 		else if (bCanBuKong)
 		{
 			m_mjLogic.removeCards(m_arrHandCard, m_nHandNums, cardKong, 1);
+			m_nHandNums--;
 			think();
 			nScore = totalScore();
 		}
@@ -207,7 +210,8 @@ int CLCmpThink::thinkAfterPong()
 	int nScore;
 
 		// 移除杠的三张牌
-		m_mjLogic.removeCards(m_arrHandCard, m_nHandNums, m_cardOut);
+		m_mjLogic.removeCards(m_arrHandCard, m_nHandNums, m_cardOut, 2);
+		m_nHandNums -= 2;
 		think();
 		nScore = totalScore();
 

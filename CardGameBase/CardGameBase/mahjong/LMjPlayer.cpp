@@ -199,7 +199,7 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut/
 	else if (eKongType == EK_KongAn)
 	{
 		//取得要杠的牌
-		int byGangCard = m_tMjActInfo.tMjActKongInfo.arrKongSelect[nCurSelectIndex];
+		int byGangCard = m_tMjActInfo.tMjActKongInfo.arrKongSelect[nIndex];
 
 		// 更新手牌
 		if (m_mjLogic.removeCards(m_arrHandCards, m_nHandNums, cardOut, 4) != 4)
@@ -222,7 +222,7 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut/
 	else if (eKongType == EK_KongBa)
 	{
 		//取得要杠的牌
-		int byGangCard = m_tMjActInfo.tMjActKongInfo.arrKongSelect[nCurSelectIndex];
+		int byGangCard = m_tMjActInfo.tMjActKongInfo.arrKongSelect[nIndex];
 		// 更新手牌
 		if (m_mjLogic.removeCards(m_arrHandCards, m_nHandNums, cardOut, 1) != 1)
 		{
