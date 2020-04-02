@@ -175,3 +175,29 @@ T_WeaveCardsItem & T_WeaveCardsItem::operator=(const T_WeaveCardsItem & rhs)
 	}
 	return *this;
 }
+
+T_WeaveCardsItem & T_WeaveCardsItem::operator=(const T_WeaveCardsValueItem & tWeaveCardsValueItem)
+{
+	byWeaveKind = tWeaveCardsValueItem.byWeaveKind;
+	cardCenter = tWeaveCardsValueItem.cardCenter;
+	cardPublic = tWeaveCardsValueItem.cardPublic;
+	byProvideUser = tWeaveCardsValueItem.byProvideUser;
+	for (int i = 0; i < 4; ++i)
+	{
+		aCards[i] = tWeaveCardsValueItem.aCards[i];
+	}
+	return *this;
+}
+
+T_WeaveCardsItem::operator T_WeaveCardsValueItem()
+{
+	T_WeaveCardsValueItem tWeaveCardsValueItem;
+	tWeaveCardsValueItem.byWeaveKind = byWeaveKind;
+	tWeaveCardsValueItem.byWeaveKind = cardCenter;
+	tWeaveCardsValueItem.byWeaveKind = cardPublic;
+	tWeaveCardsValueItem.byWeaveKind = byProvideUser;
+	for (int i = 0; i < 4; ++i)
+	{
+		tWeaveCardsValueItem.byWeaveKind = aCards[i];
+	}
+}

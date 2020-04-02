@@ -31,7 +31,6 @@ void CSiChuanMjDesk::allocation()
 	{
 		m_arrMjCardsPair[i] = g_arrMjCardPair[i];
 	}
-
 }
 
 
@@ -47,6 +46,15 @@ void CSiChuanMjDesk::updateUser()
 		{
 			m_pArrMjPlayer[i]->cancelActive();
 		}
+	}
+}
+
+// 清除各玩家的动作信息
+void CSiChuanMjDesk::clearAllUserActInfo()
+{
+	for (int i = 0; i < playerCount(); ++i)
+	{
+		m_pArrMjPlayer[i]->actInfo()->clear();
 	}
 }
 
@@ -113,24 +121,16 @@ bool CSiChuanMjDesk::execActPass(int nFromUser)
 {
 	//看看这次有没有过掉抢杠
 	bool bGuoQGang = false;
-		if (EHW_QiangGang == m_pArrMjPlayer[nFromUser]->actInfo()->tMjActHuInfo.eMjHuWay)
-		{
-			bGuoQGang = true;
-		}
-
+	if (EHW_QiangGang == m_pArrMjPlayer[nFromUser]->actInfo()->tMjActHuInfo.eMjHuWay)
+	{
+		bGuoQGang = true;
+	}
 
 	//各玩家的动作信息可清除///////////
-	for (int i = 0; i < playerCount(); ++i)
-	{
-		m_pArrMjPlayer[i]->actInfo()->clear();
-	}
+	clearAllUserActInfo();
 
 	if (bGuoQGang)
 	{
-		//m_tagParam.bCanFetch = true;
-		//m_tagParam.byNextUser = m_byTokenUser;
-		//SetTimer(TIME_GIVE_NEXT_TOKEN, 500);
-		// 活动用户不变，直接杠后补牌
 		_gameDispatcher->start(TIME_DRAW_CARD);
 		return true;
 	}
@@ -143,38 +143,23 @@ bool CSiChuanMjDesk::execActPass(int nFromUser)
 
 bool CSiChuanMjDesk::execActPong(int nFromUser, int nToUser)
 {
-
+	m_pArrMjPlayer[nFromUser]->removeLatestOutCard();
 	m_pArrMjPlayer[nToUser]->execPong(nFromUser, m_cardOut);
 
 	//向各玩家广播动作消息////////////////////////////////////////////////
+	T_MsgActResultInfo tMsgActResultInfo;
+	tMsgActResultInfo.usActFlags = EA_Pong;
+	tMsgActResultInfo.byFromUser = nFromUser;
+	tMsgActResultInfo.arrActUsers[0] = nToUser;
+	tMsgActResultInfo.nActUserNums = 1;
+	tMsgActResultInfo.tWeaveCardsValueItem = m_pArrMjPlayer[nToUser]->getLatestWeaveCardsItem();
+	//更新玩家的手牌数据
+	 m_pArrMjPlayer[nToUser]->getHandCards(tMsgActResultInfo.byHands, tMsgActResultInfo.iHandNums);
+	 onMsgActResult(tMsgActResultInfo);
 
-	for (int i = 0; i < playerCount(); ++i)
-	{
-		if (nToUser == i)
-		{
-			//只有动作执行者的客户端才知道手牌数据
-			//::memcpy(tagActInfo.byHands, pUserT->m_byHandCards, sizeof(int)*pUserT->m_iHandNums);
-		}
-		else
-		{
-		//::memset(tagActInfo.byHands, 0, sizeof(tagActInfo.byHands));
-		}
+	// 各玩家的动作信息可清除///////////////////////////////
+	 clearAllUserActInfo();
 
-		//为玩家发送数据
-
-	}
-
-
-	//各玩家的动作信息可清除///////////////////////////////
-	for (int i = 0; i < playerCount(); ++i)
-	{
-		m_pArrMjPlayer[i]->actInfo()->clear();
-	}
-
-	//动作结束后，启动为下一个玩家发令牌的流程。得令牌玩家置成碰牌的玩家,不需要抓牌。
-	//m_tagParam.bCanFetch = false;
-	//m_tagParam.byNextUser = byToUser;
-	//SetTimer(TIME_GIVE_NEXT_TOKEN, 500);
 	// 指定活动玩家
 	onSysAppointActiveUser(nToUser);
 	return true;
@@ -183,103 +168,51 @@ bool CSiChuanMjDesk::execActPong(int nFromUser, int nToUser)
 bool CSiChuanMjDesk::execActKong(int nFromUser, int nToUser)
 {
 	m_pArrMjPlayer[nFromUser]->removeLatestOutCard();
-	//m_pArrMjPlayer[nToUser]->execKong(nFromUser, )
+	m_pArrMjPlayer[nToUser]->execKong(nFromUser, m_cardOut);
 
 	//向各玩家广播动作消息/////////////////////////////////////////////////////////////////////////////////////////////////////////
-	for (int i = 0; i < playerCount(); ++i)
-	{
-		//为玩家发送数据
-
-	}
+	T_MsgActResultInfo tMsgActResultInfo;
+	tMsgActResultInfo.usActFlags = EA_Kong;
+	tMsgActResultInfo.byFromUser = nFromUser;
+	tMsgActResultInfo.arrActUsers[0] = nToUser;
+	tMsgActResultInfo.nActUserNums = 1;
+	tMsgActResultInfo.tWeaveCardsValueItem = m_pArrMjPlayer[nToUser]->getLatestWeaveCardsItem();
+	//更新玩家的手牌数据
+	m_pArrMjPlayer[nToUser]->getHandCards(tMsgActResultInfo.byHands, tMsgActResultInfo.iHandNums);
+	onMsgActResult(tMsgActResultInfo);
 	
 	//各玩家的动作信息可清除///////////////////////////////
-	for (int i = 0; i < playerCount(); ++i)
-	{
-		m_pArrMjPlayer[i]->actInfo()->clear();
-	}
+	clearAllUserActInfo();
 
 	//玩家补杠的牌可能引起其它玩家胡牌/////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//计算各玩家因bDeskStation打出的牌而产生的动作信息\
-			//产生的动作信息将保存在玩家i的数据m_tagActInfo中
-	bool bHaveQGHu = false;
-	bool bBuGang = true;
-
-	if (bBuGang)
-	{
-		for (int i = 0; i < playerCount(); ++i)
-		{
-
-			if (i == nToUser)
-			{
-				continue;
-			}
-			{
-				unsigned usIgnoreFlags = ~EA_hu;
-				if (m_pArrMjPlayer[i]->selectActInfo(m_cardOut, usIgnoreFlags))
-				{
-					m_pArrMjPlayer[i]->actInfo()->tMjActHuInfo.eMjHuWay = EHW_QiangGang;
-				}
-
-			}
-		}
-	}
-
-	//如果没有抢杠，则应该到杠牌玩家byToUser抓牌，如果抓牌能胡则为杠上开花
-			//不管byToUser能否胡，先把其特殊胡牌置为杠上开花，在IDEV_GIVE_NEXT_TOKEN事件中再确定
-			//是否把CUser::m_nHuSpecWay转到CUser::m_tagActInfo中
-	//if (!bHaveQGHu)
-	//{
-	//	//pUserT->m_nHuSpecWay[1] = emHuSpecialWay::hsw_GangKai;
-	//	if (tagNode.nType == emType::AnGang)
-	//	{
-	//		pUserT->m_nHuSpecWay[1] = emHuSpecialWay::hsw_AnGangKai;
-	//	}
-	//	else if (tagNode.nType == emType::MingGang)
-	//	{
-	//		pUserT->m_nHuSpecWay[1] = emHuSpecialWay::hsw_DianGangKai;
-	//	}
-	//	else if (tagNode.nType == emType::BuGang)
-	//	{
-	//		pUserT->m_nHuSpecWay[1] = emHuSpecialWay::hsw_BuGangKai;
-
-	//	}
-	//}
-
-	//流程处理/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	//如果有抢杠，等待玩家响应胡动作，需要有流程保护
-	//没有抢杠，则启动为下一个玩家发令牌的流程
-
-	//if (bHaveQGHu)
-	//{
-	//	if (bYouJinCanQiangGang)
-	//	{
-	//		//流程保护
-	//		m_byTokenUser = byToUser;
-	//	}
-	//	else
-	//	{
-	//		//下次得令牌玩家置成执行杠牌的玩家，逆时针抓牌
-	//		m_tagParam.bCanFetch = true;
-	//		m_tagParam.byNextUser = byToUser;
-	//		m_bHaveGang = true;
-	//		SetTimer(TIME_GIVE_NEXT_TOKEN, 500);
-	//	}
-	//}
-	//else
-	//{
-	//	//下次得令牌玩家置成执行杠牌的玩家，逆时针抓牌
-	//	m_tagParam.bCanFetch = true;
-	//	m_tagParam.byNextUser = byToUser;
-	//	m_bHaveGang = true;
-	//	SetTimer(TIME_GIVE_NEXT_TOKEN, 500);
-	//}
-
+	onSysJudgeAndExecActNotify(EA_OtherAct);
 	return true;
 }
 
 bool CSiChuanMjDesk::execActHu(int nFromUser, int arrToUser[], int nUserNums)
 {
+	for (int i = 0; i < nUserNums; ++i)
+	{
+		m_pArrMjPlayer[arrToUser[i]]->execHu(nFromUser, m_cardOut);
+	}
+
+	// 牌型判断
+	//if (nUserNums > 1) //多响///////////////////////////////////////////////////////////////////////////////////////////////////////
+	//{
+	//// 如果是一炮多项, 活动状态交给点炮者
+
+	//向各玩家广播动作消息///////////////////////////////////////////////////////////////////////////
+	T_MsgActResultInfo tMsgActResultInfo;
+	tMsgActResultInfo.usActFlags = EA_hu;
+	tMsgActResultInfo.byFromUser = nFromUser;
+	::memcpy(tMsgActResultInfo.arrActUsers, arrToUser, sizeof(arrToUser));
+	tMsgActResultInfo.nActUserNums = nUserNums;
+	//胡牌类型
+	onMsgActResult(tMsgActResultInfo);
+
+	//各玩家的动作信息可清除///////////////////////////////
+	clearAllUserActInfo();
+
 	return true;
 }
 
@@ -431,9 +364,7 @@ void CSiChuanMjDesk::onSysJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyTyp
 		break;
 	case CSiChuanMjDesk::EA_OtherAct:
 		// 只能是胡
-		usIgnoreFlags |= E_ActionTypeFlags::EA_Kong;
-		usIgnoreFlags |= E_ActionTypeFlags::EA_Eat;
-		usIgnoreFlags |= E_ActionTypeFlags::EA_Pong;
+		usIgnoreFlags = ~EA_hu;
 		break;
 	default:
 		break;
@@ -517,11 +448,74 @@ void CSiChuanMjDesk::onSysJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyTyp
 	}
 	else if (eActiveNotifyType == EA_OtherAct)
 	{
-		// 目前只有抢杠
+		/*目前只有抢杠*/
+		// 如果没有补杠
+		if (m_pArrMjPlayer[m_nCurExecActUser]->getLatestWeaveCardsItem().byWeaveKind != T_WeaveCardsItem::EW_KongBa)
+		{
+			onSysAppointActiveUser(m_nCurExecActUser);
+			_gameDispatcher->start(TIME_DRAW_CARD);
+			return;
+		}
+
+		// 有补杠则判断有没有抢杠胡
+		bool bHaveQGHu = false;
+		for (int i = 0; i < playerCount(); ++i)
+		{
+			if (i == m_nCurExecActUser)
+			{
+				continue;
+			}
+			if (m_pArrMjPlayer[i]->isReboot())
+			{
+				// 如果是机器人直接处理动作信息 并获取机器人的动作请求
+				m_pArrMjPlayer[i]->think(m_cardOut, usIgnoreFlags);
+				if (m_pArrMjPlayer[i]->aiActRequest()->usActFlags)
+				{
+					bHaveQGHu = true;
+					//OnUserActRequest(m_nActiveUser, tActRequest);
+				}
+			}
+			else
+			{
+				if (m_pArrMjPlayer[i]->selectActInfo(m_cardOut, usIgnoreFlags))
+				{
+					//动作流转向////////////////////////////////////////////////////////////////////////////////////////////
+					//即可能会断流，活动状态流转到执行动作的玩家
+					m_pArrMjPlayer[i]->actInfo()->tMjActHuInfo.eMjHuWay = EHW_QiangGang;
+					bHaveQGHu = true;
+					onMsgActNotify(*m_pArrMjPlayer[i]->actInfo());
+				}
+			}
+
+		}
+		//如果没有抢杠，则应该到杠牌玩家byToUser抓牌，如果抓牌能胡则为杠上开花
+		//不管byToUser能否胡，先把其特殊胡牌置为杠上开花，在IDEV_GIVE_NEXT_TOKEN事件中再确定
+		//是否把CUser::m_nHuSpecWay转到CUser::m_tMjActInfo中
+		//if (!bHaveQGHu)
+		//{
+		//	//pUserT->m_nHuSpecWay[1] = emHuSpecialWay::hsw_GangKai;
+		//	if (tagNode.nType == emType::AnGang)
+		//	{
+		//		pUserT->m_nHuSpecWay[1] = emHuSpecialWay::hsw_AnGangKai;
+		//	}
+		//	else if (tagNode.nType == emType::MingGang)
+		//	{
+		//		pUserT->m_nHuSpecWay[1] = emHuSpecialWay::hsw_DianGangKai;
+		//	}
+		//	else if (tagNode.nType == emType::BuGang)
+		//	{
+		//		pUserT->m_nHuSpecWay[1] = emHuSpecialWay::hsw_BuGangKai;
+
+		//	}
+		//}
+		if (!bHaveQGHu)
+		{
+			onSysAppointActiveUser(m_nCurExecActUser);
+			_gameDispatcher->start(TIME_DRAW_CARD);
+		}
+
 
 	}
-
-
 
 }
 
@@ -634,6 +628,7 @@ void CSiChuanMjDesk::onUserOutCardRequest(int nChairID, T_MjActOutInfo tMjActOut
 void CSiChuanMjDesk::OnUserActRequest(int nChairID, T_ActRequest tActRequest)
 {
 	// 验证玩家动作
+	m_nCurExecActUser = nChairID;
 	unsigned short usActFlagsRequest = tActRequest.usActFlags;
 	unsigned short usActFlags = m_pArrMjPlayer[nChairID]->actInfo()->usActFlags;
 
@@ -656,6 +651,11 @@ void CSiChuanMjDesk::OnUserActRequest(int nChairID, T_ActRequest tActRequest)
 			//记录漏胡哪张牌
 			//m_UserData[bDeskStation].addALouHuCard(m_byLastOutCard);
 		}
+	}
+
+	if (usActFlagsRequest == EA_Kong)
+	{
+		m_pArrMjPlayer[nChairID]->actInfo()->tMjActKongInfo.nCurSelectIndex = tActRequest.nKongSelectIndex;
 	}
 
 	//清理玩家的动作标志，只留下请求相关动作的标志
@@ -690,19 +690,10 @@ void CSiChuanMjDesk::OnUserActRequest(int nChairID, T_ActRequest tActRequest)
 			//为玩家执行胡操作
 			execActHu(m_nActiveUser, byCanActUsers, iAtOnceCounter);
 		}
-
 	}
 
-	//// 执行动作
-	//m_nActiveUser = nChairID;
-	//// 如果是一炮多项, 活动状态交给点炮者
+	m_nCurExecActUser = -1;
 
-	//// 广播动作信息
-	//T_MsgActResultInfo tMsgActResultInfo;
-	//onMsgActResult(tMsgActResultInfo);
-
-	//// 玩家的动作也可能引起其他玩家有动作，如补杠别人会抢杠
-	//onSysJudgeAndExecActNotify(EA_OtherAct);
 }
 
 

@@ -225,9 +225,10 @@ void CLMjDesk::dealCards(CLMjCard pArrCardHand[][14])
 	m_pArrMjPlayer[m_nBanker]->drawCard(drawCard());
 
 	//
+	int nHandNums;
 	for (int i = 0; i < playerCount(); ++i)
 	{
-		m_pArrMjPlayer[i]->getHandCards(pArrCardHand[i]);
+		m_pArrMjPlayer[i]->getHandCards(pArrCardHand[i], nHandNums);
 	}
 }
 

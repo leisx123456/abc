@@ -2433,7 +2433,6 @@ int CMJDesk::OnUserActRequest(BYTE bDeskStation,void* pData,UINT uSize,bool bWat
 		//如果iAtOnceCounter > 1,表明有多个玩家可执行同一个动作,那么根据动作进行优先处理
 
 
-
 		if(E_MAHJONG_ACTION::ACT_GUO == usAct)
 		{
 			//为玩家执行过操作

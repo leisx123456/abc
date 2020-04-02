@@ -77,8 +77,8 @@ protected:
 	int m_nIndexCurrent;	// 当前抓牌的位置index，index对应m_arrMjCard的下标，小于m_nMjNum
 
 	int m_nBanker;	//庄家 0-3
-	int m_nActiveUser;	//当前活动用户 0-3
-
+	int m_nActiveUser;	//当前活动用户 -1, 0-3
+	int m_nCurExecActUser;	//当前执行动作的用户 -1,0-3
 	
 
 };

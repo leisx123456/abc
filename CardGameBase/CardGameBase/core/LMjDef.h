@@ -2,6 +2,7 @@
 #define __L_MJ_DEF_H__
 #include <iostream>
 
+
 // 麻将通用定义
 //////////////////////////////////////////////////////////////////////////
 //公共宏定义
@@ -85,16 +86,19 @@ enum E_GameState
 	EGS_Over
 };
 
-//一个栏牌结点
-struct TMjCGPNode
+// 组合项
+struct T_WeaveCardsValueItem
 {
-	int nType; //结点类型
-	int val[4]; //栏牌数值
-	int from;	//栏牌的来源
-	int  nIdx;  //栏牌的位置
-	TMjCGPNode()
+	unsigned char byWeaveKind;						//组合类型
+	int aCards[4];					//组合数据
+	int cardCenter;						//中心牌
+	int cardPublic;						//目标牌
+
+	unsigned char byProvideUser;					//供应用户
+
+	T_WeaveCardsValueItem()
 	{
-		memset(this, 0, sizeof(TMjCGPNode));
+		memset(this, 0, sizeof(T_WeaveCardsValueItem));
 	}
 };
 
@@ -335,6 +339,11 @@ struct T_UserResultInfo
 	int nRealScore;	//实际得失分
 	int nChangdScore; //本局所变动的分数
 
+	T_UserResultInfo()
+	{
+		memset(this, 0, sizeof(T_UserResultInfo));
+	}
+
 	void calculate()
 	{
 		if (!bHu)
@@ -418,7 +427,8 @@ struct T_MsgActResultInfo
 	int	byHands[14]; //执行动作后人变化后的手牌
 	int iHandNums;		 //变化后的手牌数量
 
-	TMjCGPNode CGPNode;		//如果有拦牌，在此处取数据
+	T_WeaveCardsValueItem tWeaveCardsValueItem;		//如果有拦牌，在此处取数据
+	//T_WeaveCardsItem tWeaveCardsItem;
 
 	bool bQGang;			//如果是抢杠胡，在此处取数据
 	int nQGangIdx;		//抢那一个杠控件
@@ -430,22 +440,7 @@ struct T_MsgActResultInfo
 };
 
 
-/* client --> server*/
-struct T_ActRequest
-{
-	unsigned short	usActFlags;
-
-	int nKongCardValue;
-	// 特殊动作
-	T_MjActOutInfo tMjActOutInfo;
-
-	T_ActRequest()
-	{
-		memset(this, 0, sizeof(T_ActRequest));
-	}
-};
-
-
+// 本局结果
 struct T_MsgResult
 {
 	bool bHuangZhuang;				//是否荒庄
@@ -455,6 +450,24 @@ struct T_MsgResult
 	{
 		::memset(this, 0, sizeof(T_MsgResult));
 
+	}
+};
+
+//////////////////////////////////////////////////////////////////////////
+/* client --> server*/
+struct T_ActRequest
+{
+	unsigned short	usActFlags;
+
+	int nKongCardValue;
+	int nKongSelectIndex;
+
+	// 特殊动作
+	T_MjActOutInfo tMjActOutInfo;
+
+	T_ActRequest()
+	{
+		memset(this, 0, sizeof(T_ActRequest));
 	}
 };
 

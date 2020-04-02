@@ -49,6 +49,7 @@ public:
 	int surplusCards() { return m_nIndexCurrent > m_nIndexStart 
 		? (m_nIndexCurrent - m_nIndexStart) : (m_nIndexCurrent + mjNumAllocation() - m_nIndexStart); }
 	void updateUser();
+	void clearAllUserActInfo();
 	int selectActAtOnceUsers(int byUsers[], unsigned short & usActFlag);
 	bool execActPass(int nFromUser);
 	bool execActPong(int nFromUser, int nToUser);

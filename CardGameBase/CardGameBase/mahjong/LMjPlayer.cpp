@@ -170,9 +170,10 @@ bool CLMjPlayer::execPong(unsigned char byProvideUser, const CLMjCard & cardOut)
 }
 
 
-bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut, int nCurSelectIndex)
+bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut/*, int nCurSelectIndex*/)
 {
-	E_KongType eKongType = m_tMjActInfo.tMjActKongInfo.arrKongType[nCurSelectIndex];
+	int nIndex = m_tMjActInfo.tMjActKongInfo.nCurSelectIndex;
+	E_KongType eKongType = m_tMjActInfo.tMjActKongInfo.arrKongType[nIndex];
 
 	if (eKongType == EK_KongDian)
 	{
@@ -245,6 +246,32 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut,
 }
 
 
+bool CLMjPlayer::execHu(unsigned char byProvideUser, const CLMjCard & cardOut)
+{
+	m_bIsHu = true;
+	if (byProvideUser == m_nChairID)
+	{
+		m_tUserResultInfo.eMjHuWay = EHW_ZiMo;
+	}
+	else
+	{
+		m_tUserResultInfo.eMjHuWay = EHW_JiePao;
+	}
+	return true;
+}
+
+
+void CLMjPlayer::getWeaveCardsItems(T_WeaveCardsItem* pWeaveCardsItem, int & nWeaveItemNums)
+{
+	pWeaveCardsItem = m_arrWeaveCardsItem;
+	nWeaveItemNums = m_nWeaveItemNums;
+}
+
+
+T_WeaveCardsItem & CLMjPlayer::getLatestWeaveCardsItem()
+{
+	return m_arrWeaveCardsItem[m_nWeaveItemNums - 1];
+}
 
 
 void CLMjPlayer::dealCards(const CLMjCard arrHandCards[MJ_MAX_HAND_COUNT])
@@ -255,13 +282,23 @@ void CLMjPlayer::dealCards(const CLMjCard arrHandCards[MJ_MAX_HAND_COUNT])
 	}
 }
 
-void CLMjPlayer::getHandCards(CLMjCard* pArrHandCards)
+void CLMjPlayer::getHandCards(CLMjCard* pArrHandCards, int & nHandNums)
 {
 	//pArrHandCards = m_arrHandCards;
 	for (int i = 0; i < MJ_MAX_HAND_COUNT; ++i)
 	{
 		pArrHandCards[i] = m_arrHandCards[i];
 	}
+	nHandNums = m_nHandNums;
+}
+
+void CLMjPlayer::getHandCards(int pArrHandCards[], int & nHandNums)
+{
+	for (int i = 0; i < MJ_MAX_HAND_COUNT; ++i)
+	{
+		pArrHandCards[i] = m_arrHandCards[i];
+	}
+	nHandNums = m_nHandNums;
 }
 
 

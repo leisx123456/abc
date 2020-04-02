@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __L_MJ_CARD_H__
+#define __L_MJ_CARD_H__
+
 #include "LCard.h"
 #include "LMjDef.h"
 
@@ -203,5 +205,9 @@ struct T_WeaveCardsItem
 	}
 
 	T_WeaveCardsItem & operator = (const T_WeaveCardsItem & rhs);
-
+	T_WeaveCardsItem & operator = (const T_WeaveCardsValueItem & tWeaveCardsValueItem);
+	operator T_WeaveCardsValueItem();
 };
+
+
+#endif //__L_MJ_CARD_H__

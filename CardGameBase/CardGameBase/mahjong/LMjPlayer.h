@@ -137,7 +137,8 @@ public:
 
 	// 摸手牌
 	void dealCards(const CLMjCard arrHandCards[MJ_MAX_HAND_COUNT]);
-	void getHandCards(CLMjCard* pArrHandCards);
+	void getHandCards(CLMjCard* pArrHandCards, int & nHandNums);
+	void getHandCards(int pArrHandCards[], int & nHandNums);
 
 	// 定缺
 	void selectTBA(CLMjCard::E_MjCardColor eColorTBA) { m_eColorTBA = eColorTBA; }
@@ -157,10 +158,10 @@ public:
 	// 玩家动作
 
 	bool execPong(unsigned char byProvideUser, const CLMjCard & cardOut);
-	bool execKong(unsigned char byProvideUser, const CLMjCard & cardOut, int nCurSelectIndex);
-	//bool execHu();
-
-
+	bool execKong(unsigned char byProvideUser, const CLMjCard & cardOut/*, int nCurSelectIndex*/);
+	bool execHu(unsigned char byProvideUser, const CLMjCard & cardOut);
+	void getWeaveCardsItems(T_WeaveCardsItem* pWeaveCardsItem, int & nWeaveItemNums);
+	T_WeaveCardsItem & getLatestWeaveCardsItem();
 
 
 
@@ -230,7 +231,7 @@ private:
 	
 
 	bool m_bIsHu;						//是否已经胡了
-	
+	T_UserResultInfo m_tUserResultInfo;
 	
 	//////////////////////////////////////////////////////////////////////////
 	bool m_bReady;
