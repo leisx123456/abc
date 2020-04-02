@@ -628,7 +628,7 @@ void CSiChuanMjDesk::onUserOutCardRequest(int nChairID, T_MjActOutInfo tMjActOut
 void CSiChuanMjDesk::OnUserActRequest(int nChairID, T_ActRequest tActRequest)
 {
 	// 验证玩家动作
-	m_nCurExecActUser = nChairID;
+	
 	unsigned short usActFlagsRequest = tActRequest.usActFlags;
 	unsigned short usActFlags = m_pArrMjPlayer[nChairID]->actInfo()->usActFlags;
 
@@ -666,6 +666,8 @@ void CSiChuanMjDesk::OnUserActRequest(int nChairID, T_ActRequest tActRequest)
 
 	int byCanActUsers[MJ_MAX_PLAYER];
 	unsigned short usAct = 0;
+
+	m_nCurExecActUser = nChairID;
 
 	//获取有哪些玩家可马上执行动作
 	int iAtOnceCounter = selectActAtOnceUsers(byCanActUsers, usAct);
