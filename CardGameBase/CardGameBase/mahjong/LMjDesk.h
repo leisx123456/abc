@@ -79,8 +79,10 @@ protected:
 	int m_nBanker;	//庄家 0-3
 	int m_nActiveUser;	//当前活动用户 -1, 0-3
 	int m_nCurExecActUser;	//当前执行动作的用户 -1,0-3
+	int m_nAlreadyHuNum;	// 当前已胡的人数
 	
 	//bool bBuKongCard;
+	bool m_bHuangZhuang;
 
 };
 

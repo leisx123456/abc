@@ -39,7 +39,6 @@ void CLMjPlayer::init()
 
 	//m_CardNew = CARD_EMPTY;
 	
-		m_bIsHu = false;
 
 	m_nHandNums = 0;
 	m_nWeaveItemNums = 0;
@@ -102,14 +101,14 @@ void CLMjPlayer::drawCard(const CLMjCard & card)
 
 bool CLMjPlayer::outCard(const CLMjCard & card)
 {
-	if (!m_mjLogic.removeCard(m_arrHandCards, m_nHandNums, card))
+	if (!m_pMjLogic->removeCard(m_arrHandCards, m_nHandNums, card))
 	{
 		return false;
 	}
 	m_nHandNums--;
 
 		//重新排列手牌
-	m_mjLogic.sortCards(m_arrHandCards, m_nHandNums);
+	m_pMjLogic->sortCards(m_arrHandCards, m_nHandNums);
 
 		//向出牌表中添加该牌
 	m_vecCardOut.push_back(card);
@@ -148,7 +147,7 @@ void CLMjPlayer::removeLatestOutCard()
 bool CLMjPlayer::execPong(unsigned char byProvideUser, const CLMjCard & cardOut)
 {
 	// 更新手牌
-	if (m_mjLogic.removeCards(m_arrHandCards, m_nHandNums, cardOut, 2) != 2)
+	if (m_pMjLogic->removeCards(m_arrHandCards, m_nHandNums, cardOut, 2) != 2)
 	{
 		return false;
 	}
@@ -178,7 +177,7 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut/
 	if (eKongType == EK_KongDian)
 	{
 		// 更新手牌
-		if (m_mjLogic.removeCards(m_arrHandCards, m_nHandNums, cardOut, 3) != 3)
+		if (m_pMjLogic->removeCards(m_arrHandCards, m_nHandNums, cardOut, 3) != 3)
 		{
 			return false;
 		}
@@ -202,7 +201,7 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut/
 		int byGangCard = m_tMjActInfo.tMjActKongInfo.arrKongSelect[nIndex];
 
 		// 更新手牌
-		if (m_mjLogic.removeCards(m_arrHandCards, m_nHandNums, cardOut, 4) != 4)
+		if (m_pMjLogic->removeCards(m_arrHandCards, m_nHandNums, cardOut, 4) != 4)
 		{
 			return false;
 		}
@@ -224,7 +223,7 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut/
 		//取得要杠的牌
 		int byGangCard = m_tMjActInfo.tMjActKongInfo.arrKongSelect[nIndex];
 		// 更新手牌
-		if (m_mjLogic.removeCards(m_arrHandCards, m_nHandNums, cardOut, 1) != 1)
+		if (m_pMjLogic->removeCards(m_arrHandCards, m_nHandNums, cardOut, 1) != 1)
 		{
 			return false;
 		}
@@ -246,9 +245,10 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut/
 }
 
 
-bool CLMjPlayer::execHu(unsigned char byProvideUser, const CLMjCard & cardOut)
+bool CLMjPlayer::execHu(unsigned char byProvideUser, int nHuIndex, const CLMjCard & cardOut)
 {
 	m_tUserHuInfo.bHu = true;
+	m_tUserHuInfo.nHuIndex = nHuIndex;
 	if (byProvideUser == m_nChairID)
 	{
 		m_tUserHuInfo.eMjHuWay = EHW_ZiMo;
@@ -256,7 +256,15 @@ bool CLMjPlayer::execHu(unsigned char byProvideUser, const CLMjCard & cardOut)
 	else
 	{
 		m_tUserHuInfo.eMjHuWay = EHW_JiePao;
+		m_tUserHuInfo.byFangPaoUser = byProvideUser;
 	}
+	// 转移胡牌方式
+	m_tUserHuInfo.eMjHuWay = m_tMjActInfo.tMjActHuInfo.eMjHuWay;
+	m_tUserHuInfo.eMjHuName = m_tMjActInfo.tMjActHuInfo.eMjHuName;
+	m_tUserHuInfo.nGeng = m_tMjActInfo.tMjActHuInfo.gen;
+	//m_tUserHuInfo.bHaiDiLao
+
+	m_tUserHuInfo.calculate();
 	return true;
 }
 
@@ -355,17 +363,17 @@ bool CLMjPlayer::selectActInfo(CLMjCard cardOut, unsigned short usIgnoreFlags /*
 
 bool CLMjPlayer::isCanPong(CLMjCard cardOut)
 {
-	return m_mjLogic.isCanPong(m_arrHandCards, m_nHandNums, cardOut);
+	return m_pMjLogic->isCanPong(m_arrHandCards, m_nHandNums, cardOut);
 }
 
 bool CLMjPlayer::isCanKong(CLMjCard cardOut, T_MjActInfo* pActInfo)
 {
-	return m_mjLogic.isCanKong(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, cardOut, pActInfo->tMjActKongInfo);
+	return m_pMjLogic->isCanKong(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, cardOut, pActInfo->tMjActKongInfo);
 }
 
 bool CLMjPlayer::isCanHu(CLMjCard cardOut)
 {
-	return m_mjLogic.isCanHu(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, cardOut);
+	return m_pMjLogic->isCanHu(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, m_tMjActInfo.tMjActHuInfo, cardOut);
 }
 
 

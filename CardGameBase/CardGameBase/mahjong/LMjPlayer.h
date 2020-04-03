@@ -75,6 +75,8 @@ struct T_UserCardsData
 
 class IAbstractThink;
 
+//////////////////////////////////////////////////////////////////////////
+// 麻将玩家抽象类
 class CLMjPlayer
 {
 public:
@@ -112,13 +114,13 @@ public:
 
 	CLMjPlayer();
 	CLMjPlayer(E_PlayerType ePlayerType, int nChairID);
-	~CLMjPlayer();
+	virtual ~CLMjPlayer();
 
 	void init();
 	//////////////////////////////////////////////////////////////////////////
 	// 玩家属性
 	bool isReboot() {return m_ePlayerType != EP_People; }
-
+	virtual void initLogic() = 0;
 
 	//////////////////////////////////////////////////////////////////////////
 	// 玩家状态
@@ -129,7 +131,7 @@ public:
 	bool isActive() { return m_ePlayerActiveState == P_Active; }
 	void setActive(E_PlayerActiveState ePlayerActiveState){ m_ePlayerActiveState = ePlayerActiveState; }
 	void cancelActive(){ m_ePlayerActiveState = p_unActive; }
-	bool isAlreadyHu() { return m_bIsHu; }
+	bool isAlreadyHu() { return m_tUserHuInfo.bHu; }
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -159,7 +161,7 @@ public:
 
 	bool execPong(unsigned char byProvideUser, const CLMjCard & cardOut);
 	bool execKong(unsigned char byProvideUser, const CLMjCard & cardOut/*, int nCurSelectIndex*/);
-	bool execHu(unsigned char byProvideUser, const CLMjCard & cardOut);
+	bool execHu(unsigned char byProvideUser, int nHuIndex, const CLMjCard & cardOut);
 	void getWeaveCardsItems(T_WeaveCardsItem* pWeaveCardsItem, int & nWeaveItemNums);
 	T_WeaveCardsItem & getLatestWeaveCardsItem();
 
@@ -169,6 +171,10 @@ public:
 	void setHu(int nCard)
 	{
 		m_vecHu.push_back(nCard);
+	}
+	T_UserHuInfo & userHuInfo()
+	{
+		return m_tUserHuInfo;
 	}
 
 	//获得出了的牌队列
@@ -191,10 +197,10 @@ public:
 	void think(CLMjCard cardOut, unsigned short usIgnoreFlags = 0);
 	T_ActRequest* aiActRequest() { return &m_tActRequestAI; }
 
-private:
+protected:
 	//////////////////////////////////////////////////////////////////////////
 
-	CLMjLogic m_mjLogic;
+
 	T_WeaveCardsItem m_arrWeaveCardsItem[4];	// 用户的组合牌
 	int m_nWeaveItemNums;
 
@@ -218,6 +224,8 @@ private:
 	E_PlayerStatus m_ePlayerStatus;
 
 	CLMjCard::E_MjCardColor m_eColorTBA;	//定缺所用
+
+	CLMjLogic* m_pMjLogic;
 
 	// 玩家性质 ai or people
 	E_PlayerType m_ePlayerType;

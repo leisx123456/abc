@@ -8,16 +8,16 @@
 CLMjDesk::CLMjDesk()
 : m_nBanker(EW_South)
 {
-	m_pArrMjPlayer[0] = new CLMjPlayer(CLMjPlayer::EP_People, 0);
-	m_pArrMjPlayer[1] = new CLMjPlayer(CLMjPlayer::EP_CmpNormal, 1);
-	m_pArrMjPlayer[2] = new CLMjPlayer(CLMjPlayer::EP_CmpNormal, 2);
-	m_pArrMjPlayer[3] = new CLMjPlayer(CLMjPlayer::EP_CmpNormal, 3);
+
 
 m_nMjNumSurplus = MJ_MAX_CARD_COUNT;
 m_nIndexStart = 0;
 m_nIndexCurrent = 0;
 m_nBanker = 0;
 m_nActiveUser = 0;
+m_nCurExecActUser = -1;
+m_bHuangZhuang = false;
+m_nAlreadyHuNum = 0;
 
 }
 

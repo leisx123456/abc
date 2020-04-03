@@ -229,27 +229,35 @@ enum E_MjHuType
 
 };
 
-enum E_MjHuName
+enum E_MjHuNameFlags
 {
 	// 基本番型
-	EHN_Ping,			//平胡
-	EHN_Pong,	             //碰碰胡,大对子
-	EHN_Qing,	            //清一色
-	EHN_All_19,	              //幺九
-	EHN_SevenPair,     	      //七对
-	EHN_JinGouDiao,			// 金钩钓
+	EHN_Ping = 0x0001,			//平胡
+	EHN_Pong = 0x0002,	             //碰碰胡,大对子
+	EHN_Qing = 0x0004,	    // 清一色
+	//EHN_All_19 = 0x0008,	              //幺九
+	EHN_SevenPair = 0x0010,     	      //七对
+	EHN_JinGouDiao = 0x0020,			// 金钩钓
+	EHN_DragonSevenPair = 0x0040,	     //龙七对
+	
 	// 特殊番型
-	EHN_258_Pong,	          //将碰
-	EHN_Dai_19,	// 带19
+	//EHN_258_Pong,	          //将碰
+	//EHN_Dai_19,	// 带19
 	// 复合番型
-	EHN_QingPong,	          //清碰,清对
-	EHN_DragonSevenPair,	     //龙七对
-	EHN_QingSevenPair,	      //清七对
-	EHN_QingDragonSevenPair,	  //青龙七对
-	EHN_Qing_19,	          //清幺九
+	EHN_QingPong = EHN_Qing | EHN_Pong,	          //清碰,清对子
+	EHN_QingSevenPair = EHN_Qing | EHN_SevenPair,	      //清七对
+	EHN_QingDragonSevenPair = EHN_Qing | EHN_DragonSevenPair,	  //清龙七对
+	//EHN_Qing_19 = EHN_Qing | EHN_All_19,	          //清幺九
+	EHN_QingJinGouDiao = EHN_Qing | EHN_JinGouDiao,	  //清金钩钓
 
-	EHN_HuNameMax
 };
+
+// 可与以上任意牌型组合的
+//enum E_MjHuAbleCombined
+//{
+//	//EHN_Qing,	    // 清一色
+//	EHN_HaiDiLao,	// 海底捞
+//};
 
 enum E_MjHuWay
 {
@@ -266,6 +274,7 @@ enum E_MjHuWay
 	EHW_AnGangKai,		//暗杠杠上开花
 	EHW_BuGangKai,		//补杠杠上开花
 	EHW_GangChong,  //杠冲
+	
 
 };
 
@@ -274,10 +283,16 @@ enum E_MjHuWay
 // 玩家胡牌动作信息
 struct T_MjActHuInfo
 {
-	int nHuNameNums;	//胡牌类型数量		
-	E_MjHuName arrHuName[EHN_HuNameMax]; //牌型表
+	//int nHuNameNums;	//胡牌类型数量		
+	E_MjHuNameFlags eMjHuName;
 	E_MjHuWay eMjHuWay; // 胡牌方式
-	int nHuIndex;
+	int gen; // 带几根
+	bool bHaiDiLao;
+	//int nHuIndex;
+	T_MjActHuInfo()
+	{
+		memset(this, 0, sizeof(T_MjActHuInfo));
+	}
 };
 
 // 出牌信息
@@ -333,8 +348,9 @@ struct T_UserHuInfo
 
 
 	E_MjHuWay eMjHuWay;
-	E_MjHuName eMjHuName;
+	E_MjHuNameFlags eMjHuName;
 	int nGeng;	// 根
+	bool bHaiDiLao;
 
 	// 
 	int nTotalFan;

@@ -31,6 +31,7 @@
     <ClCompile Include="mahjong\LMjPlayer.cpp" />
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjDesk.cpp" />
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjLogic.cpp" />
+    <ClCompile Include="mahjong\SiChuanMj\SiChuanMjPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\LCard.h" />
@@ -54,6 +55,7 @@
     <ClInclude Include="mahjong\LMjPlayer.h" />
     <ClInclude Include="mahjong\SiChuanMj\SiChuanMjDesk.h" />
     <ClInclude Include="mahjong\SiChuanMj\SiChuanMjLogic.h" />
+    <ClInclude Include="mahjong\SiChuanMj\SiChuanMjPlayer.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A9F99938-1AAD-4ECD-9118-4ABF91AE7879}</ProjectGuid>

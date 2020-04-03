@@ -1,8 +1,13 @@
 #include "SiChuanMjDesk.h"
 #include "core/LGameDispatcher.h"
+#include "SiChuanMjPlayer.h"
 
 CSiChuanMjDesk::CSiChuanMjDesk()
 {
+	m_pArrMjPlayer[0] = new CSiChuanMjPlayer(CLMjPlayer::EP_People, 0);
+	m_pArrMjPlayer[1] = new CSiChuanMjPlayer(CLMjPlayer::EP_CmpNormal, 1);
+	m_pArrMjPlayer[2] = new CSiChuanMjPlayer(CLMjPlayer::EP_CmpNormal, 2);
+	m_pArrMjPlayer[3] = new CSiChuanMjPlayer(CLMjPlayer::EP_CmpNormal, 3);
 
 	_gameDispatcher = new CLGameDispatcher();
 	_gameDispatcher->add(TIME_ID_Ready, 1000, std::bind(&CSiChuanMjDesk::onEventReady, this));
@@ -211,24 +216,42 @@ bool CSiChuanMjDesk::execActHu(int nFromUser, int arrToUser[], int nUserNums)
 		m_pArrMjPlayer[arrToUser[i]]->execHu(nFromUser, m_cardOut);
 	}
 
-	// 胡牌方式转移
-
-	// 牌型判断
-	//if (nUserNums > 1) //多响///////////////////////////////////////////////////////////////////////////////////////////////////////
-	//{
-	//// 如果是一炮多项, 活动状态交给点炮者
-
 	//向各玩家广播动作消息///////////////////////////////////////////////////////////////////////////
 	T_MsgActResultInfo tMsgActResultInfo;
 	tMsgActResultInfo.usActFlags = EA_hu;
 	tMsgActResultInfo.byFromUser = nFromUser;
-	::memcpy(tMsgActResultInfo.arrActUsers, arrToUser, sizeof(arrToUser));
+	memcpy(tMsgActResultInfo.arrActUsers, arrToUser, sizeof(arrToUser));
 	tMsgActResultInfo.nActUserNums = nUserNums;
-	//胡牌类型
 	onMsgActResult(tMsgActResultInfo);
 
 	//各玩家的动作信息可清除///////////////////////////////
 	clearAllUserActInfo();
+
+	// 如果只剩一家未胡则本局结束
+	int nNotHuNum = 0;
+	for (int i = 0; i < playerCount(); ++i)
+	{
+		if (!m_pArrMjPlayer[arrToUser[i]]->isAlreadyHu())
+		{
+			nNotHuNum++;
+		}
+	}
+	if (nNotHuNum < 2)
+	{
+		_gameDispatcher->start(TIME_ID_ROUND_FINISH);
+		return;
+	}
+
+	// 如果是一炮多项, 活动状态交给点炮者
+	if (nUserNums > 1)
+	{
+		onSysAppointActiveUser(nFromUser);
+	}
+	else
+	{
+		onSysAppointActiveUser(nextPlayerIndex(arrToUser[0], playerCount(), false));
+	}
+	_gameDispatcher->start(TIME_DRAW_CARD);
 
 	return true;
 }
@@ -330,6 +353,7 @@ void CSiChuanMjDesk::onEventDrawCard()
 	if (surplusCards() == 0)
 	{
 		// 如果牌墙剩余为0，结束
+		m_bHuangZhuang = true;
 		_gameDispatcher->start(TIME_ID_ROUND_FINISH);
 		return;
 	}
@@ -344,6 +368,16 @@ void CSiChuanMjDesk::onEventDrawCard()
 	onSysJudgeAndExecActNotify(EA_DarwCard);
 }
 
+void CSiChuanMjDesk::onEventGameFinshed()
+{
+	T_MsgResult tMsgResult;
+	tMsgResult.bHuangZhuang = m_bHuangZhuang;
+	for (int i = 0; i < playerCount(); ++i)
+	{
+		tMsgResult.tUserHuInfo[i] = m_pArrMjPlayer[i]->userHuInfo();
+	}
+	onMsgGameResult(tMsgResult);
+}
 
 
 void CSiChuanMjDesk::onSysAppointActiveUser(int nChairID)
@@ -517,11 +551,6 @@ void CSiChuanMjDesk::onSysJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyTyp
 }
 
 
-
-void CSiChuanMjDesk::onEventGameFinshed()
-{
-
-}
 
 
 void CSiChuanMjDesk::onDelayExecActRequest(int nChairID)

@@ -10,9 +10,6 @@ CLMjLogic::CLMjLogic()
 }
 
 
-
-
-
 int CLMjLogic::switchToCardData(const unsigned int arrCardIndex[MJ_MAX_INDEX], CLMjCard aCards[MJ_MAX_HAND_COUNT])
 {
 	int cbPosition = 0;
@@ -48,9 +45,9 @@ int CLMjLogic::switchToCardIndex(CLMjCard aCards[], unsigned int unCardCount, un
 
 
 
-bool CLMjLogic::isCanPong(CLMjCard aCards[], unsigned int unCardCount, const CLMjCard & cardDest)
+bool CLMjLogic::isCanPong(CLMjCard aCards[], unsigned int unCardCount, const CLMjCard & cardOut)
 {
-	return getCardsNum(aCards, unCardCount, cardDest) >= 2;
+	return getCardsNum(aCards, unCardCount, cardOut) >= 2;
 }
 
 
@@ -97,9 +94,9 @@ bool CLMjLogic::isCanKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCa
 }
 
 
-bool CLMjLogic::isCanDianKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest)
+bool CLMjLogic::isCanDianKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardOut)
 {
-	if (getCardsNum(aCards, unCardCount, cardDest) == 3)
+	if (getCardsNum(aCards, unCardCount, cardOut) == 3)
 	{
 		return true;
 	}
@@ -131,7 +128,7 @@ bool CLMjLogic::isCanBuKong(CLMjCard aCards[], unsigned int unCardCount, T_Weave
 	//{
 	//	if (aWeaveItem[i].byWeaveKind == T_WeaveCardsItem::EW_Triplet)
 	//	{
-	//		if (aWeaveItem[i].cardCenter == cardDest)
+	//		if (aWeaveItem[i].cardCenter == cardOut)
 	//		{
 	//			return true;
 	//		}
@@ -220,7 +217,6 @@ bool CLMjLogic::removeSequence(CLMjCard aCards[], unsigned int unCardCount, int 
 	}
 
 	/* 分头吃 中吃 尾吃*/
-
 	// 没有该牌时或不是同一花色 用癞子补
 	if (!removeCard(aCards, unCardCount--, cardBegin + 1) || ((cardBegin + 1) / 10 != cardBegin / 10))
 	{
@@ -324,31 +320,6 @@ bool CLMjLogic::isFlowerPig(CLMjCard aCards[], unsigned int unCardCount, T_Weave
 
 
 
-// 
-bool CLMjLogic::isCanHu(CLMjCard aCards[]
-	, unsigned int unCardCount
-	, T_WeaveCardsItem aWeaveItem[]
-	, unsigned int unItemSize
-	, const CLMjCard & cardDest/* = CARD_EMPTY*/
-	, bool bMust258Pair /*= false*/)
-{
-	if (cardDest < 0)
-	{
-		return false;
-	}
-
-	// 复制牌组
-	unsigned int unCardNumTemp = unCardCount;
-	CLMjCard aCardsTemp[MJ_MAX_HAND_COUNT];
-	copyCards(aCardsTemp, unCardNumTemp, aCards, unCardCount);
-
-	// 理牌
-	sortCards(aCardsTemp, unCardNumTemp);
-
-	bool bCanHu3x2 = isCanHu_3x2(aCardsTemp, unCardNumTemp, bMust258Pair);
-	return bCanHu3x2;
-}
-
 // 递归删除法
 bool CLMjLogic::isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair /*= false*/)
 {
@@ -396,7 +367,10 @@ bool CLMjLogic::isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bM
 
 bool CLMjLogic::isCanHu_7Pair(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair /*= false*/)
 {
-	assert(unCardCount > MJ_MAX_HAND_COUNT || unCardCount <= 0);
+	if (unCardCount != 14)
+	{
+		return false;
+	}
 	if (unCardCount % 3 != 2)
 	{
 		return false;
@@ -429,13 +403,9 @@ bool CLMjLogic::isCanHu_7Pair(CLMjCard aCards[], unsigned int unCardCount, bool 
 	return true;
 }
 
-bool CLMjLogic::isPengPeng(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize)
+bool CLMjLogic::isPongPong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize)
 {
-	if (unCardCount != 2 || unItemSize != 4)
-	{
-		return false;
-	}
-	
+
 	for (int i = 0; i < unItemSize; i++)
 	{
 		if (aWeaveItem[i].byWeaveKind  & (EA_EatLeft | EA_EatCenter | EA_EatRight))
@@ -448,6 +418,81 @@ bool CLMjLogic::isPengPeng(CLMjCard aCards[], unsigned int unCardCount, T_WeaveC
 bool CLMjLogic::isQingYiSe(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize)
 {
 	return getColorCount(aCards, unCardCount, aWeaveItem, unItemSize) == 1;
+}
+
+
+bool CLMjLogic::isDragonSevenPair(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair /*= false*/)
+{
+	if (!isCanHu_7Pair(aCards, unCardCount))
+	{
+		return false;
+	}
+	//临时数据
+	unsigned int arrCardIndexTemp[MJ_MAX_INDEX];
+	switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
+
+	//计算单牌
+	for (int i = 0; i < MJ_MAX_INDEX; i++)
+	{
+		if (arrCardIndexTemp[i] == 4)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+int CLMjLogic::genNum(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize)
+{
+	unsigned int arrCardIndexTemp[MJ_MAX_INDEX];
+	switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
+	int gen = 0;
+
+	//计算单牌
+	for (int i = 0; i < MJ_MAX_INDEX; i++)
+	{
+		if (arrCardIndexTemp[i] == 4)
+		{
+			gen++;
+		}
+	}
+
+	for (int i = 0; i < unItemSize; i++)
+	{
+		if (aWeaveItem[i].isKong())
+		{
+			gen++;
+		}
+	}
+	return gen;
+}
+
+
+bool CLMjLogic::isCanHu(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[]
+	, unsigned int unItemSize, T_MjActHuInfo & tMjActHuInfo, const CLMjCard & cardOut /*= CARD_EMPTY */, bool bMust258Pair /*= false*/)
+{
+	// 复制牌组
+	unsigned int unCardNumTemp = unCardCount;
+	CLMjCard aCardsTemp[MJ_MAX_HAND_COUNT];
+	copyCards(aCardsTemp, unCardNumTemp, aCards, unCardCount);
+
+	// 加入出的牌
+	aCardsTemp[unCardNumTemp++] = cardOut;
+
+	// 理牌
+	sortCards(aCardsTemp, unCardNumTemp);
+
+	bool bCanHu3x2 = isCanHu_3x2(aCardsTemp, unCardNumTemp, bMust258Pair);
+	if (bCanHu3x2)
+	{
+		tMjActHuInfo.eMjHuWay = cardOut.isValid() ? EHW_JiePao : EHW_ZiMo;
+		tMjActHuInfo.eMjHuName = EHN_Ping;
+		//tMjActHuInfo.nHuIndex = 0;
+		//tMjActHuInfo.nHuNameNums = 1;
+	}
+	return bCanHu3x2;
 }
 
 

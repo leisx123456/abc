@@ -3,7 +3,6 @@
 #include "core/LClockActive.h"
 #include "core/LDicePair.h"
 
-#include "mahjong/LMjPlayer.h"
 #include "mahjong/LMjLogic.h"
 #include "mahjong/LMjDesk.h"
 
@@ -90,7 +89,7 @@ public:
 	virtual void onMsgActNotify(T_MjActInfo tMjActInfo) = 0;
 	virtual void onMsgOutCard(T_MsgOutCard tMsgOutCard) = 0;
 	virtual void onMsgActResult(T_MsgActResultInfo tMsgActResultInfo) = 0;
-
+	virtual void onMsgGameResult(T_MsgResult tMsgResult) = 0;
 
 	//////////////////////////////////////////////////////////////////////////
 	//用户操作接口

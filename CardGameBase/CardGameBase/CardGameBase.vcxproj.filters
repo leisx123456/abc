@@ -75,6 +75,9 @@
     <ClCompile Include="mahjong\ai\LCmpThink.cpp">
       <Filter>mahjong\ai</Filter>
     </ClCompile>
+    <ClCompile Include="mahjong\SiChuanMj\SiChuanMjPlayer.cpp">
+      <Filter>mahjong\SiChuanMj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\LCard.h">
@@ -139,6 +142,9 @@
     </ClInclude>
     <ClInclude Include="mahjong\ai\LCmpThink.h">
       <Filter>mahjong\ai</Filter>
+    </ClInclude>
+    <ClInclude Include="mahjong\SiChuanMj\SiChuanMjPlayer.h">
+      <Filter>mahjong\SiChuanMj</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
