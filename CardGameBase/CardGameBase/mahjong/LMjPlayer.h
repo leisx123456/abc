@@ -193,16 +193,7 @@ public:
 
 private:
 	//////////////////////////////////////////////////////////////////////////
-	// 玩家性质 ai or people
-	E_PlayerType m_ePlayerType;
 
-	// ai
-	IAbstractThink* m_pIAbstractThink;
-	T_ActRequest m_tActRequestAI;	// 保存AI思考后的动作结果
-
-	T_MjActInfo m_tMjActInfo;		// 保存玩家当前可以执行的那些动作(电脑玩家通用)
-
-	// 
 	CLMjLogic m_mjLogic;
 	T_WeaveCardsItem m_arrWeaveCardsItem[4];	// 用户的组合牌
 	int m_nWeaveItemNums;
@@ -228,10 +219,18 @@ private:
 
 	CLMjCard::E_MjCardColor m_eColorTBA;	//定缺所用
 
-	
+	// 玩家性质 ai or people
+	E_PlayerType m_ePlayerType;
 
-	bool m_bIsHu;						//是否已经胡了
-	T_UserResultInfo m_tUserResultInfo;
+	// ai
+	IAbstractThink* m_pIAbstractThink;
+	T_ActRequest m_tActRequestAI;	// 保存AI思考后的动作结果
+
+	// 保存玩家当前可以执行的那些动作(电脑玩家通用)
+	T_MjActInfo m_tMjActInfo;
+
+	//  玩家胡牌信息
+	T_UserHuInfo m_tUserHuInfo;
 	
 	//////////////////////////////////////////////////////////////////////////
 	bool m_bReady;

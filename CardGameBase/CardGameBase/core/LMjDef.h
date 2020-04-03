@@ -270,18 +270,14 @@ enum E_MjHuWay
 };
 
 
-enum E_MjSuanFenType
-{
-	// E_MjHuWay  + E_MjHuName + 根
-};
 
-// 玩家胡牌数据
+// 玩家胡牌动作信息
 struct T_MjActHuInfo
 {
 	int nHuNameNums;	//胡牌类型数量		
 	E_MjHuName arrHuName[EHN_HuNameMax]; //牌型表
 	E_MjHuWay eMjHuWay; // 胡牌方式
-	int  nHuGangIdx;	//抢杠控件的位置(用于抢杠)
+	int nHuIndex;
 };
 
 // 出牌信息
@@ -289,11 +285,20 @@ struct T_MjActOutInfo
 {
 	int nOutCardUser;
 	int nOutCardValue;
-
 	int m_nOutedNums; // 出牌数，不包含别人拿去碰杠胡的牌， 用于刷新界面出牌
+	T_MjActOutInfo()
+	{
+		clear();
+	}
+	void clear()
+	{
+		nOutCardUser = -1;
+		nOutCardValue = CARD_EMPTY;
+		m_nOutedNums = 0;
+	}
 };
 
-// 玩家动作信息
+// 玩家动作信息-总
 struct T_MjActInfo
 {
 	unsigned short usActFlags;	//动作标识
@@ -308,7 +313,7 @@ struct T_MjActInfo
 
 	T_MjActInfo()
 	{
-		clear();
+		memset(this, 0, sizeof(T_MjActInfo));
 	}
 
 	void clear()
@@ -319,14 +324,12 @@ struct T_MjActInfo
 };
 
 //////////////////////////////////////////////////////////////////////////
-
-struct T_UserResultInfo
+// 本局个人胡牌信息
+struct T_UserHuInfo
 {
 	bool bHu;
-
-	// 胡了的情况
-	int nHuIndex;	// 第几个胡
-	unsigned char byFangPaoUser;					//放炮玩家
+	int nHuIndex;						// 第几个胡
+	unsigned char byFangPaoUser;		//放炮玩家
 
 
 	E_MjHuWay eMjHuWay;
@@ -336,19 +339,21 @@ struct T_UserResultInfo
 	// 
 	int nTotalFan;
 	int nTotalScore;	
-	int nRealScore;	//实际得失分
-	int nChangdScore; //本局所变动的分数
+	int nRealScore;						//实际得失分
+	int nChangdScore;					//本局所变动的分数
 
-	T_UserResultInfo()
+	T_UserHuInfo()
 	{
-		memset(this, 0, sizeof(T_UserResultInfo));
+		memset(this, 0, sizeof(T_UserHuInfo));
 	}
 
 	void calculate()
 	{
 		if (!bHu)
 		{
+			return;
 		}
+		// E_MjHuWay  + E_MjHuName + 根
 	}
 };
 
@@ -445,7 +450,7 @@ struct T_MsgResult
 {
 	bool bHuangZhuang;				//是否荒庄
 
-	T_UserResultInfo tUserResultInfo[4];
+	T_UserHuInfo tUserHuInfo[4];
 	T_MsgResult()
 	{
 		::memset(this, 0, sizeof(T_MsgResult));

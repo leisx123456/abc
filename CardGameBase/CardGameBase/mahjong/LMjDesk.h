@@ -80,6 +80,7 @@ protected:
 	int m_nActiveUser;	//当前活动用户 -1, 0-3
 	int m_nCurExecActUser;	//当前执行动作的用户 -1,0-3
 	
+	//bool bBuKongCard;
 
 };
 

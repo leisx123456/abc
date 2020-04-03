@@ -248,14 +248,14 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut/
 
 bool CLMjPlayer::execHu(unsigned char byProvideUser, const CLMjCard & cardOut)
 {
-	m_bIsHu = true;
+	m_tUserHuInfo.bHu = true;
 	if (byProvideUser == m_nChairID)
 	{
-		m_tUserResultInfo.eMjHuWay = EHW_ZiMo;
+		m_tUserHuInfo.eMjHuWay = EHW_ZiMo;
 	}
 	else
 	{
-		m_tUserResultInfo.eMjHuWay = EHW_JiePao;
+		m_tUserHuInfo.eMjHuWay = EHW_JiePao;
 	}
 	return true;
 }
