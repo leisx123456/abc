@@ -96,14 +96,14 @@ public:
 	virtual int switchToCardIndex();
 	static CLMjCard switchToCardValue(int nCardIndex);
 
-	virtual int color() { return (m_nValue & MASK_COLOR) >> 4; }
+	virtual int color() const { return (m_nValue & MASK_COLOR) >> 4; }
 
 	void initCard();
 	bool isTBA(E_MjCardColor eMjCardColor);
 	// 是否序数牌
 	bool isOrderNumCard(){ return color() > -1 && color() < 3 && orderNumValue() > 0 && orderNumValue() < 10; }
 	// 序数值
-	int orderNumValue(){ return m_nValue & MASK_VALUE; }
+	int orderNumValue() const{ return m_nValue & MASK_VALUE; }
 	// 是否幺九序数牌，即1,9万 1,9条 1,9同
 	bool isYaoJiuOrderNum_19(){ return (m_nValue & MASK_VALUE) == 1 || (m_nValue & MASK_VALUE) == 9; }
 	bool isJaing_28(){ return (m_nValue & MASK_VALUE) == 2 || (m_nValue & MASK_VALUE) == 8; }
@@ -139,7 +139,7 @@ public:
 		return cbColor * 10 + cbValue;
 	}
 
-	bool isLocked()
+	bool isLocked() const
 	{
 		return m_bLocked;
 	}

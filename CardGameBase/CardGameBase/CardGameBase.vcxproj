@@ -21,17 +21,15 @@
     <ClCompile Include="core\LRight.cpp" />
     <ClCompile Include="core\TimerCore.cpp" />
     <ClCompile Include="mahjong\ai\AbstractThink.cpp" />
-    <ClCompile Include="mahjong\ai\BasicThink.cpp" />
-    <ClCompile Include="mahjong\ai\CleverThink.cpp" />
-    <ClCompile Include="mahjong\ai\CmpThink.cpp" />
     <ClCompile Include="mahjong\ai\LBasicThink.cpp" />
-    <ClCompile Include="mahjong\ai\LCmpThink.cpp" />
+    <ClCompile Include="mahjong\ai\LScoreBasicThink.cpp" />
     <ClCompile Include="mahjong\LMjDesk.cpp" />
     <ClCompile Include="mahjong\LMjLogic.cpp" />
     <ClCompile Include="mahjong\LMjPlayer.cpp" />
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjDesk.cpp" />
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjLogic.cpp" />
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjPlayer.cpp" />
+    <ClCompile Include="mahjong\SiChuanMj\SiChuanMjThink.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\LCard.h" />
@@ -45,17 +43,15 @@
     <ClInclude Include="core\LRight.h" />
     <ClInclude Include="core\TimerCore.h" />
     <ClInclude Include="mahjong\ai\AbstractThink.h" />
-    <ClInclude Include="mahjong\ai\BasicThink.h" />
-    <ClInclude Include="mahjong\ai\CleverThink.h" />
-    <ClInclude Include="mahjong\ai\CmpThink.h" />
     <ClInclude Include="mahjong\ai\LBasicThink.h" />
-    <ClInclude Include="mahjong\ai\LCmpThink.h" />
+    <ClInclude Include="mahjong\ai\LScoreBasicThink.h" />
     <ClInclude Include="mahjong\LMjDesk.h" />
     <ClInclude Include="mahjong\LMjLogic.h" />
     <ClInclude Include="mahjong\LMjPlayer.h" />
     <ClInclude Include="mahjong\SiChuanMj\SiChuanMjDesk.h" />
     <ClInclude Include="mahjong\SiChuanMj\SiChuanMjLogic.h" />
     <ClInclude Include="mahjong\SiChuanMj\SiChuanMjPlayer.h" />
+    <ClInclude Include="mahjong\SiChuanMj\SiChuanMjThink.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A9F99938-1AAD-4ECD-9118-4ABF91AE7879}</ProjectGuid>

@@ -193,12 +193,12 @@ T_WeaveCardsItem::operator T_WeaveCardsValueItem()
 {
 	T_WeaveCardsValueItem tWeaveCardsValueItem;
 	tWeaveCardsValueItem.byWeaveKind = byWeaveKind;
-	tWeaveCardsValueItem.byWeaveKind = cardCenter;
-	tWeaveCardsValueItem.byWeaveKind = cardPublic;
-	tWeaveCardsValueItem.byWeaveKind = byProvideUser;
+	tWeaveCardsValueItem.cardCenter = cardCenter;
+	tWeaveCardsValueItem.cardPublic = cardPublic;
+	tWeaveCardsValueItem.byProvideUser = byProvideUser;
 	for (int i = 0; i < 4; ++i)
 	{
-		tWeaveCardsValueItem.byWeaveKind = aCards[i];
+		tWeaveCardsValueItem.aCards[i] = aCards[i];
 	}
 	return tWeaveCardsValueItem;
 }

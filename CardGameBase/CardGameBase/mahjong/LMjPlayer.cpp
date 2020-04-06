@@ -1,6 +1,6 @@
 #include "LMjPlayer.h"
 #include "ai/AbstractThink.h"
-#include "ai/LCmpThink.h"
+
 
 CLMjPlayer::CLMjPlayer()
 : m_ePlayerType(EP_People)
@@ -19,23 +19,7 @@ CLMjPlayer::CLMjPlayer(E_PlayerType ePlayerType, int nChairID)
 
 void CLMjPlayer::init()
 {
-	switch (m_ePlayerType)
-	{
-	case CLMjPlayer::EP_People:
-		m_pIAbstractThink = new CLCmpThink();
-		break;
-	case CLMjPlayer::EP_CmpEasy:
-		m_pIAbstractThink = nullptr;
-		break;
-	case CLMjPlayer::EP_CmpNormal:
-		m_pIAbstractThink = new CLCmpThink();
-		break;
-	case CLMjPlayer::EP_CmpClever:
-		m_pIAbstractThink = nullptr;
-		break;
-	default:
-		break;
-	}
+
 
 	//m_CardNew = CARD_EMPTY;
 	
@@ -71,32 +55,15 @@ void CLMjPlayer::drawCard(const CLMjCard & card)
 }
 
 
+void CLMjPlayer::sordCards()
+{
+	if (m_nHandNums < 1)
+	{
+		return;
+	}
+	m_pMjLogic->sortCards(m_arrHandCards, m_nHandNums);
+}
 
-
-
-
-
-
-
-
-
-
-
-//bool CLMjPlayer::isAlreadyHu()
-//{
-//	return m_bIsHu;
-//}
-
-
-
-//bool CLMjPlayer::isTBA(CHandCard handCard)
-//{
-//	if (handCard.getONCardType() == m_eTBA)
-//	{
-//		return true;
-//	}
-//	return false;
-//}
 
 
 bool CLMjPlayer::outCard(const CLMjCard & card)
@@ -257,6 +224,9 @@ bool CLMjPlayer::execHu(unsigned char byProvideUser, int nHuIndex, const CLMjCar
 	{
 		m_tUserHuInfo.eMjHuWay = EHW_JiePao;
 		m_tUserHuInfo.byFangPaoUser = byProvideUser;
+
+		// 加入到手牌
+		m_arrHandCards[13] = cardOut;
 	}
 	// 转移胡牌方式
 	m_tUserHuInfo.eMjHuWay = m_tMjActInfo.tMjActHuInfo.eMjHuWay;
@@ -384,12 +354,11 @@ CLMjCard::E_MjCardColor CLMjPlayer::thinkDingQue()
 	return (CLMjCard::E_MjCardColor)m_pIAbstractThink->thinkDingQue(m_arrHandCards, m_nHandNums);
 }
 
-void CLMjPlayer::think(CLMjCard cardDest, unsigned short usIgnoreFlags)
+void CLMjPlayer::think(CLMjCard cardOut, unsigned short usIgnoreFlags)
 {
 	// 出牌思考
-	m_tActRequestAI.tMjActOutInfo.nOutCardUser = m_nChairID;
-	m_pIAbstractThink->think(&m_tActRequestAI, m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem
-		, m_nWeaveItemNums, cardDest, m_eColorTBA, usIgnoreFlags);
+	m_pIAbstractThink->think(&m_tMjActInfo, m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem
+		, m_nWeaveItemNums, cardOut, m_eColorTBA, usIgnoreFlags);
 }
 
 

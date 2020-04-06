@@ -1,6 +1,6 @@
 #pragma once
 #include "AbstractThink.h"
-#include "../LMjLogic.h"
+#include "../SiChuanMj/SiChuanMjLogic.h"
 
 
 class CLBasicThink : public IAbstractThink
@@ -9,19 +9,19 @@ public:
 	CLBasicThink();
 	virtual ~CLBasicThink();
 
-	void copyCards(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardDest, int nQueColor = -1);
-	int findPosInActiveHandCards(CLMjCard handCard);
+	void copyCards(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardOut, int nQueColor = -1);
+	int findPosInHandCards(const CLMjCard & card);
 
 	// 下面函数确保card为锁定状态
-	bool isExistTriplet(CLMjCard card, int &pos1, int &pos2);
-	bool isExistSequence(CLMjCard card, int &pos1, int &pos2);
-	bool isExistPair(CLMjCard card, int & pos1);
-	bool isExistDoor(CLMjCard card, E_HandCardRelationType & doorType, int &pos1);
+	bool isExistTriplet(const CLMjCard & card, int &pos1, int &pos2);
+	bool isExistSequence(const CLMjCard & card, int &pos1, int &pos2);
+	bool isExistPair(const CLMjCard & card, int & pos1);
+	bool isExistDoor(const CLMjCard & card, E_HandCardRelationType & doorType, int &pos1);
 
 	
 
 protected:
-	CLMjLogic m_mjLogic;
+	CSiChuanMjLogic m_mjLogic;
 	//手牌
 	CLMjCard m_arrHandCard[14];
 	int m_nHandNums;

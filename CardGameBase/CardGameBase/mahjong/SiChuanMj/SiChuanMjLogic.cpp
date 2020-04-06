@@ -15,7 +15,10 @@ bool CSiChuanMjLogic::isCanHu(CLMjCard aCards[]
 	copyCards(aCardsTemp, unCardNumTemp, aCards, unCardCount);
 
 	// 加入出的牌
-	aCardsTemp[unCardNumTemp++] = cardOut;
+	if (cardOut.isValid())
+	{
+		aCardsTemp[unCardNumTemp++] = cardOut;
+	}
 
 	// 理牌
 	sortCards(aCardsTemp, unCardNumTemp);
@@ -27,7 +30,7 @@ bool CSiChuanMjLogic::isCanHu(CLMjCard aCards[]
 	//	EHN_JinGouDiao = 0x0020,			// 金钩钓
 	//	EHN_DragonSevenPair = 0x0040,	     //龙七对
 	bool bCanHu3x2 = isCanHu_3x2(aCardsTemp, unCardNumTemp, bMust258Pair);
-	bool bCanHu7Pair = isCanHu_7Pair(aCards, unCardCount);
+	bool bCanHu7Pair = isCanHu_7Pair(aCardsTemp, unCardNumTemp);
 	if (!bCanHu3x2 && !bCanHu7Pair)
 	{
 		return false;
@@ -38,7 +41,7 @@ bool CSiChuanMjLogic::isCanHu(CLMjCard aCards[]
 	{
 		bJinGouDiao = true;
 	}
-	bool bDragonSevenPair = isDragonSevenPair(aCards, unCardNumTemp);
+	bool bDragonSevenPair = isDragonSevenPair(aCardsTemp, unCardNumTemp);
 
 	// 组合牌型判断
 	unHuNameFlags = 0;

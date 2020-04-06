@@ -32,10 +32,7 @@ public:
 	virtual void initCard();
 
 	// 是否有效
-	virtual bool isValid() const
-	{
-		return m_nValue > 1;
-	}
+	virtual bool isValid() const { return m_nValue > 1; }
 
 	int value()
 	{
@@ -49,7 +46,7 @@ public:
 	virtual int switchToCardIndex(){ return m_nValue; }
 
 	// 牌的花色
-	virtual int color(){ return 1; }
+	virtual int color() const{ return 1; }
 
 	void setValue(int nValue)
 	{
@@ -73,18 +70,32 @@ public:
 	operator int();
 
 	// operator+
-	T operator+(T &rhs)
+	T operator+(const T & rhs) const	// 这里最好还是加上const
 	{
 		T card;
 		card.m_nValue = m_nValue + rhs.m_nValue;
 		return card;
 	}
 
-	// operator-
-	CLCard operator-(CLCard &rhs)
+	T operator+(int nValue) const	// 这里最好还是加上const
 	{
-		CLCard card;
+		T card;
+		card.m_nValue = m_nValue + nValue;
+		return card;
+	}
+
+	// operator-
+	T operator-(const T &rhs) const
+	{
+		T card;
 		card.m_nValue = m_nValue - rhs.m_nValue;
+		return card;
+	}
+
+	T operator-(int nValue) const
+	{
+		T card;
+		card.m_nValue = m_nValue - nValue;
 		return card;
 	}
 

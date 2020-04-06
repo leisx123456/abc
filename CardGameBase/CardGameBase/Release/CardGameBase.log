@@ -1,58 +1,116 @@
-﻿生成启动时间为 2020/3/24 22:55:20。
+﻿生成启动时间为 2020/4/4 21:01:23。
      1>项目“F:\work\pro\LxGame\LxGameBase\CardGameBase\CardGameBase\CardGameBase.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I. /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D CARDGAMEBASE_EXPORTS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt core\LCardOperate.cpp mahjong\LMjDesk.cpp mahjong\LMjLogic.cpp mahjong\LMjPlayer.cpp mahjong\SiChuanMj\SiChuanMjDesk.cpp mahjong\SiChuanMj\SiChuanMjLogic.cpp mahjong\ai\LBasicThink.cpp mahjong\ai\LCmpThink.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I. /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D CARDGAMEBASE_EXPORTS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt core\LCard.cpp core\LCardOperate.cpp core\LGameDispatcher.cpp core\LMjCard.cpp mahjong\ai\AbstractThink.cpp mahjong\ai\LBasicThink.cpp mahjong\ai\LCmpThink.cpp mahjong\LMjDesk.cpp mahjong\LMjLogic.cpp mahjong\LMjPlayer.cpp mahjong\SiChuanMj\SiChuanMjDesk.cpp mahjong\SiChuanMj\SiChuanMjLogic.cpp mahjong\SiChuanMj\SiChuanMjPlayer.cpp
+         LCard.cpp
          LCardOperate.cpp
+         LGameDispatcher.cpp
+         LMjCard.cpp
+         AbstractThink.cpp
+         LBasicThink.cpp
+     1>mahjong\ai\LBasicThink.cpp(21): warning C4018: “<”: 有符号/无符号不匹配
+         LCmpThink.cpp
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(189): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(188): 编译类 模板 成员函数“void CLCardOperate<CLMjCard>::emptyCards(CLCard [],unsigned int)”时
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 mahjong\ai\LCmpThink.cpp(216): 参见对正在编译的函数 模板 实例化“void CLCardOperate<CLMjCard>::emptyCards(CLCard [],unsigned int)”的引用
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 F:\work\pro\LxGame\LxGameBase\CardGameBase\CardGameBase\mahjong/LMjLogic.h(11): 参见对正在编译的类 模板 实例化“CLCardOperate<CLMjCard>”的引用
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(244): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(242): 编译类 模板 成员函数“unsigned char CLCardOperate<CLMjCard>::removeCards(CLCard [],unsigned int,CLCard,unsigned int)”时
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 mahjong\ai\LCmpThink.cpp(135): 参见对正在编译的函数 模板 实例化“unsigned char CLCardOperate<CLMjCard>::removeCards(CLCard [],unsigned int,CLCard,unsigned int)”的引用
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(249): warning C4018: “<”: 有符号/无符号不匹配
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(200): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(199): 编译类 模板 成员函数“bool CLCardOperate<CLMjCard>::removeCard(CLCard [],unsigned int,CLCard)”时
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(251): 参见对正在编译的函数 模板 实例化“bool CLCardOperate<CLMjCard>::removeCard(CLCard [],unsigned int,CLCard)”的引用
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(69): 编译类 模板 成员函数“CLCardOperate<CLMjCard>::~CLCardOperate(void)”时
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\ai\LCmpThink.h(92): 参见对正在编译的函数 模板 实例化“CLCardOperate<CLMjCard>::~CLCardOperate(void)”的引用
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(204): warning C4018: “<”: 有符号/无符号不匹配
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(310): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(308): 编译类 模板 成员函数“int CLCardOperate<CLMjCard>::getCardsNum(CLCard [],unsigned int,CLCard)”时
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(243): 参见对正在编译的函数 模板 实例化“int CLCardOperate<CLMjCard>::getCardsNum(CLCard [],unsigned int,CLCard)”的引用
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
          LMjDesk.cpp
-     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(77): warning C4018: “<”: 有符号/无符号不匹配
-                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(71): 编译类 模板 成员函数“void CLCardOperate<CLMjCard>::shuffleCards(CLCard [],unsigned int)”时
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(80): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(74): 编译类 模板 成员函数“void CLCardOperate<CLMjCard>::shuffleCards(CLCard [],unsigned int)”时
                  with
                  [
                      CLCard=CLMjCard
                  ]
-                 mahjong\LMjDesk.cpp(44): 参见对正在编译的函数 模板 实例化“void CLCardOperate<CLMjCard>::shuffleCards(CLCard [],unsigned int)”的引用
+                 mahjong\LMjDesk.cpp(69): 参见对正在编译的函数 模板 实例化“void CLCardOperate<CLMjCard>::shuffleCards(CLCard [],unsigned int)”的引用
                  with
                  [
                      CLCard=CLMjCard
                  ]
-                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\LMjLogic.h(9): 参见对正在编译的类 模板 实例化“CLCardOperate<CLMjCard>”的引用
-     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(90): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\LMjLogic.h(11): 参见对正在编译的类 模板 实例化“CLCardOperate<CLMjCard>”的引用
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(93): warning C4018: “<”: 有符号/无符号不匹配
          LMjLogic.cpp
      1>mahjong\LMjLogic.cpp(21): warning C4018: “<”: 有符号/无符号不匹配
      1>mahjong\LMjLogic.cpp(37): warning C4018: “<”: 有符号/无符号不匹配
-     1>mahjong\LMjLogic.cpp(169): warning C4018: “<”: 有符号/无符号不匹配
-     1>mahjong\LMjLogic.cpp(188): warning C4018: “<”: 有符号/无符号不匹配
-     1>mahjong\LMjLogic.cpp(194): warning C4018: “<”: 有符号/无符号不匹配
-     1>mahjong\LMjLogic.cpp(224): warning C4018: “<”: 有符号/无符号不匹配
-     1>mahjong\LMjLogic.cpp(233): warning C4018: “<”: 有符号/无符号不匹配
-     1>mahjong\LMjLogic.cpp(359): warning C4018: “<”: 有符号/无符号不匹配
-     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(103): warning C4018: “<”: 有符号/无符号不匹配
-                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(97): 编译类 模板 成员函数“void CLCardOperate<CLMjCard>::sortCards(CLCard [],unsigned int)”时
+     1>mahjong\LMjLogic.cpp(79): warning C4018: “<”: 有符号/无符号不匹配
+     1>mahjong\LMjLogic.cpp(246): warning C4018: “<”: 有符号/无符号不匹配
+     1>mahjong\LMjLogic.cpp(265): warning C4018: “<”: 有符号/无符号不匹配
+     1>mahjong\LMjLogic.cpp(271): warning C4018: “<”: 有符号/无符号不匹配
+     1>mahjong\LMjLogic.cpp(301): warning C4018: “<”: 有符号/无符号不匹配
+     1>mahjong\LMjLogic.cpp(310): warning C4018: “<”: 有符号/无符号不匹配
+     1>mahjong\LMjLogic.cpp(409): warning C4018: “<”: 有符号/无符号不匹配
+     1>mahjong\LMjLogic.cpp(462): warning C4018: “<”: 有符号/无符号不匹配
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(117): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(111): 编译类 模板 成员函数“void CLCardOperate<CLMjCard>::sortCards(CLCard [],unsigned int)”时
                  with
                  [
                      CLCard=CLMjCard
                  ]
-                 mahjong\LMjLogic.cpp(266): 参见对正在编译的函数 模板 实例化“void CLCardOperate<CLMjCard>::sortCards(CLCard [],unsigned int)”的引用
+                 mahjong\LMjLogic.cpp(485): 参见对正在编译的函数 模板 实例化“void CLCardOperate<CLMjCard>::sortCards(CLCard [],unsigned int)”的引用
                  with
                  [
                      CLCard=CLMjCard
                  ]
-                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\LMjLogic.h(9): 参见对正在编译的类 模板 实例化“CLCardOperate<CLMjCard>”的引用
-     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(105): warning C4018: “<”: 有符号/无符号不匹配
-     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(142): warning C4018: “<”: 有符号/无符号不匹配
-                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(141): 编译类 模板 成员函数“bool CLCardOperate<CLMjCard>::removeCard(CLCard [],unsigned int,CLCard)”时
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\LMjLogic.h(11): 参见对正在编译的类 模板 实例化“CLCardOperate<CLMjCard>”的引用
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(119): warning C4018: “<”: 有符号/无符号不匹配
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(200): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(199): 编译类 模板 成员函数“bool CLCardOperate<CLMjCard>::removeCard(CLCard [],unsigned int,CLCard)”时
                  with
                  [
                      CLCard=CLMjCard
                  ]
-                 mahjong\LMjLogic.cpp(97): 参见对正在编译的函数 模板 实例化“bool CLCardOperate<CLMjCard>::removeCard(CLCard [],unsigned int,CLCard)”的引用
+                 mahjong\LMjLogic.cpp(175): 参见对正在编译的函数 模板 实例化“bool CLCardOperate<CLMjCard>::removeCard(CLCard [],unsigned int,CLCard)”的引用
                  with
                  [
                      CLCard=CLMjCard
                  ]
-     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(146): warning C4018: “<”: 有符号/无符号不匹配
-     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(233): warning C4018: “<”: 有符号/无符号不匹配
-                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(231): 编译类 模板 成员函数“int CLCardOperate<CLMjCard>::getCardsNum(CLCard [],unsigned int,CLCard)”时
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(204): warning C4018: “<”: 有符号/无符号不匹配
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(310): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(308): 编译类 模板 成员函数“int CLCardOperate<CLMjCard>::getCardsNum(CLCard [],unsigned int,CLCard)”时
                  with
                  [
                      CLCard=CLMjCard
@@ -63,34 +121,73 @@
                      CLCard=CLMjCard
                  ]
          LMjPlayer.cpp
+     1>mahjong\LMjPlayer.cpp(130): warning C4018: “<”: 有符号/无符号不匹配
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(117): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(111): 编译类 模板 成员函数“void CLCardOperate<CLMjCard>::sortCards(CLCard [],unsigned int)”时
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 mahjong\LMjPlayer.cpp(111): 参见对正在编译的函数 模板 实例化“void CLCardOperate<CLMjCard>::sortCards(CLCard [],unsigned int)”的引用
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\LMjLogic.h(11): 参见对正在编译的类 模板 实例化“CLCardOperate<CLMjCard>”的引用
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(119): warning C4018: “<”: 有符号/无符号不匹配
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(200): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(199): 编译类 模板 成员函数“bool CLCardOperate<CLMjCard>::removeCard(CLCard [],unsigned int,CLCard)”时
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 mahjong\LMjPlayer.cpp(104): 参见对正在编译的函数 模板 实例化“bool CLCardOperate<CLMjCard>::removeCard(CLCard [],unsigned int,CLCard)”的引用
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(204): warning C4018: “<”: 有符号/无符号不匹配
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(244): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(242): 编译类 模板 成员函数“unsigned char CLCardOperate<CLMjCard>::removeCards(CLCard [],unsigned int,CLCard,unsigned int)”时
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 mahjong\LMjPlayer.cpp(150): 参见对正在编译的函数 模板 实例化“unsigned char CLCardOperate<CLMjCard>::removeCards(CLCard [],unsigned int,CLCard,unsigned int)”的引用
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(249): warning C4018: “<”: 有符号/无符号不匹配
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(310): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(308): 编译类 模板 成员函数“int CLCardOperate<CLMjCard>::getCardsNum(CLCard [],unsigned int,CLCard)”时
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(243): 参见对正在编译的函数 模板 实例化“int CLCardOperate<CLMjCard>::getCardsNum(CLCard [],unsigned int,CLCard)”的引用
+                 with
+                 [
+                     CLCard=CLMjCard
+                 ]
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(69): 编译类 模板 成员函数“CLCardOperate<CLMjCard>::~CLCardOperate(void)”时
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\ai/LCmpThink.h(92): 参见对正在编译的函数 模板 实例化“CLCardOperate<CLMjCard>::~CLCardOperate(void)”的引用
          SiChuanMjDesk.cpp
-     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(131): warning C4018: “<”: 有符号/无符号不匹配
-                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(130): 编译类 模板 成员函数“void CLCardOperate<CLMjCard>::emptyCards(CLCard [],unsigned int)”时
-                 with
-                 [
-                     CLCard=CLMjCard
-                 ]
-                 mahjong\SiChuanMj\SiChuanMjDesk.cpp(60): 参见对正在编译的函数 模板 实例化“void CLCardOperate<CLMjCard>::emptyCards(CLCard [],unsigned int)”的引用
-                 with
-                 [
-                     CLCard=CLMjCard
-                 ]
-                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\LMjLogic.h(9): 参见对正在编译的类 模板 实例化“CLCardOperate<CLMjCard>”的引用
          SiChuanMjLogic.cpp
-         LBasicThink.cpp
-         LCmpThink.cpp
-     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(131): warning C4018: “<”: 有符号/无符号不匹配
-                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(130): 编译类 模板 成员函数“void CLCardOperate<CLMjCard>::emptyCards(CLCard [],unsigned int)”时
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(117): warning C4018: “<”: 有符号/无符号不匹配
+                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(111): 编译类 模板 成员函数“void CLCardOperate<CLMjCard>::sortCards(CLCard [],unsigned int)”时
                  with
                  [
                      CLCard=CLMjCard
                  ]
-                 mahjong\ai\LCmpThink.cpp(89): 参见对正在编译的函数 模板 实例化“void CLCardOperate<CLMjCard>::emptyCards(CLCard [],unsigned int)”的引用
+                 mahjong\SiChuanMj\SiChuanMjLogic.cpp(24): 参见对正在编译的函数 模板 实例化“void CLCardOperate<CLMjCard>::sortCards(CLCard [],unsigned int)”的引用
                  with
                  [
                      CLCard=CLMjCard
                  ]
-                 f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\ai\../LMjLogic.h(9): 参见对正在编译的类 模板 实例化“CLCardOperate<CLMjCard>”的引用
+                 F:\work\pro\LxGame\LxGameBase\CardGameBase\CardGameBase\mahjong/LMjLogic.h(11): 参见对正在编译的类 模板 实例化“CLCardOperate<CLMjCard>”的引用
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\mahjong\../core/LCardOperate.h(119): warning C4018: “<”: 有符号/无符号不匹配
+         SiChuanMjPlayer.cpp
        Lib:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"F:\work\pro\LxGame\LxCocosGameLib\LCocosTool\Release\CardGameBase.lib" /NOLOGO /LTCG Release\LCard.obj
          Release\LCardOperate.obj
@@ -112,9 +209,10 @@
          Release\LMjPlayer.obj
          Release\SiChuanMjDesk.obj
          Release\SiChuanMjLogic.obj
+         Release\SiChuanMjPlayer.obj
          CardGameBase.vcxproj -> F:\work\pro\LxGame\LxCocosGameLib\LCocosTool\Release\CardGameBase.lib
      1>已完成生成项目“F:\work\pro\LxGame\LxGameBase\CardGameBase\CardGameBase\CardGameBase.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:03.15
+已用时间 00:00:05.71

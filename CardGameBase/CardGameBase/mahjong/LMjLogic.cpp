@@ -36,7 +36,11 @@ int CLMjLogic::switchToCardIndex(CLMjCard aCards[], unsigned int unCardCount, un
 
 	for (int i = 0; i < unCardCount; i++)
 	{
-		assert(aCards[i].isValid());
+		//assert(aCards[i].isValid());
+		if (!aCards[i].isValid())
+		{
+			std::cout << "errer";
+		}
 		arrCardIndex[aCards[i].switchToCardIndex()]++;
 	}
 
@@ -94,63 +98,63 @@ bool CLMjLogic::isCanKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCa
 }
 
 
-bool CLMjLogic::isCanDianKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardOut)
-{
-	if (getCardsNum(aCards, unCardCount, cardOut) == 3)
-	{
-		return true;
-	}
-	return false;
-}
-
-
-bool CLMjLogic::isCanAnKong(CLMjCard aCards[], unsigned int unCardCount, CLMjCard & cardResult)
-{
-	unsigned int arrCardIndexTemp[MJ_MAX_INDEX];
-	switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
-
-	for (int i = 0; i < MJ_MAX_INDEX; i++)
-	{
-		if (arrCardIndexTemp[i] == 4)
-		{
-			cardResult = CLMjCard::switchToCardValue(i);
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool CLMjLogic::isCanBuKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard & cardResult)
-{
-	//找补杠
-	//for (int i = 0; i < unItemSize; ++i)
-	//{
-	//	if (aWeaveItem[i].byWeaveKind == T_WeaveCardsItem::EW_Triplet)
-	//	{
-	//		if (aWeaveItem[i].cardCenter == cardOut)
-	//		{
-	//			return true;
-	//		}
-	//	}
-	//}
-	unsigned int arrCardIndexTemp[MJ_MAX_INDEX];
-	switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
-
-	for (int i = 0; i < unItemSize; i++)
-	{
-		if (aWeaveItem[i].byWeaveKind == T_WeaveCardsItem::EW_Triplet)
-		{
-			if (arrCardIndexTemp[aWeaveItem[i].cardCenter.switchToCardIndex()] == 1)
-			{
-				cardResult = CLMjCard::switchToCardValue(i);
-				return true;
-			}
-		}
-	}
-
-	return false;
-}
+//bool CLMjLogic::isCanDianKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardOut)
+//{
+//	if (getCardsNum(aCards, unCardCount, cardOut) == 3)
+//	{
+//		return true;
+//	}
+//	return false;
+//}
+//
+//
+//bool CLMjLogic::isCanAnKong(CLMjCard aCards[], unsigned int unCardCount, CLMjCard & cardResult)
+//{
+//	unsigned int arrCardIndexTemp[MJ_MAX_INDEX];
+//	switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
+//
+//	for (int i = 0; i < MJ_MAX_INDEX; i++)
+//	{
+//		if (arrCardIndexTemp[i] == 4)
+//		{
+//			cardResult = CLMjCard::switchToCardValue(i);
+//			return true;
+//		}
+//	}
+//
+//	return false;
+//}
+//
+//bool CLMjLogic::isCanBuKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard & cardResult)
+//{
+//	//找补杠
+//	//for (int i = 0; i < unItemSize; ++i)
+//	//{
+//	//	if (aWeaveItem[i].byWeaveKind == T_WeaveCardsItem::EW_Triplet)
+//	//	{
+//	//		if (aWeaveItem[i].cardCenter == cardOut)
+//	//		{
+//	//			return true;
+//	//		}
+//	//	}
+//	//}
+//	unsigned int arrCardIndexTemp[MJ_MAX_INDEX];
+//	switchToCardIndex(aCards, unCardCount, arrCardIndexTemp);
+//
+//	for (int i = 0; i < unItemSize; i++)
+//	{
+//		if (aWeaveItem[i].byWeaveKind == T_WeaveCardsItem::EW_Triplet)
+//		{
+//			if (arrCardIndexTemp[aWeaveItem[i].cardCenter.switchToCardIndex()] == 1)
+//			{
+//				cardResult = CLMjCard::switchToCardValue(i);
+//				return true;
+//			}
+//		}
+//	}
+//
+//	return false;
+//}
 
 
 
@@ -158,85 +162,119 @@ bool CLMjLogic::isCanBuKong(CLMjCard aCards[], unsigned int unCardCount, T_Weave
 
 
 // 要保证手牌已经从小到大排序
-// 移除刻子
+// 移除刻子，包含癞子
+//bool CLMjLogic::removeTriplet(CLMjCard aCards[], unsigned int unCardCount, int nBeginPos /*= 0*/)
+//{
+//	CLMjCard cardBegin = aCards[nBeginPos];
+//	int nMagicNum = getMagicNum(aCards, unCardCount);
+//	int nMagicUsed = 0;
+//
+//	// 跳过癞子牌
+//	if (cardBegin.isMagicCard())
+//	{
+//		return false;
+//	}
+//
+//	// 移除起始牌
+//	if (!removeCard(aCards, unCardCount--, cardBegin))
+//	{
+//		return false;
+//	}
+//
+//	// 移除失败时没有该牌时用癞子补
+//	if (!removeCard(aCards, unCardCount--, cardBegin))
+//	{
+//		++nMagicUsed;
+//		// 如果癞子都不够用了则直接返回
+//		if (nMagicUsed > nMagicNum)
+//		{
+//			return false;
+//		}
+//	}
+//
+//	if (!removeCard(aCards, unCardCount, cardBegin))
+//	{
+//		++nMagicUsed;
+//		if (nMagicUsed > nMagicNum)
+//		{
+//			return false;
+//		}
+//	}
+//		return true;
+//}
+
 bool CLMjLogic::removeTriplet(CLMjCard aCards[], unsigned int unCardCount, int nBeginPos /*= 0*/)
 {
 	CLMjCard cardBegin = aCards[nBeginPos];
-	int nMagicNum = getMagicNum(aCards, unCardCount);
-	int nMagicUsed = 0;
-
-	// 跳过癞子牌
-	if (cardBegin.isMagicCard())
+	if (!removeCards(aCards, unCardCount, cardBegin, 3))
 	{
-		return false;
-	}
-
-	// 移除起始牌
-	if (!removeCard(aCards, unCardCount--, cardBegin))
-	{
-		return false;
-	}
-
-	// 移除失败时没有该牌时用癞子补
-	if (!removeCard(aCards, unCardCount--, cardBegin))
-	{
-		++nMagicUsed;
-		// 如果癞子都不够用了则直接返回
-		if (nMagicUsed > nMagicNum)
-		{
 			return false;
-		}
 	}
-
-	if (!removeCard(aCards, unCardCount, cardBegin))
-	{
-		++nMagicUsed;
-		if (nMagicUsed > nMagicNum)
-		{
-			return false;
-		}
-	}
-		return true;
+	return true;
 }
 
+//bool CLMjLogic::removeSequence(CLMjCard aCards[], unsigned int unCardCount, int nBeginPos /*= 0*/)
+//{
+//	CLMjCard cardBegin = aCards[nBeginPos];
+//	int nMagicNum = getMagicNum(aCards, unCardCount);
+//	int nMagicUsed = 0;
+//
+//	if (cardBegin.isMagicCard())
+//	{
+//		return false;
+//	}
+//
+//	if (!removeCard(aCards, unCardCount--, cardBegin))
+//	{
+//		return false;
+//	}
+//
+//	/* 分头吃 中吃 尾吃*/
+//	// 没有该牌时或不是同一花色 用癞子补
+//	if (!removeCard(aCards, unCardCount--, cardBegin + 1) || ((cardBegin + 1) / 10 != cardBegin / 10))
+//	{
+//		++nMagicUsed;
+//		// 如果癞子都不够用了则直接返回
+//		if (nMagicUsed > nMagicNum)
+//		{
+//			return false;
+//		}
+//	}
+//
+//	if (!removeCard(aCards, unCardCount--, cardBegin + 2) || ((cardBegin + 2) / 10 != cardBegin / 10))
+//	{
+//		++nMagicUsed;
+//		// 如果癞子都不够用了则直接返回
+//		if (nMagicUsed > nMagicNum)
+//		{
+//			return false;
+//		}
+//	}
+//	return true;
+//}
 
+// 为了保证原子性，先检测是否有顺子再删除
 bool CLMjLogic::removeSequence(CLMjCard aCards[], unsigned int unCardCount, int nBeginPos /*= 0*/)
 {
 	CLMjCard cardBegin = aCards[nBeginPos];
-	int nMagicNum = getMagicNum(aCards, unCardCount);
-	int nMagicUsed = 0;
-
-	if (cardBegin.isMagicCard())
+	CLMjCard card2 = cardBegin + 1;
+	CLMjCard card3 = cardBegin + 2;
+	if (!card2.isValid() || card2.color() != cardBegin.color())
+	{
+		return false;
+	}
+	if (!card3.isValid() || card3.color() != cardBegin.color())
+	{
+		return false;
+	}
+	if (!isCardInArray(aCards, unCardCount, card2) || !isCardInArray(aCards, unCardCount, card3))
 	{
 		return false;
 	}
 
-	if (!removeCard(aCards, unCardCount--, cardBegin))
-	{
-		return false;
-	}
-
-	/* 分头吃 中吃 尾吃*/
-	// 没有该牌时或不是同一花色 用癞子补
-	if (!removeCard(aCards, unCardCount--, cardBegin + 1) || ((cardBegin + 1) / 10 != cardBegin / 10))
-	{
-		++nMagicUsed;
-		// 如果癞子都不够用了则直接返回
-		if (nMagicUsed > nMagicNum)
-		{
-			return false;
-		}
-	}
-
-	if (!removeCard(aCards, unCardCount--, cardBegin + 2) || ((cardBegin + 2) / 10 != cardBegin / 10))
-	{
-		++nMagicUsed;
-		// 如果癞子都不够用了则直接返回
-		if (nMagicUsed > nMagicNum)
-		{
-			return false;
-		}
-	}
+	removeCard(aCards, unCardCount--, cardBegin);
+	removeCard(aCards, unCardCount--, card2);
+	removeCard(aCards, unCardCount--, card3);
 	return true;
 }
 
@@ -332,10 +370,6 @@ bool CLMjLogic::isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bM
 	// 剩下一对将就可以胡了
 	if (unCardCount == 2)
 	{
-		if (getMagicNum(aCards, unCardCount) > 1)
-		{
-			return true;
-		}
 		if (aCards[0] == aCards[1])
 		{
 			return true;
@@ -347,20 +381,32 @@ bool CLMjLogic::isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bM
 	CLMjCard aCardsTemp[MJ_MAX_HAND_COUNT];
 	copyCards(aCardsTemp, unCardCount, aCards, unCardCount);
 
-	// 剔除刻子
-	if (removeTriplet(aCardsTemp, unCardCount))
+	// 这里需要循环遍历
+	for (int i = 0; i < unCardCount; ++i)
 	{
-		isCanHu_3x2(aCardsTemp, unCardCount - 3); // 剔除成功则使用aCardsTemp传参
+		// 剔除刻子
+		if (removeTriplet(aCardsTemp, unCardCount, i))
+		{
+			if (isCanHu_3x2(aCardsTemp, unCardCount - 3))
+			{
+				return true; // 注意加入返回值，层层返回true
+			}
+		}
+
+		// 剔除失败则重新拷贝
+		copyCards(aCardsTemp, unCardCount, aCards, unCardCount);
+
+		// 剔除顺子
+		if (removeSequence(aCardsTemp, unCardCount, i))
+		{
+			if (isCanHu_3x2(aCardsTemp, unCardCount - 3))
+			{
+				return true;
+			}
+		}
+		copyCards(aCardsTemp, unCardCount, aCards, unCardCount);
 	}
 
-	// 剔除失败则重新拷贝
-	copyCards(aCardsTemp, unCardCount, aCards, unCardCount);
-
-	// 剔除顺子
-	if (removeSequence(aCardsTemp, unCardCount))
-	{
-		isCanHu_3x2(aCardsTemp, unCardCount - 3);
-	}
 
 	return false;
 }

@@ -19,7 +19,8 @@
 
 //游戏事件ID定义,(取值范围从10-49)（定时器的处理）
 
-#define TIME_ID_Ready					9			// 准备
+#define TIME_ID_Ready					8			// 准备
+#define TIME_ID_Begin					9			// 准备
 #define TIME_ID_CHOOSE_A_SEAT			10			// 选座
 #define TIME_ID_CHOOSE_BANKER			11			// 选庄
 #define TIME_ID_SHUFFLE_CARD			13			// 系统洗牌据事件
@@ -44,6 +45,9 @@ const int SCORE_BASE = 5;
 const int MAX_FAN = 3;
 const long COIN_MUL = 200;
 
+
+// 定义测试的宏
+#define TEST_LOCAL_LX
 
 //////////////////////////////////////////////////////////////////////////
 //逻辑掩码
@@ -99,6 +103,15 @@ struct T_WeaveCardsValueItem
 	T_WeaveCardsValueItem()
 	{
 		memset(this, 0, sizeof(T_WeaveCardsValueItem));
+	}
+
+	int cardNum()
+	{
+		if (byWeaveKind > 1 && byWeaveKind < 5)
+		{
+			return 4;
+		}
+		return 3;
 	}
 };
 
@@ -190,6 +203,10 @@ struct T_MjActKongInfo
 			}
 		}
 		return -1;
+	}
+	T_MjActKongInfo()
+	{
+		clear();
 	}
 
 	void clear()
@@ -422,8 +439,12 @@ struct T_MsgDrawCard
 {
 	int nDrawCardUser;
 	int nNewCard;
+
 	int arrMjCardsPair[MJ_MAX_CARD_COUNT]; // 更新牌墙
 	int nMjNumAllocation;	// 一副麻将分配数
+
+	int nIndexStart;
+	int nIndexCurrent;
 };
 
 // 出牌结果
@@ -448,8 +469,10 @@ struct T_MsgActResultInfo
 	int	byHands[14]; //执行动作后人变化后的手牌
 	int iHandNums;		 //变化后的手牌数量
 
+	int nFromOutCardNums;	// 更新出牌玩家的出牌数量
+
 	T_WeaveCardsValueItem tWeaveCardsValueItem;		//如果有拦牌，在此处取数据
-	//T_WeaveCardsItem tWeaveCardsItem;
+	int nWeaveCardsItemNum;
 
 	bool bQGang;			//如果是抢杠胡，在此处取数据
 	int nQGangIdx;		//抢那一个杠控件
@@ -458,6 +481,8 @@ struct T_MsgActResultInfo
 	{
 		::memset(this, 0, sizeof(T_MsgActResultInfo));
 	}
+
+
 };
 
 

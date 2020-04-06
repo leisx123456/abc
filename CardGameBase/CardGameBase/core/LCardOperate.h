@@ -222,7 +222,7 @@ bool CLCardOperate<CLCard>::removeCards(CLCard aCards[], unsigned int unCardCoun
 		return false;
 	}
 
-	// 判断要删除的数组，是否存在源数组里面
+	// 为了保证原子性，需要判断要删除的数组，是否存在源数组里面
 	if (!isCardsInArray(aCards, unCardCount, aRemoveCards, unRemoveCount))
 	{
 		return false;
@@ -236,10 +236,11 @@ bool CLCardOperate<CLCard>::removeCards(CLCard aCards[], unsigned int unCardCoun
 	return true;
 }
 
-
+// 删除多张牌的时候需要保证原子性， 如果第一张牌删除成功，第二张失败，要把第一张删除的放回来。保证要删除的牌要么全删除，要么一张也不删
 template<class CLCard>
 unsigned char CLCardOperate<CLCard>::removeCards(CLCard aCards[], unsigned int unCardCount, CLCard cardRemove, unsigned int unRemoveCount/* =1*/)
 {
+	// 这里先找出了要删除的那张牌的张数，如果不够就不删了，这样保证了原子性
 	int unRemoveCountTotal = getCardsNum(aCards, unCardCount, cardRemove);
 	if (unRemoveCountTotal < unRemoveCount)
 	{

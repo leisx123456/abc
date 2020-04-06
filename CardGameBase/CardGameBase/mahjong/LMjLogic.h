@@ -22,12 +22,10 @@ public:
 
 	// 是否能杠
 	bool isCanKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardOut, T_MjActKongInfo & tMjActKongInfo);
-	bool isCanDianKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize,
-		CLMjCard cardOut);
-	bool isCanAnKong(CLMjCard aCards[], unsigned int unCardCount, CLMjCard & cardResult);
-	bool isCanBuKong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard & cardResult);
-
+	
 	// 消除一组刻子(包含起始位置的牌)
+	// bool removeTriplet(CLMjCard aCards[], unsigned int unCardCount, int nBeginPos = 0);
+	// 不考虑癞子的情况
 	bool removeTriplet(CLMjCard aCards[], unsigned int unCardCount, int nBeginPos = 0);
 
 	// 消除一组顺子
@@ -41,6 +39,7 @@ public:
 	//是否花猪
 	bool isFlowerPig(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, int colorQue = -1);
 
+	// 胡牌算法还有问题
 	bool isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair = false);
 	bool isCanHu_7Pair(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair = false);
 

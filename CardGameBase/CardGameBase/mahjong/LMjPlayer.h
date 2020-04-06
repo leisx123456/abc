@@ -151,11 +151,15 @@ public:
 	//摸牌
 	void drawCard(const CLMjCard & card);
 
+	// 理牌
+	void sordCards();
+
 	//玩家出牌
 	bool outCard(const CLMjCard & card);
 	CLMjCard getLatestOutCard();
 	void getOutCardsValue(int* pArrOutCardsValue, int & nOutCardNums);
 	void removeLatestOutCard();
+	int outCardNums() { return m_vecCardOut.size(); }
 
 	// 玩家动作
 
@@ -164,7 +168,7 @@ public:
 	bool execHu(unsigned char byProvideUser, int nHuIndex, const CLMjCard & cardOut);
 	void getWeaveCardsItems(T_WeaveCardsItem* pWeaveCardsItem, int & nWeaveItemNums);
 	T_WeaveCardsItem & getLatestWeaveCardsItem();
-
+	int weaveItemNums() { return m_nWeaveItemNums; }
 
 
 	//设置胡
@@ -195,7 +199,6 @@ public:
 	// ai思考
 	CLMjCard::E_MjCardColor thinkDingQue();
 	void think(CLMjCard cardOut, unsigned short usIgnoreFlags = 0);
-	T_ActRequest* aiActRequest() { return &m_tActRequestAI; }
 
 protected:
 	//////////////////////////////////////////////////////////////////////////
@@ -232,7 +235,6 @@ protected:
 
 	// ai
 	IAbstractThink* m_pIAbstractThink;
-	T_ActRequest m_tActRequestAI;	// 保存AI思考后的动作结果
 
 	// 保存玩家当前可以执行的那些动作(电脑玩家通用)
 	T_MjActInfo m_tMjActInfo;

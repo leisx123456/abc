@@ -45,7 +45,7 @@ public:
 	// 分配麻将子，四川麻将只需万条筒
 	virtual void allocation();
 	virtual int mjNumAllocation() const { return 108; }
-	int surplusCards() { return m_nIndexCurrent > m_nIndexStart 
+	int surplusCards() { return m_nIndexCurrent >= m_nIndexStart 
 		? (m_nIndexCurrent - m_nIndexStart) : (m_nIndexCurrent + mjNumAllocation() - m_nIndexStart); }
 	void updateUser();
 	void clearAllUserActInfo();

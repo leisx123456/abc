@@ -11,6 +11,7 @@ CSiChuanMjDesk::CSiChuanMjDesk()
 
 	_gameDispatcher = new CLGameDispatcher();
 	_gameDispatcher->add(TIME_ID_Ready, 1000, std::bind(&CSiChuanMjDesk::onEventReady, this));
+	_gameDispatcher->add(TIME_ID_Begin, 500, std::bind(&CSiChuanMjDesk::onEventGameBegin, this));
 	_gameDispatcher->add(TIME_ID_ROCK_DICE, 3000, std::bind(&CSiChuanMjDesk::onEventCutCards, this));
 	_gameDispatcher->add(TIME_ID_FETCH_HANDCARDS, 3000, std::bind(&CSiChuanMjDesk::onEventDealCards, this));
 	_gameDispatcher->add(TIME_ID_TBA, 1000, std::bind(&CSiChuanMjDesk::onEventDingQue, this));
@@ -141,8 +142,12 @@ bool CSiChuanMjDesk::execActPass(int nFromUser)
 	}
 
 	// 下一个活动用户摸牌
-	onSysAppointActiveUser(nextPlayerIndex(m_nActiveUser, playerCount(), false));
-	_gameDispatcher->start(TIME_DRAW_CARD);
+	if (nFromUser != m_nActiveUser)
+	{
+		m_nActiveUser = nextPlayerIndex(m_nActiveUser, playerCount(), false);
+		onSysAppointActiveUser(m_nActiveUser);
+		_gameDispatcher->start(TIME_DRAW_CARD);
+	}
 	return true;
 }
 
@@ -157,7 +162,9 @@ bool CSiChuanMjDesk::execActPong(int nFromUser, int nToUser)
 	tMsgActResultInfo.byFromUser = nFromUser;
 	tMsgActResultInfo.arrActUsers[0] = nToUser;
 	tMsgActResultInfo.nActUserNums = 1;
+	tMsgActResultInfo.nFromOutCardNums = m_pArrMjPlayer[nFromUser]->outCardNums();
 	tMsgActResultInfo.tWeaveCardsValueItem = m_pArrMjPlayer[nToUser]->getLatestWeaveCardsItem();
+	tMsgActResultInfo.nWeaveCardsItemNum = m_pArrMjPlayer[nToUser]->weaveItemNums();
 	//更新玩家的手牌数据
 	 m_pArrMjPlayer[nToUser]->getHandCards(tMsgActResultInfo.byHands, tMsgActResultInfo.iHandNums);
 	 onMsgActResult(tMsgActResultInfo);
@@ -166,6 +173,14 @@ bool CSiChuanMjDesk::execActPong(int nFromUser, int nToUser)
 
 	// 指定活动玩家
 	onSysAppointActiveUser(nToUser);
+
+	if (m_pArrMjPlayer[nToUser]->isReboot())
+	{
+		// 如果是机器人思考出牌
+		unsigned int usIgnoreFlags = ~0;
+		m_pArrMjPlayer[m_nActiveUser]->think(CARD_EMPTY, usIgnoreFlags);
+		_gameDispatcher->delayExec(TIME_ID_COMPUTER_THINK_OUT_CARD, m_nActiveUser);
+	}
 	return true;
 }
 
@@ -180,7 +195,9 @@ bool CSiChuanMjDesk::execActKong(int nFromUser, int nToUser)
 	tMsgActResultInfo.byFromUser = nFromUser;
 	tMsgActResultInfo.arrActUsers[0] = nToUser;
 	tMsgActResultInfo.nActUserNums = 1;
+	tMsgActResultInfo.nFromOutCardNums = m_pArrMjPlayer[nFromUser]->outCardNums();
 	tMsgActResultInfo.tWeaveCardsValueItem = m_pArrMjPlayer[nToUser]->getLatestWeaveCardsItem();
+	tMsgActResultInfo.nWeaveCardsItemNum = m_pArrMjPlayer[nToUser]->weaveItemNums();
 	// 更新玩家的手牌数据
 	m_pArrMjPlayer[nToUser]->getHandCards(tMsgActResultInfo.byHands, tMsgActResultInfo.iHandNums);
 	onMsgActResult(tMsgActResultInfo);
@@ -213,7 +230,7 @@ bool CSiChuanMjDesk::execActHu(int nFromUser, int arrToUser[], int nUserNums)
 {
 	for (int i = 0; i < nUserNums; ++i)
 	{
-		m_pArrMjPlayer[arrToUser[i]]->execHu(nFromUser, m_cardOut);
+		m_pArrMjPlayer[arrToUser[i]]->execHu(nFromUser, 0, m_cardOut);
 	}
 
 	//向各玩家广播动作消息///////////////////////////////////////////////////////////////////////////
@@ -222,6 +239,12 @@ bool CSiChuanMjDesk::execActHu(int nFromUser, int arrToUser[], int nUserNums)
 	tMsgActResultInfo.byFromUser = nFromUser;
 	memcpy(tMsgActResultInfo.arrActUsers, arrToUser, sizeof(arrToUser));
 	tMsgActResultInfo.nActUserNums = nUserNums;
+	tMsgActResultInfo.nFromOutCardNums = m_pArrMjPlayer[nFromUser]->outCardNums();
+	// 更新玩家的手牌数据
+	for (int i = 0; i < nUserNums; ++i)
+	{
+		m_pArrMjPlayer[arrToUser[i]]->getHandCards(tMsgActResultInfo.byHands, tMsgActResultInfo.iHandNums);
+	}
 	onMsgActResult(tMsgActResultInfo);
 
 	//各玩家的动作信息可清除///////////////////////////////
@@ -231,7 +254,7 @@ bool CSiChuanMjDesk::execActHu(int nFromUser, int arrToUser[], int nUserNums)
 	int nNotHuNum = 0;
 	for (int i = 0; i < playerCount(); ++i)
 	{
-		if (!m_pArrMjPlayer[arrToUser[i]]->isAlreadyHu())
+		if (!m_pArrMjPlayer[i]->isAlreadyHu())
 		{
 			nNotHuNum++;
 		}
@@ -239,18 +262,19 @@ bool CSiChuanMjDesk::execActHu(int nFromUser, int arrToUser[], int nUserNums)
 	if (nNotHuNum < 2)
 	{
 		_gameDispatcher->start(TIME_ID_ROUND_FINISH);
-		return;
+		return true;
 	}
 
 	// 如果是一炮多项, 活动状态交给点炮者
 	if (nUserNums > 1)
 	{
-		onSysAppointActiveUser(nFromUser);
+		m_nActiveUser = nFromUser;
 	}
 	else
 	{
-		onSysAppointActiveUser(nextPlayerIndex(arrToUser[0], playerCount(), false));
+		m_nActiveUser = nextPlayerIndex(arrToUser[0], playerCount(), false);
 	}
+	onSysAppointActiveUser(m_nActiveUser);
 	_gameDispatcher->start(TIME_DRAW_CARD);
 
 	return true;
@@ -304,13 +328,20 @@ void CSiChuanMjDesk::onEventDealCards()
 
 	tMsgDealCards.nPlayerCount = playerCount();
 	tMsgDealCards.nMjNumAllocation = mjNumAllocation();
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < playerCount(); ++i)
 	{
 		m_mjLogic.copyCards(tMsgDealCards.arrCardHand[i], 14, arrCardHand[i], 14);
 	}
 	m_mjLogic.copyCards(tMsgDealCards.arrMjCardsPair, MJ_MAX_CARD_COUNT, m_arrMjCardsPair, MJ_MAX_CARD_COUNT);
 
 	onMsgDealCards(tMsgDealCards);
+
+	// 理牌
+	for (int i = 0; i < playerCount(); i++)
+	{
+		m_pArrMjPlayer[i]->sordCards();
+	}
+
 	_gameDispatcher->start(TIME_ID_TBA);
 }
 
@@ -362,6 +393,8 @@ void CSiChuanMjDesk::onEventDrawCard()
 	T_MsgDrawCard tMsgDrawCard;
 	tMsgDrawCard.nDrawCardUser = m_nActiveUser;
 	tMsgDrawCard.nNewCard = card;
+	tMsgDrawCard.nIndexCurrent = m_nIndexCurrent;
+	tMsgDrawCard.nIndexStart = m_nIndexStart;
 	onMsgDrawCard(tMsgDrawCard);
 
 	// 2. 获取所有可能的动作信息
@@ -383,6 +416,11 @@ void CSiChuanMjDesk::onEventGameFinshed()
 void CSiChuanMjDesk::onSysAppointActiveUser(int nChairID)
 {
 	m_nActiveUser = nChairID;
+	while (m_pArrMjPlayer[m_nActiveUser]->isAlreadyHu())
+	{
+		m_nActiveUser = nextPlayerIndex(m_nActiveUser, playerCount(), false);
+	}
+	
 	m_cardOut = CARD_EMPTY;
 	updateUser();
 
@@ -429,7 +467,7 @@ void CSiChuanMjDesk::onSysJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyTyp
 			// 如果是机器人直接处理动作信息 并获取机器人的动作请求
 
 			m_pArrMjPlayer[m_nActiveUser]->think(CARD_EMPTY, usIgnoreFlags);
-			if (m_pArrMjPlayer[m_nActiveUser]->aiActRequest()->usActFlags)
+			if (m_pArrMjPlayer[m_nActiveUser]->actInfo()->usActFlags)
 			{
 				_gameDispatcher->delayExec(TIME_ID_COMPUTER_THINK_ACT, m_nActiveUser);
 				//OnUserActRequest(m_nActiveUser, tActRequest);
@@ -443,11 +481,10 @@ void CSiChuanMjDesk::onSysJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyTyp
 		else
 		{
 			// 是玩家则把动作信息交给玩家自己处理(包括出牌)
-			T_MjActInfo tMjActInfo;
 			bool bHaveAct = m_pArrMjPlayer[m_nActiveUser]->selectActInfo(CARD_EMPTY, usIgnoreFlags);
 			if (bHaveAct)
 			{
-				onMsgActNotify(tMjActInfo);
+				onMsgActNotify(*m_pArrMjPlayer[m_nActiveUser]->actInfo());
 			}
 
 		}
@@ -470,10 +507,10 @@ void CSiChuanMjDesk::onSysJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyTyp
 			{
 				// 如果是机器人直接处理动作信息 并获取机器人的动作请求
 				m_pArrMjPlayer[i]->think(m_cardOut, usIgnoreFlags);
-				if (m_pArrMjPlayer[i]->aiActRequest()->usActFlags)
+				if (m_pArrMjPlayer[i]->actInfo()->usActFlags)
 				{
 					bHaveAct = true;
-					//OnUserActRequest(m_nActiveUser, tActRequest);
+					_gameDispatcher->delayExec(TIME_ID_COMPUTER_THINK_ACT, i);
 				}
 			}
 			else
@@ -492,7 +529,8 @@ void CSiChuanMjDesk::onSysJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyTyp
 		// 都没有动作信息
 		if (!bHaveAct)
 		{
-			onSysAppointActiveUser(nextPlayerIndex(m_nActiveUser, playerCount(), false));
+			m_nActiveUser = nextPlayerIndex(m_nActiveUser, playerCount(), false);
+			onSysAppointActiveUser(m_nActiveUser);
 			_gameDispatcher->start(TIME_DRAW_CARD);
 		}
 
@@ -516,14 +554,18 @@ void CSiChuanMjDesk::onSysJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyTyp
 			{
 				continue;
 			}
+			if (m_pArrMjPlayer[i]->isAlreadyHu())
+			{
+				continue;
+			}
 			if (m_pArrMjPlayer[i]->isReboot())
 			{
 				// 如果是机器人直接处理动作信息 并获取机器人的动作请求
 				m_pArrMjPlayer[i]->think(m_cardOut, usIgnoreFlags);
-				if (m_pArrMjPlayer[i]->aiActRequest()->usActFlags)
+				if (m_pArrMjPlayer[i]->actInfo()->usActFlags)
 				{
 					bHaveQGHu = true;
-					//OnUserActRequest(m_nActiveUser, tActRequest);
+					_gameDispatcher->delayExec(TIME_ID_COMPUTER_THINK_ACT, i);
 				}
 			}
 			else
@@ -555,13 +597,19 @@ void CSiChuanMjDesk::onSysJudgeAndExecActNotify(E_ActNotifyType eActiveNotifyTyp
 
 void CSiChuanMjDesk::onDelayExecActRequest(int nChairID)
 {
-	OnUserActRequest(nChairID, *m_pArrMjPlayer[nChairID]->aiActRequest());
+	T_ActRequest tActRequest;
+	tActRequest.usActFlags = m_pArrMjPlayer[nChairID]->actInfo()->usActFlags;
+	tActRequest.nKongCardValue = m_pArrMjPlayer[nChairID]->actInfo()->tMjActKongInfo.arrKongSelect[0];
+	tActRequest.nKongSelectIndex = 0;
+	tActRequest.tMjActOutInfo = m_pArrMjPlayer[nChairID]->actInfo()->tMjActOutInfo;
+	OnUserActRequest(nChairID, tActRequest);
 }
 
 
 void CSiChuanMjDesk::onDelayExecOutCardRequest(int nChairID)
 {
-	T_MjActOutInfo tMjActOutInfo = m_pArrMjPlayer[nChairID]->aiActRequest()->tMjActOutInfo;
+	T_MjActOutInfo tMjActOutInfo = m_pArrMjPlayer[nChairID]->actInfo()->tMjActOutInfo;
+	tMjActOutInfo.nOutCardUser = nChairID;
 	onUserOutCardRequest(nChairID, tMjActOutInfo);
 }
 
@@ -596,7 +644,7 @@ void CSiChuanMjDesk::onUserReady(int nChairID)
 
 	if (playerCount() == nReadyNum)
 	{
-		onEventGameBegin();
+		_gameDispatcher->start(TIME_ID_Begin);
 	}
 }
 

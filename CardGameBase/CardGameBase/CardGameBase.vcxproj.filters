@@ -36,15 +36,6 @@
     <ClCompile Include="mahjong\LMjPlayer.cpp">
       <Filter>mahjong</Filter>
     </ClCompile>
-    <ClCompile Include="mahjong\ai\BasicThink.cpp">
-      <Filter>mahjong\ai</Filter>
-    </ClCompile>
-    <ClCompile Include="mahjong\ai\CleverThink.cpp">
-      <Filter>mahjong\ai</Filter>
-    </ClCompile>
-    <ClCompile Include="mahjong\ai\CmpThink.cpp">
-      <Filter>mahjong\ai</Filter>
-    </ClCompile>
     <ClCompile Include="mahjong\ai\AbstractThink.cpp">
       <Filter>mahjong\ai</Filter>
     </ClCompile>
@@ -72,10 +63,13 @@
     <ClCompile Include="mahjong\ai\LBasicThink.cpp">
       <Filter>mahjong\ai</Filter>
     </ClCompile>
-    <ClCompile Include="mahjong\ai\LCmpThink.cpp">
+    <ClCompile Include="mahjong\SiChuanMj\SiChuanMjPlayer.cpp">
+      <Filter>mahjong\SiChuanMj</Filter>
+    </ClCompile>
+    <ClCompile Include="mahjong\ai\LScoreBasicThink.cpp">
       <Filter>mahjong\ai</Filter>
     </ClCompile>
-    <ClCompile Include="mahjong\SiChuanMj\SiChuanMjPlayer.cpp">
+    <ClCompile Include="mahjong\SiChuanMj\SiChuanMjThink.cpp">
       <Filter>mahjong\SiChuanMj</Filter>
     </ClCompile>
   </ItemGroup>
@@ -100,15 +94,6 @@
     </ClInclude>
     <ClInclude Include="mahjong\LMjPlayer.h">
       <Filter>mahjong</Filter>
-    </ClInclude>
-    <ClInclude Include="mahjong\ai\BasicThink.h">
-      <Filter>mahjong\ai</Filter>
-    </ClInclude>
-    <ClInclude Include="mahjong\ai\CleverThink.h">
-      <Filter>mahjong\ai</Filter>
-    </ClInclude>
-    <ClInclude Include="mahjong\ai\CmpThink.h">
-      <Filter>mahjong\ai</Filter>
     </ClInclude>
     <ClInclude Include="mahjong\ai\AbstractThink.h">
       <Filter>mahjong\ai</Filter>
@@ -140,10 +125,13 @@
     <ClInclude Include="mahjong\ai\LBasicThink.h">
       <Filter>mahjong\ai</Filter>
     </ClInclude>
-    <ClInclude Include="mahjong\ai\LCmpThink.h">
+    <ClInclude Include="mahjong\SiChuanMj\SiChuanMjPlayer.h">
+      <Filter>mahjong\SiChuanMj</Filter>
+    </ClInclude>
+    <ClInclude Include="mahjong\ai\LScoreBasicThink.h">
       <Filter>mahjong\ai</Filter>
     </ClInclude>
-    <ClInclude Include="mahjong\SiChuanMj\SiChuanMjPlayer.h">
+    <ClInclude Include="mahjong\SiChuanMj\SiChuanMjThink.h">
       <Filter>mahjong\SiChuanMj</Filter>
     </ClInclude>
   </ItemGroup>
