@@ -1,5 +1,5 @@
 #include "LMjDesk.h"
-#include "LMjMachine.h"
+
 #include <time.h>
 #include <iostream>
 #include <stdlib.h>

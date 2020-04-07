@@ -2,7 +2,6 @@
 #include "../core/LClockActive.h"
 #include "LMjPlayer.h"
 #include "../core/LDicePair.h"
-#include "LMjMachine.h"
 #include "LMjLogic.h"
 /************************************************************************/
 /* 

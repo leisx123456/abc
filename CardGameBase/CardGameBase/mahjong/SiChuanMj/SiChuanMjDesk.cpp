@@ -414,37 +414,37 @@ void CSiChuanMjDesk::onEventGameFinshed()
 		tMsgResult.tUserHuInfo[i].calculate(m_tDeskConfig);
 	}
 
-	// 给胡牌与被胡牌玩家之间结算分数，首先先给一胡的玩家结算，再给二胡的玩家结算,最后三胡
-	for (int i = 0; i < _vecHu.size(); i++)
-	{
-		int nHuUser = _vecHu.at(i);
-		if (m_pArrMjPlayer[nHuUser]->userHuInfo().isZiMoType())
-		{
-			for (int i = 0; i < playerCount(); ++i)
-			{
-				if (i == nHuUser)
-				{
-					continue;
-				}
-				if (m_pArrMjPlayer[i]->huIndex() > m_pArrMjPlayer[nHuUser]->huIndex())
-				{
-					tMsgResult.tJieSuanItem[nHuUser].nGetScore += tMsgResult.tUserHuInfo[nHuUser].nFinalScore;
+	//// 给胡牌与被胡牌玩家之间结算分数，首先先给一胡的玩家结算，再给二胡的玩家结算,最后三胡
+	//for (int i = 0; i < _vecHu.size(); i++)
+	//{
+	//	int nHuUser = _vecHu.at(i);
+	//	if (m_pArrMjPlayer[nHuUser]->userHuInfo().isZiMoType())
+	//	{
+	//		for (int i = 0; i < playerCount(); ++i)
+	//		{
+	//			if (i == nHuUser)
+	//			{
+	//				continue;
+	//			}
+	//			if (m_pArrMjPlayer[i]->huIndex() > m_pArrMjPlayer[nHuUser]->huIndex())
+	//			{
+	//				tMsgResult.tJieSuanItem[nHuUser].nGetScore += tMsgResult.tUserHuInfo[nHuUser].nFinalScore;
 
-					T_LostScoreItem tLostScoreItem(nHuUser
-						, tMsgResult.tUserHuInfo[nHuUser].eMjHuWay
-						, tMsgResult.tUserHuInfo[nHuUser].nFinalScore);
-					tMsgResult.tJieSuanItem[i].addLostScoreItem(tLostScoreItem);
+	//				T_LostScoreItem tLostScoreItem(nHuUser
+	//					, tMsgResult.tUserHuInfo[nHuUser].eMjHuWay
+	//					, tMsgResult.tUserHuInfo[nHuUser].nFinalScore);
+	//				tMsgResult.tJieSuanItem[i].addLostScoreItem(tLostScoreItem);
 
 
 
-				}
-			}
-		}
-		else
-		{
+	//			}
+	//		}
+	//	}
+	//	else
+	//	{
 
-		}
-	}
+	//	}
+	//}
 
 	onMsgGameResult(tMsgResult);
 }

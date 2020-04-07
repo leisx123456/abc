@@ -23,28 +23,6 @@ enum E_OperatorStatus
 	EO_NULL					//未操作
 };
 
-// 后台数据或用户本地保存数据
-struct T_Setting
-{
-	enum E_Sex
-	{
-		S_Boy,
-		S_Girl
-	};
-
-	// 用户信息
-	string strNickname;
-	unsigned short cbScore;
-	string strHeadPath;
-
-	T_Setting()
-		: strNickname("12345")
-		, cbScore(0)
-		, strHeadPath("")
-	{
-
-	}
-};
 
 
 
