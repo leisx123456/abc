@@ -232,9 +232,7 @@ bool CLMjPlayer::execHu(unsigned char byProvideUser, int nHuIndex, const CLMjCar
 	m_tUserHuInfo.eMjHuWay = m_tMjActInfo.tMjActHuInfo.eMjHuWay;
 	m_tUserHuInfo.eMjHuName = m_tMjActInfo.tMjActHuInfo.eMjHuName;
 	m_tUserHuInfo.nGeng = m_tMjActInfo.tMjActHuInfo.gen;
-	//m_tUserHuInfo.bHaiDiLao
 
-	m_tUserHuInfo.calculate();
 	return true;
 }
 
@@ -280,6 +278,15 @@ void CLMjPlayer::getHandCards(int pArrHandCards[], int & nHandNums)
 }
 
 
+int CLMjPlayer::huIndex()
+{
+	int nIndex = 255;
+	if (m_tUserHuInfo.bHu)
+	{
+		nIndex = m_tUserHuInfo.nHuIndex;
+	}
+	return nIndex;
+}
 
 
 

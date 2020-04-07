@@ -57,16 +57,15 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	// 系统事件
-	virtual void onEventReady();
-	virtual void onEventGameBegin();		// 游戏开始
-	virtual void onEventCutCards();			// 摇骰子切牌
-	virtual void onEventDealCards();		// 发手牌
-	virtual void onEventDingQue();			// 定缺
-	virtual void onEventFristBankerActive();
-	virtual void onEventDrawCard();	// 摸牌
-	//virtual void onEventAppointActiveUser();			// 指定活动用户
-	//virtual void onEventAppointResponseUsers();			// 指定响应用户
-	virtual void onEventGameFinshed();
+	void onEventReady();
+	void onEventGameBegin();		// 游戏开始
+	void onEventCutCards();			// 摇骰子切牌
+	void onEventDealCards();		// 发手牌
+	void onEventDingQue();			// 定缺
+	void onEventFristBankerActive();
+	void onEventDrawCard();	// 摸牌
+	void onEventChaJiao();	// 查叫
+	void onEventGameFinshed();
 	// 由于电脑思考执行动作比较快，需要延迟执行
 	void onDelayExecActRequest(int nChairID);
 	void onDelayExecOutCardRequest(int nChairID);

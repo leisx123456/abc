@@ -79,10 +79,15 @@ protected:
 	int m_nBanker;	//庄家 0-3
 	int m_nActiveUser;	//当前活动用户 -1, 0-3
 	int m_nCurExecActUser;	//当前执行动作的用户 -1,0-3
-	int m_nAlreadyHuNum;	// 当前已胡的人数
+
+	//int m_nAlreadyHuNum;	// 当前已胡的人数0-3
+	int m_nHuOrderNum;	// 有时候胡牌玩家有一炮多响, 这两个胡牌玩家是并列序号
+	std::vector<int> _vecHu;	// 胡牌id序列
 	
 	//bool bBuKongCard;
 	bool m_bHuangZhuang;
+
+	T_DeskConfig m_tDeskConfig;
 
 };
 

@@ -16,6 +16,7 @@ CSiChuanMjDesk::CSiChuanMjDesk()
 	_gameDispatcher->add(TIME_ID_FETCH_HANDCARDS, 3000, std::bind(&CSiChuanMjDesk::onEventDealCards, this));
 	_gameDispatcher->add(TIME_ID_TBA, 1000, std::bind(&CSiChuanMjDesk::onEventDingQue, this));
 	_gameDispatcher->add(TIME_DRAW_CARD, 1000, std::bind(&CSiChuanMjDesk::onEventDrawCard, this));
+	_gameDispatcher->add(TIME_ID_CHA_JIAO, 500, std::bind(&CSiChuanMjDesk::onEventChaJiao, this));
 	_gameDispatcher->add(TIME_ID_ROUND_FINISH, 500, std::bind(&CSiChuanMjDesk::onEventGameFinshed, this));
 	// 电脑AI延迟处理
 	_gameDispatcher->addDelayFun(TIME_ID_COMPUTER_THINK_ACT, 1000, std::bind(&CSiChuanMjDesk::onDelayExecActRequest, this, std::placeholders::_1));
@@ -230,8 +231,10 @@ bool CSiChuanMjDesk::execActHu(int nFromUser, int arrToUser[], int nUserNums)
 {
 	for (int i = 0; i < nUserNums; ++i)
 	{
-		m_pArrMjPlayer[arrToUser[i]]->execHu(nFromUser, 0, m_cardOut);
+		m_pArrMjPlayer[arrToUser[i]]->execHu(nFromUser, m_nHuOrderNum, m_cardOut);
+		_vecHu.push_back(arrToUser[i]);
 	}
+	m_nHuOrderNum++;
 
 	//向各玩家广播动作消息///////////////////////////////////////////////////////////////////////////
 	T_MsgActResultInfo tMsgActResultInfo;
@@ -251,15 +254,7 @@ bool CSiChuanMjDesk::execActHu(int nFromUser, int arrToUser[], int nUserNums)
 	clearAllUserActInfo();
 
 	// 如果只剩一家未胡则本局结束
-	int nNotHuNum = 0;
-	for (int i = 0; i < playerCount(); ++i)
-	{
-		if (!m_pArrMjPlayer[i]->isAlreadyHu())
-		{
-			nNotHuNum++;
-		}
-	}
-	if (nNotHuNum < 2)
+	if (_vecHu.size() >= playerCount() - 1)
 	{
 		_gameDispatcher->start(TIME_ID_ROUND_FINISH);
 		return true;
@@ -383,9 +378,8 @@ void CSiChuanMjDesk::onEventDrawCard()
 	// 1. 活动用户摸牌
 	if (surplusCards() == 0)
 	{
-		// 如果牌墙剩余为0，结束
-		m_bHuangZhuang = true;
-		_gameDispatcher->start(TIME_ID_ROUND_FINISH);
+		// 如果牌墙剩余为0，荒庄，查大叫
+		_gameDispatcher->start(TIME_ID_CHA_JIAO);
 		return;
 	}
 	CLMjCard card = drawCard();
@@ -401,14 +395,57 @@ void CSiChuanMjDesk::onEventDrawCard()
 	onSysJudgeAndExecActNotify(EA_DarwCard);
 }
 
+
+void CSiChuanMjDesk::onEventChaJiao()
+{
+	m_bHuangZhuang = true;
+	// 查叫用户需计算最大牌型,其实就是补一张癞子牌，然后得到的牌型分中取最大的一个
+}
+
 void CSiChuanMjDesk::onEventGameFinshed()
 {
 	T_MsgResult tMsgResult;
 	tMsgResult.bHuangZhuang = m_bHuangZhuang;
+
+	// 给胡牌玩家计算胡牌分
 	for (int i = 0; i < playerCount(); ++i)
 	{
 		tMsgResult.tUserHuInfo[i] = m_pArrMjPlayer[i]->userHuInfo();
+		tMsgResult.tUserHuInfo[i].calculate(m_tDeskConfig);
 	}
+
+	// 给胡牌与被胡牌玩家之间结算分数，首先先给一胡的玩家结算，再给二胡的玩家结算,最后三胡
+	for (int i = 0; i < _vecHu.size(); i++)
+	{
+		int nHuUser = _vecHu.at(i);
+		if (m_pArrMjPlayer[nHuUser]->userHuInfo().isZiMoType())
+		{
+			for (int i = 0; i < playerCount(); ++i)
+			{
+				if (i == nHuUser)
+				{
+					continue;
+				}
+				if (m_pArrMjPlayer[i]->huIndex() > m_pArrMjPlayer[nHuUser]->huIndex())
+				{
+					tMsgResult.tJieSuanItem[nHuUser].nGetScore += tMsgResult.tUserHuInfo[nHuUser].nFinalScore;
+
+					T_LostScoreItem tLostScoreItem(nHuUser
+						, tMsgResult.tUserHuInfo[nHuUser].eMjHuWay
+						, tMsgResult.tUserHuInfo[nHuUser].nFinalScore);
+					tMsgResult.tJieSuanItem[i].addLostScoreItem(tLostScoreItem);
+
+
+
+				}
+			}
+		}
+		else
+		{
+
+		}
+	}
+
 	onMsgGameResult(tMsgResult);
 }
 

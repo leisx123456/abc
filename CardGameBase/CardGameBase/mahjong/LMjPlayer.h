@@ -23,42 +23,30 @@ enum E_OperatorStatus
 	EO_NULL					//未操作
 };
 
-struct T_UserInfo
+// 后台数据或用户本地保存数据
+struct T_Setting
 {
+	enum E_Sex
+	{
+		S_Boy,
+		S_Girl
+	};
+
 	// 用户信息
 	string strNickname;
 	unsigned short cbScore;
 	string strHeadPath;
 
-	bool bOffline;
-	bool bHouseOwner;
-
-	bool bBanker;
-	bool bQingUue;
-	bool bReady;
-	bool bBaoJiao;
-	bool bHu;
-	bool bBuyCard;
-	CLMjCard::E_MjCardColor eTBACardColor;
-	E_OperatorStatus eOperatorStatus;
-
-	T_UserInfo()
+	T_Setting()
 		: strNickname("12345")
 		, cbScore(0)
-		, bOffline(false)
 		, strHeadPath("")
-		, bBanker(false)
-		, bHouseOwner(false)
-		, bReady(false)
-		, bBaoJiao(false)
-		, bHu(false)
-		, bBuyCard(false)
-		, eTBACardColor(CLMjCard::EM_Invalid_Color)
-		, eOperatorStatus(EO_NULL)
 	{
 
 	}
 };
+
+
 
 // 手牌基本数据
 struct T_UserCardsData
@@ -104,13 +92,6 @@ public:
 		p_unActive
 	};
 
-
-
-	enum E_Sex
-	{
-		S_Boy,
-		S_Girl
-	};
 
 	CLMjPlayer();
 	CLMjPlayer(E_PlayerType ePlayerType, int nChairID);
@@ -180,6 +161,7 @@ public:
 	{
 		return m_tUserHuInfo;
 	}
+	int huIndex();
 
 	//获得出了的牌队列
 	//vector<int> getOutCard();
@@ -239,7 +221,7 @@ protected:
 	// 保存玩家当前可以执行的那些动作(电脑玩家通用)
 	T_MjActInfo m_tMjActInfo;
 
-	//  玩家胡牌信息
+	//  保存玩家本局胡牌信息
 	T_UserHuInfo m_tUserHuInfo;
 	
 	//////////////////////////////////////////////////////////////////////////
@@ -249,6 +231,17 @@ protected:
 	//////////////////////////////////////////////////////////////////////////
 	// 玩家属性
 	int m_nChairID;
+
+	//bool bOffline;
+	//bool bHouseOwner;
+
+	bool bBanker;
+	//bool bQingUue;
+	//bool bBaoJiao;
+	bool bHu;
+	//bool bBuyCard;
+	CLMjCard::E_MjCardColor eTBACardColor;
+	E_OperatorStatus eOperatorStatus;
 
 };
 

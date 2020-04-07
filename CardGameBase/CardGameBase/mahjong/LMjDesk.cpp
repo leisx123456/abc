@@ -17,7 +17,8 @@ m_nBanker = 0;
 m_nActiveUser = 0;
 m_nCurExecActUser = -1;
 m_bHuangZhuang = false;
-m_nAlreadyHuNum = 0;
+m_nHuOrderNum = 1;
+//m_nAlreadyHuNum = 0;
 
 }
 

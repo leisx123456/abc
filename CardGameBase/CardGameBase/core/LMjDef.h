@@ -28,7 +28,8 @@
 #define TIME_ID_FETCH_HANDCARDS			14			//系统发手牌事件
 #define TIME_ID_TBA						16          
 #define TIME_DRAW_CARD					17			//系统为某个玩家下发令牌事件,得令牌者抓牌出牌
-#define TIME_ID_RESULT					19			//游戏结算事件
+#define TIME_ID_RESULT					18			//游戏结算事件
+#define TIME_ID_CHA_JIAO				19			//查叫
 #define TIME_ID_ROUND_FINISH			20			//一回合完成/事件
 
 #define TIME_ID_COMPUTER_THINK_ACT		21			// 电脑思考吃碰杠胡
@@ -284,13 +285,13 @@ enum E_MjHuWay
 	EHW_ZiMo,  //自摸
 	// 特殊方式
 	EHW_DayHu,	              //天胡
-	EHW_LandHu,	               //地胡
-	EHW_PensonHu,	              //人和
+	EHW_LandHu,	               //地胡 - 闲家第一轮自摸
+	EHW_PensonHu,	              //人和 - 即庄家打第一张牌就被闲家胡了
 	EHW_QiangGang,  //抢杠
 	EHW_DianGangKai,  //点杠杠上开花
 	EHW_AnGangKai,		//暗杠杠上开花
 	EHW_BuGangKai,		//补杠杠上开花
-	EHW_GangChong,  //杠冲
+	//EHW_GangChong,  //杠冲
 	
 
 };
@@ -356,6 +357,28 @@ struct T_MjActInfo
 };
 
 //////////////////////////////////////////////////////////////////////////
+
+struct T_DeskConfig
+{
+	enum E_ZiMoAddScoreType
+	{
+		EZ_ZiMoAddUnit,	// 自摸加底
+		EZ_ZimoAddFan,	// 自摸加番
+	};
+	int bBaseScore;
+
+	bool bAbleHaiDiLao;
+	int nMaxFan;	// 如果不计最大番数则赋值255
+
+	T_DeskConfig()
+		: bBaseScore(5)
+		, bAbleHaiDiLao(true)
+		, nMaxFan(3)
+	{
+
+	}
+};
+
 // 本局个人胡牌信息
 struct T_UserHuInfo
 {
@@ -363,30 +386,154 @@ struct T_UserHuInfo
 	int nHuIndex;						// 第几个胡
 	unsigned char byFangPaoUser;		//放炮玩家
 
+	bool bChaJiao;	// 是否成功查了别人的叫
+	int arrBeChaoJiaoUser[MJ_MAX_PLAYER];	// 被查叫的玩家id
 
 	E_MjHuWay eMjHuWay;
 	E_MjHuNameFlags eMjHuName;
 	int nGeng;	// 根
+
+	// 地方配置
 	bool bHaiDiLao;
 
 	// 
-	int nTotalFan;
-	int nTotalScore;	
-	int nRealScore;						//实际得失分
-	int nChangdScore;					//本局所变动的分数
+	int nTotalFan;	// 当前牌型总番数
+	int nFinalFan;	// 当前牌型最终番数(如果有定义最大番数不能超过最大番数)
+	int nFinalUnit;	// 当前牌型最终多少个 底分数
+	int nFinalScore;	// 当前牌型最终得分nTotalScore = nTotalUnit*UnitScore; //UnitScore由玩家定
+
+
 
 	T_UserHuInfo()
 	{
 		memset(this, 0, sizeof(T_UserHuInfo));
+
 	}
 
-	void calculate()
+	bool isZiMoType()
+	{
+		//bool bBelongZiMo = false;
+		if (eMjHuWay == EHW_ZiMo
+			|| eMjHuWay == EHW_DayHu
+			|| eMjHuWay == EHW_LandHu
+			|| eMjHuWay == EHW_PensonHu
+			|| eMjHuWay == EHW_DianGangKai
+			|| eMjHuWay == EHW_AnGangKai
+			|| eMjHuWay == EHW_BuGangKai)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	void calculate(const T_DeskConfig & tDeskConfig)
 	{
 		if (!bHu)
 		{
 			return;
 		}
 		// E_MjHuWay  + E_MjHuName + 根
+		int nUnit = 0;
+		int nFan = 0;
+		//E_MjHuWay
+		switch (eMjHuWay)
+		{
+		case EHW_Unknown:
+			break;
+		case EHW_JiePao:
+			break;
+		case EHW_ZiMo:
+			nUnit++;//自摸加底
+			break;
+		case EHW_DayHu:
+			nUnit++;
+			nFan += 6;
+			goto end;
+		case EHW_LandHu:
+			nUnit++;
+			nFan += 6;
+			goto end;
+		case EHW_PensonHu:
+			nFan += 6;
+			goto end;
+		case EHW_QiangGang:
+			nFan++;
+			break;
+		case EHW_DianGangKai:
+			nUnit++;
+			nFan++;
+			break;
+		case EHW_AnGangKai:
+			nUnit++;
+			nFan++;
+			break;
+		case EHW_BuGangKai:
+			nUnit++;
+			nFan++;
+			break;
+		default:
+			break;
+		}
+
+		// E_MjHuName
+		switch (eMjHuName)
+		{
+		case EHN_Ping:
+			break;
+		case EHN_Pong:
+			nFan++;
+			break;
+		case EHN_Qing:
+			nFan += 2;
+			break;
+		case EHN_SevenPair:
+			nFan += 2;
+			break;
+		case EHN_JinGouDiao:
+			nFan += 2;
+			break;
+		case EHN_DragonSevenPair:
+			nFan += 3;
+			break;
+		case EHN_QingPong:
+			nFan += 3;
+			break;
+		case EHN_QingSevenPair:
+			nFan += 4;
+			break;
+		case EHN_QingDragonSevenPair:
+			nFan += 5;
+			break;
+		case EHN_QingJinGouDiao:
+			nFan += 4;
+			break;
+		default:
+			break;
+		}
+
+		// 地方配置情况
+		if (tDeskConfig.bAbleHaiDiLao)
+		{
+			if (bHaiDiLao)
+			{
+				nFan++;
+			}
+		}
+
+		//gen
+		nFan += nGeng;	// 牌型番数+根
+
+	end:
+		nTotalFan = nFan;
+		nFinalFan = nTotalFan;
+		if (nTotalFan > tDeskConfig.nMaxFan)
+		{
+			nFinalFan = tDeskConfig.nMaxFan;
+		}
+		
+		int nFinalMultiple = pow(2, nFinalFan); //倍数
+		nFinalUnit = nUnit + nFinalMultiple;
+		nFinalScore = nFinalUnit * tDeskConfig.bBaseScore;
 	}
 };
 
@@ -485,6 +632,41 @@ struct T_MsgActResultInfo
 
 };
 
+struct T_LostScoreItem
+{
+	T_LostScoreItem()
+	{
+
+	}
+	T_LostScoreItem(int arrToUser, E_MjHuWay eMjHuWay, int nLostScore)
+	: arrToUser(arrToUser)
+	, eMjHuWay(eMjHuWay)
+	, nLostScore(nLostScore)
+	{
+
+	}
+	int arrToUser;
+	E_MjHuWay eMjHuWay;
+	int nLostScore;
+};
+
+struct T_JieSuanItem
+{
+	// 得分情况
+	int nGetScore;
+	
+	// 自己失分情况
+	T_LostScoreItem arrLostScoreItem[MJ_MAX_PLAYER];
+	int nLostScoreItemNum;
+	//
+	int nRealScore;						//实际得失分 有正负值
+	//int nChangedScore;					//本局所变动的分数
+
+	void addLostScoreItem(const T_LostScoreItem & tLostScoreItem)
+	{
+		arrLostScoreItem[nLostScoreItemNum++] = tLostScoreItem;
+	}
+};
 
 // 本局结果
 struct T_MsgResult
@@ -492,6 +674,8 @@ struct T_MsgResult
 	bool bHuangZhuang;				//是否荒庄
 
 	T_UserHuInfo tUserHuInfo[4];
+	T_JieSuanItem tJieSuanItem[4];
+
 	T_MsgResult()
 	{
 		::memset(this, 0, sizeof(T_MsgResult));
@@ -501,6 +685,7 @@ struct T_MsgResult
 
 //////////////////////////////////////////////////////////////////////////
 /* client --> server*/
+
 struct T_ActRequest
 {
 	unsigned short	usActFlags;
