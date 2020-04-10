@@ -123,7 +123,7 @@ public:
 	// Íæ¼Ò¶¯×÷
 
 	bool execPong(unsigned char byProvideUser, const CLMjCard & cardOut);
-	bool execKong(unsigned char byProvideUser, const CLMjCard & cardOut/*, int nCurSelectIndex*/);
+	bool execKong(unsigned char byProvideUser, const CLMjCard & cardOut, std::vector<int> vetHu, int nPlayNum/*, int nCurSelectIndex*/);
 	bool execHu(unsigned char byProvideUser, int nHuIndex, const CLMjCard & cardOut);
 	void getWeaveCardsItems(T_WeaveCardsItem* pWeaveCardsItem, int & nWeaveItemNums);
 	T_WeaveCardsItem & getLatestWeaveCardsItem();

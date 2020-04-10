@@ -1,9 +1,10 @@
-﻿生成启动时间为 2020/4/7 23:11:47。
+﻿生成启动时间为 2020/4/10 23:04:56。
      1>项目“F:\work\pro\LxGame\LxGameBase\CardGameBase\CardGameBase\CardGameBase.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I. /Z7 /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _WINDOWS /D _USRDLL /D CARDGAMEBASE_EXPORTS /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt mahjong\LMjDesk.cpp
-         LMjDesk.cpp
-     1>F:\work\pro\LxGame\LxGameBase\CardGameBase\CardGameBase\core/LMjDef.h(534): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I. /Z7 /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _WINDOWS /D _USRDLL /D CARDGAMEBASE_EXPORTS /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt mahjong\ai\LBasicThink.cpp
+         LBasicThink.cpp
+     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\core\LMjDef.h(560): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+     1>mahjong\ai\LBasicThink.cpp(21): warning C4018: “<”: 有符号/无符号不匹配
        Lib:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"F:\work\pro\LxGame\LxMahjone\LxSiChuanMahjong\proj.win32\Debug\CardGameBase.lib" /NOLOGO Debug\LCard.obj
          Debug\LCardOperate.obj
@@ -30,4 +31,4 @@
 
 生成成功。
 
-已用时间 00:00:01.47
+已用时间 00:00:00.84

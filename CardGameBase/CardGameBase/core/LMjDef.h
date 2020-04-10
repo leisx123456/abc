@@ -92,6 +92,27 @@ enum E_GameState
 	EGS_Over
 };
 
+struct T_DeskConfig
+{
+	enum E_ZiMoAddScoreType
+	{
+		EZ_ZiMoAddUnit,	// 自摸加底
+		EZ_ZimoAddFan,	// 自摸加番
+	};
+	int bBaseScore;
+
+	bool bAbleHaiDiLao;
+	int nMaxFan;	// 如果不计最大番数则赋值255
+
+	T_DeskConfig()
+		: bBaseScore(5)
+		, bAbleHaiDiLao(true)
+		, nMaxFan(3)
+	{
+
+	}
+};
+
 // 组合项
 struct T_WeaveCardsValueItem
 {
@@ -382,26 +403,7 @@ struct T_MjActInfo
 
 //////////////////////////////////////////////////////////////////////////
 
-struct T_DeskConfig
-{
-	enum E_ZiMoAddScoreType
-	{
-		EZ_ZiMoAddUnit,	// 自摸加底
-		EZ_ZimoAddFan,	// 自摸加番
-	};
-	int bBaseScore;
 
-	bool bAbleHaiDiLao;
-	int nMaxFan;	// 如果不计最大番数则赋值255
-
-	T_DeskConfig()
-		: bBaseScore(5)
-		, bAbleHaiDiLao(true)
-		, nMaxFan(3)
-	{
-
-	}
-};
 
 // 本局个人胡牌信息
 struct T_UserHuInfo

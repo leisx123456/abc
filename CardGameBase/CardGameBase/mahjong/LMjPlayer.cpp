@@ -1,6 +1,6 @@
 #include "LMjPlayer.h"
 #include "ai/AbstractThink.h"
-
+#include <iostream>
 
 CLMjPlayer::CLMjPlayer()
 : m_ePlayerType(EP_People)
@@ -136,7 +136,7 @@ bool CLMjPlayer::execPong(unsigned char byProvideUser, const CLMjCard & cardOut)
 }
 
 
-bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut/*, int nCurSelectIndex*/)
+bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut, std::vector<int> vetHu, int nPlayNum/*, int nCurSelectIndex*/)
 {
 	int nIndex = m_tMjActInfo.tMjActKongInfo.nCurSelectIndex;
 	E_KongType eKongType = m_tMjActInfo.tMjActKongInfo.arrKongType[nIndex];
@@ -160,7 +160,17 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut/
 		{
 			tWeaveCardsItem.aCards[i] = cardOut;
 		}
+		
+		for (int i = 0; i < nPlayNum; ++i)
+		{
+			std::vector<int>::iterator it = std::find(vetHu.begin(), vetHu.end(), i);
+			if (it == vetHu.end())
+			{
+				tWeaveCardsItem.arrNotHuUser[tWeaveCardsItem.nNotHuUserNum++] = *it;
+			}
+		}
 		m_arrWeaveCardsItem[m_nWeaveItemNums++] = tWeaveCardsItem;
+		
 	}
 	else if (eKongType == EK_KongAn)
 	{
@@ -168,7 +178,7 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut/
 		int byGangCard = m_tMjActInfo.tMjActKongInfo.arrKongSelect[nIndex];
 
 		// ¸üÐÂÊÖÅÆ
-		if (m_pMjLogic->removeCards(m_arrHandCards, m_nHandNums, cardOut, 4) != 4)
+ 		if (m_pMjLogic->removeCards(m_arrHandCards, m_nHandNums, byGangCard, 4) != 4)
 		{
 			return false;
 		}
@@ -182,6 +192,14 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut/
 		for (int i = 0; i < 4; i++)
 		{
 			tWeaveCardsItem.aCards[i] = byGangCard;
+		}
+		for (int i = 0; i < nPlayNum; ++i)
+		{
+			std::vector<int>::iterator it = std::find(vetHu.begin(), vetHu.end(), i);
+			if (it == vetHu.end())
+			{
+				tWeaveCardsItem.arrNotHuUser[tWeaveCardsItem.nNotHuUserNum++] = *it;
+			}
 		}
 		m_arrWeaveCardsItem[m_nWeaveItemNums++] = tWeaveCardsItem;
 	}
@@ -204,6 +222,14 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut/
 		for (int i = 0; i < 4; i++)
 		{
 			tWeaveCardsItem.aCards[i] = byGangCard;
+		}
+		for (int i = 0; i < nPlayNum; ++i)
+		{
+			std::vector<int>::iterator it = std::find(vetHu.begin(), vetHu.end(), i);
+			if (it == vetHu.end())
+			{
+				tWeaveCardsItem.arrNotHuUser[tWeaveCardsItem.nNotHuUserNum++] = *it;
+			}
 		}
 		m_arrWeaveCardsItem[m_nWeaveItemNums++] = tWeaveCardsItem;
 	}

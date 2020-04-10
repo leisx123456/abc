@@ -188,7 +188,7 @@ bool CSiChuanMjDesk::execActPong(int nFromUser, int nToUser)
 bool CSiChuanMjDesk::execActKong(int nFromUser, int nToUser)
 {
 	m_pArrMjPlayer[nFromUser]->removeLatestOutCard();
-	m_pArrMjPlayer[nToUser]->execKong(nFromUser, m_cardOut);
+	m_pArrMjPlayer[nToUser]->execKong(nFromUser, m_cardOut, _vecHu, playerCount());
 
 	// 向各玩家广播动作消息/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	T_MsgActResultInfo tMsgActResultInfo;
@@ -407,44 +407,44 @@ void CSiChuanMjDesk::onEventGameFinshed()
 	T_MsgResult tMsgResult;
 	tMsgResult.bHuangZhuang = m_bHuangZhuang;
 
-	// 给消息结构体赋值并给胡牌玩家计算胡牌分
-	for (int i = 0; i < playerCount(); ++i)
-	{
-		tMsgResult.arrUserHuInfo[i] = m_pArrMjPlayer[i]->userHuInfo();
-		tMsgResult.arrUserHuInfo[i].calculate(m_tDeskConfig);
-	}
+	//// 给消息结构体赋值并给胡牌玩家计算胡牌分
+	//for (int i = 0; i < playerCount(); ++i)
+	//{
+	//	tMsgResult.arrUserHuInfo[i] = m_pArrMjPlayer[i]->userHuInfo();
+	//	tMsgResult.arrUserHuInfo[i].calculate(m_tDeskConfig);
+	//}
 
-	// 给胡牌与被胡牌玩家之间结算分数，首先先给一胡的玩家结算，再给二胡的玩家结算,最后三胡
-	for (int i = 0; i < _vecHu.size(); i++)
-	{
-		int nHuUser = _vecHu.at(i);
-		if (tMsgResult.arrUserHuInfo[nHuUser].isZiMoType())
-		{
-			for (int i = 0; i < playerCount(); ++i)
-			{
-				if (i == nHuUser)
-				{
-					continue;
-				}
-				if (tMsgResult.arrUserHuInfo[i].nHuIndex > tMsgResult.arrUserHuInfo[nHuUser].nHuIndex)
-				{
-					tMsgResult.arrSettlementList[nHuUser].nGetScore += tMsgResult.arrUserHuInfo[nHuUser].nFinalScore;
+	//// 给胡牌与被胡牌玩家之间结算分数，首先先给一胡的玩家结算，再给二胡的玩家结算,最后三胡
+	//for (int i = 0; i < _vecHu.size(); i++)
+	//{
+	//	int nHuUser = _vecHu.at(i);
+	//	if (tMsgResult.arrUserHuInfo[nHuUser].isZiMoType())
+	//	{
+	//		for (int i = 0; i < playerCount(); ++i)
+	//		{
+	//			if (i == nHuUser)
+	//			{
+	//				continue;
+	//			}
+	//			if (tMsgResult.arrUserHuInfo[i].nHuIndex > tMsgResult.arrUserHuInfo[nHuUser].nHuIndex)
+	//			{
+	//				tMsgResult.arrSettlementList[nHuUser].nGetScore += tMsgResult.arrUserHuInfo[nHuUser].nFinalScore;
 
-					T_HuLostItem tLostScoreItem(nHuUser
-						, tMsgResult.arrUserHuInfo[nHuUser].eMjHuWay
-						, tMsgResult.arrUserHuInfo[nHuUser].nFinalScore);
-					tMsgResult.arrSettlementList[i].addLostScoreItem(tLostScoreItem);
+	//				T_HuLostItem tLostScoreItem(nHuUser
+	//					, tMsgResult.arrUserHuInfo[nHuUser].eMjHuWay
+	//					, tMsgResult.arrUserHuInfo[nHuUser].nFinalScore);
+	//				tMsgResult.arrSettlementList[i].addLostScoreItem(tLostScoreItem);
 
 
 
-				}
-			}
-		}
-		else
-		{
+	//			}
+	//		}
+	//	}
+	//	else
+	//	{
 
-		}
-	}
+	//	}
+	//}
 
 	onMsgGameResult(tMsgResult);
 }
