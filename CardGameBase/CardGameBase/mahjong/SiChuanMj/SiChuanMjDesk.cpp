@@ -407,44 +407,44 @@ void CSiChuanMjDesk::onEventGameFinshed()
 	T_MsgResult tMsgResult;
 	tMsgResult.bHuangZhuang = m_bHuangZhuang;
 
-	// 给胡牌玩家计算胡牌分
+	// 给消息结构体赋值并给胡牌玩家计算胡牌分
 	for (int i = 0; i < playerCount(); ++i)
 	{
-		tMsgResult.tUserHuInfo[i] = m_pArrMjPlayer[i]->userHuInfo();
-		tMsgResult.tUserHuInfo[i].calculate(m_tDeskConfig);
+		tMsgResult.arrUserHuInfo[i] = m_pArrMjPlayer[i]->userHuInfo();
+		tMsgResult.arrUserHuInfo[i].calculate(m_tDeskConfig);
 	}
 
-	//// 给胡牌与被胡牌玩家之间结算分数，首先先给一胡的玩家结算，再给二胡的玩家结算,最后三胡
-	//for (int i = 0; i < _vecHu.size(); i++)
-	//{
-	//	int nHuUser = _vecHu.at(i);
-	//	if (m_pArrMjPlayer[nHuUser]->userHuInfo().isZiMoType())
-	//	{
-	//		for (int i = 0; i < playerCount(); ++i)
-	//		{
-	//			if (i == nHuUser)
-	//			{
-	//				continue;
-	//			}
-	//			if (m_pArrMjPlayer[i]->huIndex() > m_pArrMjPlayer[nHuUser]->huIndex())
-	//			{
-	//				tMsgResult.tJieSuanItem[nHuUser].nGetScore += tMsgResult.tUserHuInfo[nHuUser].nFinalScore;
+	// 给胡牌与被胡牌玩家之间结算分数，首先先给一胡的玩家结算，再给二胡的玩家结算,最后三胡
+	for (int i = 0; i < _vecHu.size(); i++)
+	{
+		int nHuUser = _vecHu.at(i);
+		if (tMsgResult.arrUserHuInfo[nHuUser].isZiMoType())
+		{
+			for (int i = 0; i < playerCount(); ++i)
+			{
+				if (i == nHuUser)
+				{
+					continue;
+				}
+				if (tMsgResult.arrUserHuInfo[i].nHuIndex > tMsgResult.arrUserHuInfo[nHuUser].nHuIndex)
+				{
+					tMsgResult.arrSettlementList[nHuUser].nGetScore += tMsgResult.arrUserHuInfo[nHuUser].nFinalScore;
 
-	//				T_LostScoreItem tLostScoreItem(nHuUser
-	//					, tMsgResult.tUserHuInfo[nHuUser].eMjHuWay
-	//					, tMsgResult.tUserHuInfo[nHuUser].nFinalScore);
-	//				tMsgResult.tJieSuanItem[i].addLostScoreItem(tLostScoreItem);
+					T_HuLostItem tLostScoreItem(nHuUser
+						, tMsgResult.arrUserHuInfo[nHuUser].eMjHuWay
+						, tMsgResult.arrUserHuInfo[nHuUser].nFinalScore);
+					tMsgResult.arrSettlementList[i].addLostScoreItem(tLostScoreItem);
 
 
 
-	//			}
-	//		}
-	//	}
-	//	else
-	//	{
+				}
+			}
+		}
+		else
+		{
 
-	//	}
-	//}
+		}
+	}
 
 	onMsgGameResult(tMsgResult);
 }

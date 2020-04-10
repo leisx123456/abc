@@ -13,6 +13,7 @@
 #define MJ_MAX_HAND_COUNT				14									//最大数目
 #define MJ_MAX_OUTED_COUNT				30									//最大数目
 #define MJ_TOTAL_CARD_NUM				108									//最大库存
+#define MJ_MAX_SETTLEMENT_LIST_SIZE		16									// 结算清单最大项
 
 #define CARD_EMPTY					0
 
@@ -101,6 +102,9 @@ struct T_WeaveCardsValueItem
 
 	unsigned char byProvideUser;					//供应用户
 
+	int arrNotHuUser[MJ_MAX_PLAYER];
+	int nNotHuUserNum;
+
 	T_WeaveCardsValueItem()
 	{
 		memset(this, 0, sizeof(T_WeaveCardsValueItem));
@@ -113,6 +117,26 @@ struct T_WeaveCardsValueItem
 			return 4;
 		}
 		return 3;
+	}
+
+	int kongScore(const T_DeskConfig & tDeskConfig)
+	{
+		if (byWeaveKind == 2)
+		{
+			return 2 * tDeskConfig.bBaseScore * nNotHuUserNum;
+		}
+		else if (byWeaveKind == 3)
+		{
+			return tDeskConfig.bBaseScore * nNotHuUserNum;
+		}
+		else if (byWeaveKind == 4)
+		{
+			return 2 * tDeskConfig.bBaseScore;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 };
 
@@ -632,40 +656,125 @@ struct T_MsgActResultInfo
 
 };
 
-struct T_LostScoreItem
+struct T_HuLostItem
 {
-	T_LostScoreItem()
+	int nToUser;
+	T_UserHuInfo tUserHuInfoOther;
+
+	T_HuLostItem()
 	{
 
 	}
-	T_LostScoreItem(int arrToUser, E_MjHuWay eMjHuWay, int nLostScore)
-	: arrToUser(arrToUser)
-	, eMjHuWay(eMjHuWay)
-	, nLostScore(nLostScore)
+	T_HuLostItem(int nToUser, const T_UserHuInfo & tUserHuInfo)
+	: nToUser(nToUser)
+	, tUserHuInfoOther(tUserHuInfo)
 	{
 
 	}
-	int arrToUser;
-	E_MjHuWay eMjHuWay;
-	int nLostScore;
+
+	void calculate(const T_DeskConfig & tDeskConfig)
+	{
+		tUserHuInfoOther.calculate(tDeskConfig);
+	}
+
+	int score()
+	{
+		return tUserHuInfoOther.nFinalScore;
+	}
+	
 };
 
-struct T_JieSuanItem
+struct T_KongLostItem
 {
-	// 得分情况
-	int nGetScore;
-	
-	// 自己失分情况
-	T_LostScoreItem arrLostScoreItem[MJ_MAX_PLAYER];
-	int nLostScoreItemNum;
-	//
-	int nRealScore;						//实际得失分 有正负值
-	//int nChangedScore;					//本局所变动的分数
-
-	void addLostScoreItem(const T_LostScoreItem & tLostScoreItem)
+	unsigned char byWeaveKind;						//组合类型
+	unsigned char nToUser;					//供应用户
+	//int nLostScore;
+	T_KongLostItem()
 	{
-		arrLostScoreItem[nLostScoreItemNum++] = tLostScoreItem;
+
 	}
+	T_KongLostItem(unsigned char nToUser, const T_WeaveCardsValueItem & tWeaveCardsValueItem)
+		: nToUser(nToUser)
+		, byWeaveKind(tWeaveCardsValueItem.byWeaveKind)
+	{
+
+	}
+
+	int score(const T_DeskConfig & tDeskConfig)
+	{
+		if (byWeaveKind == 2)
+		{
+			return 2 * tDeskConfig.bBaseScore;
+		}
+		else if (byWeaveKind == 3)
+		{
+			return tDeskConfig.bBaseScore;
+		}
+		else if (byWeaveKind == 4)
+		{
+			return 2 * tDeskConfig.bBaseScore;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+};
+
+// 某个玩家的结算清单
+struct T_SettlementList
+{
+	// 胡或查叫得分
+	T_UserHuInfo tUserHuInfo;
+	
+	// 胡或查叫失分
+	T_HuLostItem arrHuLostItem[MJ_MAX_PLAYER];
+	int nHuLostItemNum;
+	int nHuLostScore;
+
+	// 杠分得分
+	T_WeaveCardsValueItem arrWeaveCardsKongGot[MJ_MAX_WEAVE];
+	int nKongNum;
+	int nKongScore;
+
+	// 杠分失分
+	T_KongLostItem arrKongLostItem[MJ_MAX_WEAVE * 4];
+	int nKongLostNum;
+	int nKongLostScore;
+	
+	//实际得失分 有正负值
+	int realScore()
+	{
+		int nLostScore = 0;
+		for (int i = 0; i < MJ_MAX_PLAYER; ++i)
+		{
+			nLostScore += arrHuLostItem[i].score();
+		}
+		return tUserHuInfo.nFinalScore - nLostScore;
+	}
+
+	void addLostScoreItem(const T_HuLostItem & tLostScoreItem)
+	{
+		arrHuLostItem[nHuLostItemNum++] = tLostScoreItem;
+	}
+
+	void calculate(const T_DeskConfig & tDeskConfig)
+	{
+		tUserHuInfo.calculate(tDeskConfig);
+		nHuLostScore = 0;
+		for (int i = 0; i < nHuLostItemNum; ++i)
+		{
+			arrHuLostItem[i].calculate(tDeskConfig);
+			nHuLostScore += arrHuLostItem[i].score();
+		}
+		nKongScore = 0;
+		for (int i = 0; i < nKongNum; ++i)
+		{
+			arrHuLostItem[i].calculate(tDeskConfig);
+			nKongScore += arrHuLostItem[i].score();
+		}
+	}
+
 };
 
 // 本局结果
@@ -673,8 +782,7 @@ struct T_MsgResult
 {
 	bool bHuangZhuang;				//是否荒庄
 
-	T_UserHuInfo tUserHuInfo[4];
-	T_JieSuanItem tJieSuanItem[4];
+	T_SettlementList arrSettlementList[4];
 
 	T_MsgResult()
 	{

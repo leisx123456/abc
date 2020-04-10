@@ -196,12 +196,16 @@ struct T_WeaveCardsItem
 	
 	unsigned char byProvideUser;					//供应用户
 
+	int arrNotHuUser[MJ_MAX_PLAYER];
+	int nNotHuUserNum;
+
 	T_WeaveCardsItem()
 		: byWeaveKind(EW_Triplet)
 		, cardCenter(2)
 		, byProvideUser(0)
 	{
-
+		memset(arrNotHuUser, 0, sizeof(arrNotHuUser));
+		nNotHuUserNum = 0;
 	}
 
 	T_WeaveCardsItem & operator = (const T_WeaveCardsItem & rhs);
