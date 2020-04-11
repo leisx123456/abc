@@ -379,6 +379,15 @@ bool CLMjPlayer::isCanHu(CLMjCard cardOut)
 	return m_pMjLogic->isCanHu(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, m_tMjActInfo.tMjActHuInfo, cardOut);
 }
 
+void CLMjPlayer::checkTing()
+{
+	m_pMjLogic->isCanTing(m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem, m_nWeaveItemNums, m_tMjActInfo.tMjActHuInfo);
+}
+
+bool CLMjPlayer::isTing()
+{
+	return m_vecTing.size() > 0;
+}
 
 
 //////////////////////////////////////////////////////////////////////////

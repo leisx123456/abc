@@ -173,6 +173,8 @@ T_WeaveCardsItem & T_WeaveCardsItem::operator=(const T_WeaveCardsItem & rhs)
 	{
 		aCards[i] = rhs.aCards[i];
 	}
+	memcpy(arrNotHuUser, rhs.arrNotHuUser, sizeof(arrNotHuUser));
+	nNotHuUserNum = rhs.nNotHuUserNum;
 	return *this;
 }
 
@@ -186,6 +188,8 @@ T_WeaveCardsItem & T_WeaveCardsItem::operator=(const T_WeaveCardsValueItem & tWe
 	{
 		aCards[i] = tWeaveCardsValueItem.aCards[i];
 	}
+	memcpy(arrNotHuUser, tWeaveCardsValueItem.arrNotHuUser, sizeof(arrNotHuUser));
+	nNotHuUserNum = tWeaveCardsValueItem.nNotHuUserNum;
 	return *this;
 }
 
@@ -200,5 +204,7 @@ T_WeaveCardsItem::operator T_WeaveCardsValueItem()
 	{
 		tWeaveCardsValueItem.aCards[i] = aCards[i];
 	}
+	memcpy(tWeaveCardsValueItem.arrNotHuUser, arrNotHuUser, sizeof(arrNotHuUser));
+	tWeaveCardsValueItem.nNotHuUserNum = nNotHuUserNum;
 	return tWeaveCardsValueItem;
 }

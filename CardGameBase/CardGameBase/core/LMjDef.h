@@ -1,7 +1,7 @@
 #ifndef __L_MJ_DEF_H__
 #define __L_MJ_DEF_H__
 #include <iostream>
-
+#include <vector>
 
 // 麻将通用定义
 //////////////////////////////////////////////////////////////////////////
@@ -140,7 +140,7 @@ struct T_WeaveCardsValueItem
 		return 3;
 	}
 
-	int kongScore(const T_DeskConfig & tDeskConfig)
+	int calculateScore(const T_DeskConfig & tDeskConfig)
 	{
 		if (byWeaveKind == 2)
 		{
@@ -229,6 +229,7 @@ enum E_KongType
 	EK_KongDian	//刮风-点杠
 };
 
+// 有的麻将杠是立即结算分数的
 struct T_MjActKongInfo
 {
 	int arrKongSelect[MJ_MAX_WEAVE];	  //可以杠的选择
@@ -452,7 +453,7 @@ struct T_UserHuInfo
 		return false;
 	}
 
-	void calculate(const T_DeskConfig & tDeskConfig)
+	void calculateScore(const T_DeskConfig & tDeskConfig)
 	{
 		if (!bHu)
 		{
@@ -635,11 +636,11 @@ struct T_MsgOutCard
 struct T_MsgActResultInfo
 {
 	unsigned short	usActFlags;				//动作类型
-	int	arrActUsers[4];	//动作所属者表,在吃、碰、杠、听动作中，动作一般只属一个玩家，只用byUsers[0]，但也有动作由多玩家执行，如一炮多响。
+	int	arrActUsers[MJ_MAX_PLAYER];	//动作所属者表,在吃、碰、杠、听动作中，动作一般只属一个玩家，只用byUsers[0]，但也有动作由多玩家执行，如一炮多响。
 	int nActUserNums;				//动作所属者人数
 
 	int	byFromUser;				//动作的触发者，该成员只用于胡牌类型，吃、碰、杠中该值无效，FromUser可从CGPNode中取得
-	int	byHands[14]; //执行动作后人变化后的手牌
+	int	byHands[MJ_MAX_HAND_COUNT]; //执行动作后人变化后的手牌
 	int iHandNums;		 //变化后的手牌数量
 
 	int nFromOutCardNums;	// 更新出牌玩家的出牌数量
@@ -650,11 +651,27 @@ struct T_MsgActResultInfo
 	bool bQGang;			//如果是抢杠胡，在此处取数据
 	int nQGangIdx;		//抢那一个杠控件
 
+	// 执行杠或胡动作后的分数变化
+	int arrScoreChanged[MJ_MAX_PLAYER];
+
 	T_MsgActResultInfo()
 	{
 		::memset(this, 0, sizeof(T_MsgActResultInfo));
 	}
 
+
+};
+
+struct T_MsgChaJiao
+{
+	int arrChaJiaoUser[MJ_MAX_PLAYER];
+	int arrNotTingUser[MJ_MAX_PLAYER];
+
+	// 退杠分
+	int arrScoreTuiGang[MJ_MAX_PLAYER];
+
+	// 查叫的分数变化
+	int arrScoreChanged[MJ_MAX_PLAYER];
 
 };
 
@@ -674,9 +691,10 @@ struct T_HuLostItem
 
 	}
 
-	void calculate(const T_DeskConfig & tDeskConfig)
+	int calculateScore(const T_DeskConfig & tDeskConfig)
 	{
-		tUserHuInfoOther.calculate(tDeskConfig);
+		tUserHuInfoOther.calculateScore(tDeskConfig);
+		return tUserHuInfoOther.nFinalScore;
 	}
 
 	int score()
@@ -702,7 +720,7 @@ struct T_KongLostItem
 
 	}
 
-	int score(const T_DeskConfig & tDeskConfig)
+	int calculateScore(const T_DeskConfig & tDeskConfig)
 	{
 		if (byWeaveKind == 2)
 		{
@@ -723,7 +741,7 @@ struct T_KongLostItem
 	}
 };
 
-// 某个玩家的结算清单
+// 某个玩家的本局的结算清单
 struct T_SettlementList
 {
 	// 胡或查叫得分
@@ -743,38 +761,49 @@ struct T_SettlementList
 	T_KongLostItem arrKongLostItem[MJ_MAX_WEAVE * 4];
 	int nKongLostNum;
 	int nKongLostScore;
+
+	// 实际最终分数
+	int nRealScore;
 	
 	//实际得失分 有正负值
 	int realScore()
 	{
-		int nLostScore = 0;
-		for (int i = 0; i < MJ_MAX_PLAYER; ++i)
-		{
-			nLostScore += arrHuLostItem[i].score();
-		}
-		return tUserHuInfo.nFinalScore - nLostScore;
+		return nRealScore;
 	}
 
-	void addLostScoreItem(const T_HuLostItem & tLostScoreItem)
+	void addHuLostItem(const T_HuLostItem & tHuLostItem)
 	{
-		arrHuLostItem[nHuLostItemNum++] = tLostScoreItem;
+		arrHuLostItem[nHuLostItemNum++] = tHuLostItem;
 	}
 
-	void calculate(const T_DeskConfig & tDeskConfig)
+	void addKongLostItem(const T_KongLostItem & tKongLostItem)
 	{
-		tUserHuInfo.calculate(tDeskConfig);
+		arrKongLostItem[nKongLostNum++] = tKongLostItem;
+	}
+
+	void calculateScore(const T_DeskConfig & tDeskConfig)
+	{
+		tUserHuInfo.calculateScore(tDeskConfig);
+
 		nHuLostScore = 0;
 		for (int i = 0; i < nHuLostItemNum; ++i)
 		{
-			arrHuLostItem[i].calculate(tDeskConfig);
-			nHuLostScore += arrHuLostItem[i].score();
+			nHuLostScore += arrHuLostItem[i].calculateScore(tDeskConfig);
 		}
+
 		nKongScore = 0;
 		for (int i = 0; i < nKongNum; ++i)
 		{
-			arrHuLostItem[i].calculate(tDeskConfig);
-			nKongScore += arrHuLostItem[i].score();
+			nKongScore += arrWeaveCardsKongGot[i].calculateScore(tDeskConfig);
 		}
+
+		nKongLostScore = 0;
+		for (int i = 0; i < nKongLostNum; ++i)
+		{
+			nKongLostScore += arrKongLostItem[i].calculateScore(tDeskConfig);
+		}
+
+		nRealScore = tUserHuInfo.nFinalScore - nHuLostScore + nKongScore - nKongLostScore;
 	}
 
 };
@@ -784,11 +813,90 @@ struct T_MsgResult
 {
 	bool bHuangZhuang;				//是否荒庄
 
-	T_SettlementList arrSettlementList[4];
+	T_UserHuInfo arrUserHuInfo[MJ_MAX_PLAYER]; // 也可以放在createSettlementList参数列表中
+
+	T_WeaveCardsValueItem arrWeaveCardsKong[MJ_MAX_PLAYER][MJ_MAX_WEAVE];// 也可以放在createSettlementList参数列表中
+	int arrKongNum[MJ_MAX_PLAYER];// 也可以放在createSettlementList参数列表中
+
+	T_SettlementList arrSettlementList[MJ_MAX_PLAYER];
 
 	T_MsgResult()
 	{
 		::memset(this, 0, sizeof(T_MsgResult));
+
+	}
+
+	void createSettlementList(std::vector<int> vecHu, int nPlayerNum, const T_DeskConfig & tDeskConfig)
+	{
+		for (int i = 0; i < nPlayerNum; i++)
+		{
+			arrSettlementList[i].tUserHuInfo = arrUserHuInfo[i];
+		}
+
+		// 给胡牌与被胡牌玩家之间结算分数，首先先给一胡的玩家结算，再给二胡的玩家结算,最后三胡
+		for (int i = 0; i < vecHu.size(); i++)
+		{
+			int nHuUser = vecHu.at(i);
+			if (arrUserHuInfo[nHuUser].isZiMoType())
+			{
+				for (int i = 0; i < nPlayerNum; ++i)
+				{
+					if (i == nHuUser)
+					{
+						continue;
+					}
+					if (arrUserHuInfo[i].nHuIndex > arrUserHuInfo[nHuUser].nHuIndex)
+					{
+						T_HuLostItem tLostScoreItem(nHuUser, arrUserHuInfo[nHuUser]);
+						arrSettlementList[i].addHuLostItem(tLostScoreItem);
+					}
+				}
+			}
+			else
+			{
+				T_HuLostItem tLostScoreItem(arrUserHuInfo[nHuUser].byFangPaoUser, arrUserHuInfo[nHuUser]);
+				arrSettlementList[arrUserHuInfo[nHuUser].byFangPaoUser].addHuLostItem(tLostScoreItem);
+			}
+		}
+
+		// 生成杠清单
+		for (int i = 0; i < nPlayerNum; ++i)
+		{
+			memcpy(arrSettlementList[i].arrWeaveCardsKongGot, arrWeaveCardsKong[i], sizeof(T_WeaveCardsValueItem)* MJ_MAX_WEAVE);
+			arrSettlementList[i].nKongNum = arrKongNum[i];
+		}
+
+		for (int i = 0; i < nPlayerNum; ++i)
+		{
+			for (int j = 0; j < arrKongNum[i]; ++j)
+			{
+				T_WeaveCardsValueItem* pWeaveCardsKong = &arrWeaveCardsKong[i][j];
+				if (pWeaveCardsKong->byWeaveKind == 2 || pWeaveCardsKong->byWeaveKind == 3)//暗杠与补杠
+				{
+					for (int k = 0; k < pWeaveCardsKong->nNotHuUserNum; ++k)
+					{
+						if (pWeaveCardsKong->arrNotHuUser[k] == i)
+						{
+							continue;
+						}
+						T_KongLostItem tKongLostItem(i, arrWeaveCardsKong[i][j]);
+						arrSettlementList[pWeaveCardsKong->arrNotHuUser[k]].addKongLostItem(tKongLostItem);
+					}
+					
+				}
+				else
+				{
+					T_KongLostItem tKongLostItem(i, arrWeaveCardsKong[i][j]);
+					arrSettlementList[pWeaveCardsKong->byProvideUser].addKongLostItem(tKongLostItem);
+				}
+			}
+		}
+
+		// 结算
+		for (int i = 0; i < nPlayerNum; ++i)
+		{
+			arrSettlementList[i].calculateScore(tDeskConfig);
+		}
 
 	}
 };

@@ -1,4 +1,5 @@
 #include "SiChuanMjLogic.h"
+#include <assert.h>
 // 
 bool CSiChuanMjLogic::isCanHu(CLMjCard aCards[]
 	, unsigned int unCardCount
@@ -78,4 +79,11 @@ bool CSiChuanMjLogic::isCanHu(CLMjCard aCards[]
 	tMjActHuInfo.eMjHuName = E_MjHuNameFlags(unHuNameFlags);
 	tMjActHuInfo.gen = gen;
 	return true;
+}
+
+bool CSiChuanMjLogic::isCanTing(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[]
+	, unsigned int unItemSize, T_MjActHuInfo & tMjActHuInfo, const CLMjCard & cardOut /*= CARD_EMPTY */, bool bMust258Pair /*= false*/)
+{
+	assert(unCardCount < MJ_MAX_HAND_COUNT);
+
 }

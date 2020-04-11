@@ -1,12 +1,20 @@
-﻿生成启动时间为 2020/4/10 23:04:56。
-     1>项目“F:\work\pro\LxGame\LxGameBase\CardGameBase\CardGameBase\CardGameBase.vcxproj”在节点 2 上(Build 个目标)。
+﻿生成启动时间为 2020-4-11 15:38:13。
+     1>项目“E:\space_lx\src\abc\CardGameBase\CardGameBase\CardGameBase.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I. /Z7 /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _WINDOWS /D _USRDLL /D CARDGAMEBASE_EXPORTS /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt mahjong\ai\LBasicThink.cpp
-         LBasicThink.cpp
-     1>f:\work\pro\lxgame\lxgamebase\cardgamebase\cardgamebase\core\LMjDef.h(560): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
-     1>mahjong\ai\LBasicThink.cpp(21): warning C4018: “<”: 有符号/无符号不匹配
+         D:\vs\vs2013\VC\bin\CL.exe /c /I. /Z7 /nologo /W3 /WX- /MP /Od /Oy- /D WIN32 /D _WINDOWS /D _USRDLL /D CARDGAMEBASE_EXPORTS /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt core\LMjCard.cpp mahjong\SiChuanMj\SiChuanMjDesk.cpp
+         LMjCard.cpp
+         SiChuanMjDesk.cpp
+     1>e:\space_lx\src\abc\cardgamebase\cardgamebase\core\LMjDef.h(560): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据 (core\LMjCard.cpp)
+     1>e:\space_lx\src\abc\cardgamebase\cardgamebase\core\LMjDef.h(820): warning C4018: “<”: 有符号/无符号不匹配 (core\LMjCard.cpp)
+     1>e:\space_lx\src\abc\cardgamebase\cardgamebase\core\LMjDef.h(848): warning C4996: 'memccpy': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _memccpy. See online help for details. (core\LMjCard.cpp)
+                 D:\vs\vs2013\VC\include\string.h(98) : 参见“memccpy”的声明
+     1>e:\space_lx\src\abc\cardgamebase\cardgamebase\core\LMjDef.h(560): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据 (mahjong\SiChuanMj\SiChuanMjDesk.cpp)
+     1>e:\space_lx\src\abc\cardgamebase\cardgamebase\core\LMjDef.h(820): warning C4018: “<”: 有符号/无符号不匹配 (mahjong\SiChuanMj\SiChuanMjDesk.cpp)
+     1>e:\space_lx\src\abc\cardgamebase\cardgamebase\core\LMjDef.h(848): warning C4996: 'memccpy': The POSIX name for this item is deprecated. Instead, use the ISO C++ conformant name: _memccpy. See online help for details. (mahjong\SiChuanMj\SiChuanMjDesk.cpp)
+                 D:\vs\vs2013\VC\include\string.h(98) : 参见“memccpy”的声明
+     1>mahjong\SiChuanMj\SiChuanMjDesk.cpp(257): warning C4018: “>=”: 有符号/无符号不匹配
        Lib:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"F:\work\pro\LxGame\LxMahjone\LxSiChuanMahjong\proj.win32\Debug\CardGameBase.lib" /NOLOGO Debug\LCard.obj
+         D:\vs\vs2013\VC\bin\Lib.exe /OUT:"E:\space_lx\src\abc\CardGameBase\Debug\CardGameBase.lib" /NOLOGO Debug\LCard.obj
          Debug\LCardOperate.obj
          Debug\LClockActive.obj
          Debug\LCpp11Timer.obj
@@ -26,9 +34,9 @@
          Debug\SiChuanMjPlayer.obj
          Debug\SiChuanMjThink.obj
      1>LCardOperate.obj : warning LNK4221: 此对象文件未定义任何之前未定义的公共符号，因此任何耗用此库的链接操作都不会使用此文件
-         CardGameBase.vcxproj -> F:\work\pro\LxGame\LxMahjone\LxSiChuanMahjong\proj.win32\Debug\CardGameBase.lib
-     1>已完成生成项目“F:\work\pro\LxGame\LxGameBase\CardGameBase\CardGameBase\CardGameBase.vcxproj”(Build 个目标)的操作。
+         CardGameBase.vcxproj -> E:\space_lx\src\abc\CardGameBase\Debug\CardGameBase.lib
+     1>已完成生成项目“E:\space_lx\src\abc\CardGameBase\CardGameBase\CardGameBase.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:00.84
+已用时间 00:00:02.66

@@ -81,7 +81,7 @@ protected:
 
 	//int m_nAlreadyHuNum;	// 当前已胡的人数0-3
 	int m_nHuOrderNum;	// 有时候胡牌玩家有一炮多响, 这两个胡牌玩家是并列序号
-	std::vector<int> _vecHu;	// 胡牌id序列
+	std::vector<int> m_vecHu;	// 胡牌id序列
 	
 	//bool bBuKongCard;
 	bool m_bHuangZhuang;

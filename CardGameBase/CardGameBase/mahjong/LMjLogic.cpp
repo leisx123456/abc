@@ -356,6 +356,11 @@ bool CLMjLogic::isFlowerPig(CLMjCard aCards[], unsigned int unCardCount, T_Weave
 	return false;
 }
 
+bool CLMjLogic::isCanTing(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize
+	, T_MjActHuInfo & tMjActHuInfo, const CLMjCard & cardOut /*= CARD_EMPTY */, bool bMust258Pair /*= false*/)
+{
+	return false;
+}
 
 
 // 递归删除法
@@ -460,7 +465,7 @@ bool CLMjLogic::isPongPong(CLMjCard aCards[], unsigned int unCardCount, T_WeaveC
 	return true;
 }
 
-// 我的思路，只有一种花色的牌数大于0，其他花色的牌数为0，就是清一色 20200321 leisx
+// 只有一种花色的牌数大于0，其他花色的牌数为0，就是清一色 20200321 leisx
 bool CLMjLogic::isQingYiSe(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize)
 {
 	return getColorCount(aCards, unCardCount, aWeaveItem, unItemSize) == 1;
@@ -540,6 +545,8 @@ bool CLMjLogic::isCanHu(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCard
 	}
 	return bCanHu3x2;
 }
+
+
 
 
 

@@ -72,6 +72,9 @@
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjThink.cpp">
       <Filter>mahjong\SiChuanMj</Filter>
     </ClCompile>
+    <ClCompile Include="core\LMjDef.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\LCard.h">

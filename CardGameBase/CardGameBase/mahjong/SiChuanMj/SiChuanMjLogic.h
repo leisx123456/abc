@@ -14,6 +14,14 @@ public:
 		, T_MjActHuInfo & tMjActHuInfo
 		, const CLMjCard & cardOut = CARD_EMPTY
 		, bool bMust258Pair = false);
+
+	virtual bool isCanTing(CLMjCard aCards[]
+		, unsigned int unCardCount
+		, T_WeaveCardsItem aWeaveItem[]
+		, unsigned int unItemSize
+		, T_MjActHuInfo & tMjActHuInfo
+		, const CLMjCard & cardOut = CARD_EMPTY
+		, bool bMust258Pair = false);
 };
 
 

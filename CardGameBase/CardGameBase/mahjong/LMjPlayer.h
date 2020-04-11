@@ -153,7 +153,8 @@ public:
 	bool isCanPong(CLMjCard cardOut);
 	bool isCanKong(CLMjCard cardOut, T_MjActInfo* pActInfo);
 	bool isCanHu(CLMjCard cardOut);
-
+	void checkTing();
+	bool isTing();
 
 	//////////////////////////////////////////////////////////////////////////
 	// ai思考
@@ -201,6 +202,9 @@ protected:
 
 	//  保存玩家本局胡牌信息
 	T_UserHuInfo m_tUserHuInfo;
+
+	// 保存玩家本局结算清单
+	T_SettlementList tSettlementList;
 	
 	//////////////////////////////////////////////////////////////////////////
 	bool m_bReady;

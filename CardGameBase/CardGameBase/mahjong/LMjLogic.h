@@ -38,6 +38,13 @@ public:
 
 	//是否花猪
 	bool isFlowerPig(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, int colorQue = -1);
+	virtual bool isCanTing(CLMjCard aCards[]
+		, unsigned int unCardCount
+		, T_WeaveCardsItem aWeaveItem[]
+		, unsigned int unItemSize
+		, T_MjActHuInfo & tMjActHuInfo
+		, const CLMjCard & cardOut = CARD_EMPTY
+		, bool bMust258Pair = false);
 
 	// 胡牌算法还有问题
 	bool isCanHu_3x2(CLMjCard aCards[], unsigned int unCardCount, bool bMust258Pair = false);
