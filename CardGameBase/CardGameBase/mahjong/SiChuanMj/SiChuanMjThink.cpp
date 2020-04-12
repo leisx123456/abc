@@ -49,6 +49,7 @@ void CSiChuanMjThink::think(T_MjActInfo* pMjActInfo, CLMjCard aCards[], unsigned
 	{
 		return;
 	}
+	clear();
 
 	// ¿½±´Êý¾Ý
 	copyCards(aCards, unCardCount, aWeaveItem, unItemSize, cardOut, nQueColor);

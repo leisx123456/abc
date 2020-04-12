@@ -184,7 +184,8 @@ struct T_WeaveCardsItem
 		EW_Triplet,	// 覦赽
 		EW_KongAn,	//狟迾-做話
 		EW_KongBa,	//團瑞-匙話
-		EW_KongDian	//團瑞-萸話
+		EW_KongDian,	//團瑞-萸話
+		EW_InVaild
 	};
 
 	bool isKong() { return byWeaveKind == EW_KongAn || byWeaveKind == EW_KongBa || byWeaveKind == EW_KongDian; }
@@ -200,10 +201,20 @@ struct T_WeaveCardsItem
 	int nNotHuUserNum;
 
 	T_WeaveCardsItem()
-		: byWeaveKind(EW_Triplet)
-		, cardCenter(2)
-		, byProvideUser(0)
 	{
+		clear();
+	}
+
+	void clear()
+	{
+		byWeaveKind = EW_InVaild;
+		cardCenter.empty();
+		byProvideUser = 0;
+		cardPublic.empty();
+		for (int i = 0; i < 4; ++i)
+		{
+			aCards[i].empty();
+		}
 		memset(arrNotHuUser, 0, sizeof(arrNotHuUser));
 		nNotHuUserNum = 0;
 	}

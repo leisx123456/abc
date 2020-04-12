@@ -95,7 +95,7 @@ void CLMjDesk::ruffle()
 		// 定义紧接着摸完手牌后要摸的牌
 		int arrDrawCard[] = { 0x17, 0x05, 0x17, 0x21 };
 
-		std::memcpy(arrTest[m_nBanker], arrBanker, sizeof(arrBanker));
+		memcpy(arrTest[m_nBanker], arrBanker, sizeof(arrBanker));
 		int pos = 2; // 保证骰子摇的是1+4或1+8
 
 		// 前面3次是4张四张的拿

@@ -203,7 +203,8 @@ bool CSiChuanMjDesk::execActKong(int nFromUser, int nToUser)
 	// 更新玩家的手牌数据
 	m_pArrMjPlayer[nToUser]->getHandCards(tMsgActResultInfo.byHands, tMsgActResultInfo.iHandNums);
 	// 更新玩家分数变化
-	//...
+	tMsgActResultInfo.calculateKongScoreChanged(nToUser, m_tDeskConfig);
+
 	onMsgActResult(tMsgActResultInfo);
 	// 加入到结算清单里
 	//...
@@ -244,6 +245,7 @@ bool CSiChuanMjDesk::execActHu(int nFromUser, int arrToUser[], int nUserNums)
 	//向各玩家广播动作消息///////////////////////////////////////////////////////////////////////////
 	T_MsgActResultInfo tMsgActResultInfo;
 	tMsgActResultInfo.usActFlags = EA_hu;
+	tMsgActResultInfo.nHuIndex = m_nHuOrderNum - 1;
 	tMsgActResultInfo.byFromUser = nFromUser;
 	memcpy(tMsgActResultInfo.arrActUsers, arrToUser, sizeof(arrToUser));
 	tMsgActResultInfo.nActUserNums = nUserNums;

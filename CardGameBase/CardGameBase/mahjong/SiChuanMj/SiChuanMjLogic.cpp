@@ -85,5 +85,5 @@ bool CSiChuanMjLogic::isCanTing(CLMjCard aCards[], unsigned int unCardCount, T_W
 	, unsigned int unItemSize, T_MjActHuInfo & tMjActHuInfo, const CLMjCard & cardOut /*= CARD_EMPTY */, bool bMust258Pair /*= false*/)
 {
 	assert(unCardCount < MJ_MAX_HAND_COUNT);
-
+	return false;
 }

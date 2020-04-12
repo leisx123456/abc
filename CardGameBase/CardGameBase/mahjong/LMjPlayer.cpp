@@ -1,6 +1,7 @@
 #include "LMjPlayer.h"
 #include "ai/AbstractThink.h"
 #include <iostream>
+#include <assert.h>
 
 CLMjPlayer::CLMjPlayer()
 : m_ePlayerType(EP_People)
@@ -70,6 +71,7 @@ bool CLMjPlayer::outCard(const CLMjCard & card)
 {
 	if (!m_pMjLogic->removeCard(m_arrHandCards, m_nHandNums, card))
 	{
+		assert(false);
 		return false;
 	}
 	m_nHandNums--;
@@ -166,7 +168,7 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut,
 			std::vector<int>::iterator it = std::find(vetHu.begin(), vetHu.end(), i);
 			if (it == vetHu.end())
 			{
-				tWeaveCardsItem.arrNotHuUser[tWeaveCardsItem.nNotHuUserNum++] = *it;
+				tWeaveCardsItem.arrNotHuUser[tWeaveCardsItem.nNotHuUserNum++] = i;
 			}
 		}
 		m_arrWeaveCardsItem[m_nWeaveItemNums++] = tWeaveCardsItem;
@@ -198,7 +200,7 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut,
 			std::vector<int>::iterator it = std::find(vetHu.begin(), vetHu.end(), i);
 			if (it == vetHu.end())
 			{
-				tWeaveCardsItem.arrNotHuUser[tWeaveCardsItem.nNotHuUserNum++] = *it;
+				tWeaveCardsItem.arrNotHuUser[tWeaveCardsItem.nNotHuUserNum++] = i;
 			}
 		}
 		m_arrWeaveCardsItem[m_nWeaveItemNums++] = tWeaveCardsItem;
@@ -228,7 +230,7 @@ bool CLMjPlayer::execKong(unsigned char byProvideUser, const CLMjCard & cardOut,
 			std::vector<int>::iterator it = std::find(vetHu.begin(), vetHu.end(), i);
 			if (it == vetHu.end())
 			{
-				tWeaveCardsItem.arrNotHuUser[tWeaveCardsItem.nNotHuUserNum++] = *it;
+				tWeaveCardsItem.arrNotHuUser[tWeaveCardsItem.nNotHuUserNum++] = i;
 			}
 		}
 		m_arrWeaveCardsItem[m_nWeaveItemNums++] = tWeaveCardsItem;
@@ -399,6 +401,11 @@ CLMjCard::E_MjCardColor CLMjPlayer::thinkDingQue()
 void CLMjPlayer::think(CLMjCard cardOut, unsigned short usIgnoreFlags)
 {
 	// ³öÅÆË¼¿¼
+	if (m_nChairID == 1)
+	{
+		int i = 5;
+		i = 4;
+	}
 	m_pIAbstractThink->think(&m_tMjActInfo, m_arrHandCards, m_nHandNums, m_arrWeaveCardsItem
 		, m_nWeaveItemNums, cardOut, m_eColorTBA, usIgnoreFlags);
 }

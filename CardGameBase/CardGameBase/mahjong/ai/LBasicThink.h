@@ -9,6 +9,7 @@ public:
 	CLBasicThink();
 	virtual ~CLBasicThink();
 
+	void clear();
 	void copyCards(CLMjCard aCards[], unsigned int unCardCount, T_WeaveCardsItem aWeaveItem[], unsigned int unItemSize, CLMjCard cardOut, int nQueColor = -1);
 	int findPosInHandCards(const CLMjCard & card);
 

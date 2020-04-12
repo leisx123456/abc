@@ -4,12 +4,31 @@
 
 CLBasicThink::CLBasicThink()
 {
-
+	clear();
 }
 
 CLBasicThink::~CLBasicThink()
 {
 
+}
+
+
+void CLBasicThink::clear()
+{
+	m_mjLogic.emptyCards(m_arrHandCard, 14);
+	m_nHandNums = 14;
+	m_mjLogic.emptyCards(m_arrHandCardTemp, 14);
+	for (int i = 0; i < 4; ++i)
+	{
+		m_arrWeaveCardsItem[i].clear();
+	}
+	m_nWeaveCardsItemNum = 0;
+	m_colorQue = -1;
+	m_cardOut.empty();
+	m_cardBadly.empty();
+	m_bHavePair = false;
+	m_nScore = 0;
+	m_nMaxScore = 0;
 }
 
 

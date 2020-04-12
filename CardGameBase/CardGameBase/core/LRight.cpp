@@ -1,7 +1,7 @@
 #include "LRight.h"
 #include <iostream>
 #include <assert.h>
-
+#include <math.h>
 
 //¹¹Ôìº¯Êý
 CChiHuRight::CChiHuRight()
@@ -19,7 +19,7 @@ CChiHuRight::CChiHuRight()
 			if (0 == i)
 				m_pRightMask[i] = 0;
 			else
-				m_pRightMask[i] = (unsigned long(pow(2, i - 1))) << 28;
+				m_pRightMask[i] = (unsigned long)(pow(2, i - 1)) << 28;
 		}
 	}
 }
