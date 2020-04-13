@@ -1,6 +1,7 @@
 #include "SiChuanMjDesk.h"
 #include "core/LGameDispatcher.h"
 #include "SiChuanMjPlayer.h"
+#include "SiChuanMjScoreService.h"
 #include <assert.h>
 
 CSiChuanMjDesk::CSiChuanMjDesk()
@@ -24,12 +25,15 @@ CSiChuanMjDesk::CSiChuanMjDesk()
 	_gameDispatcher->addDelayFun(TIME_ID_COMPUTER_THINK_OUT_CARD, 1000, std::bind(&CSiChuanMjDesk::onDelayExecOutCardRequest, this, std::placeholders::_1));
 	// 1秒后自动准备
 	_gameDispatcher->start(TIME_ID_Ready);
+
+	m_pSiChuanMjScoreService = new CSiChuanMjScoreService();
 }
 
 
 CSiChuanMjDesk::~CSiChuanMjDesk()
 {
 	delete _gameDispatcher;
+	delete m_pSiChuanMjScoreService;
 }
 
 
@@ -203,11 +207,10 @@ bool CSiChuanMjDesk::execActKong(int nFromUser, int nToUser)
 	// 更新玩家的手牌数据
 	m_pArrMjPlayer[nToUser]->getHandCards(tMsgActResultInfo.byHands, tMsgActResultInfo.iHandNums);
 	// 更新玩家分数变化
-	tMsgActResultInfo.calculateKongScoreChanged(nToUser, m_tDeskConfig);
+	m_pSiChuanMjScoreService->addKongSettlementItem(nToUser, tMsgActResultInfo.tWeaveCardsValueItem, m_vecHu, playerCount()
+		, m_tDeskConfig, tMsgActResultInfo.arrScoreChanged);
 
 	onMsgActResult(tMsgActResultInfo);
-	// 加入到结算清单里
-	//...
 	
 	// 各玩家本轮的动作信息可清除///////////////////////////////
 	clearAllUserActInfo();
@@ -255,11 +258,10 @@ bool CSiChuanMjDesk::execActHu(int nFromUser, int arrToUser[], int nUserNums)
 	{
 		m_pArrMjPlayer[arrToUser[i]]->getHandCards(tMsgActResultInfo.byHands, tMsgActResultInfo.iHandNums);
 	}
-	// 更新玩家分数变化
-	//...
+	// 更新玩家分数变化并加入到结算清单里
+	m_pSiChuanMjScoreService->addHuSettlement()
 	onMsgActResult(tMsgActResultInfo);
-	// 加入到结算清单里
-	//...
+
 
 	//各玩家的动作信息可清除///////////////////////////////
 	clearAllUserActInfo();

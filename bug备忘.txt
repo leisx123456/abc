@@ -1,0 +1,33 @@
+弹框下showMax与还原
+搜索中未显示 编辑中 锁定
+
+--奇怪的bug
+鼠标右键的选项没有了
+
+// Qwidget不能立即调用并未初始化完成的m_pShareQuickView
+
+Q:VS 容易出现的奇怪问题比如 明明包含了头文件还说没有找到标识， 定义的类型明明是正确的， 这些有可能都是文件编码格式问题
+Q:error C2447: “{”: 缺少函数标题(是否是老式的形式表?) 语法没有错
+A: 用notepad打开出错的文件，把编码由utf8 --> 改为带bom的utf8，或者用vs自带的高级保存转换当前文件编码格式
+而且要清理obj，重新便于
+
+// QPalette 的学习， 之前一直用QPalette(QColor(Qt::red)), 进入查看才知道默认是给button这个角色上红色颜色， 所以要指定role
+QPalette pa = QApplication::palette();
+		pa.setColor(role, opTypeColor(tFlowLog.getFdOperationType()));// QPalette()
+        QApplication::style()->drawItemText ( painter
+                                              , rect
+                                              , Qt::AlignCenter
+											  , pa
+                                              , true
+                                              , strDraw
+											  , role);
+
+
+
+Q: 给Qcombobox上颜色背景未白色，始终不生效
+A:
+background-color: rgb(255, 255, 255);
+	border:1px solid rgb(221,221,221);
+	font: 10pt "微软雅黑";
+	padding-left:10px;
+因为调试版会自动对比其他背景颜色，如果也是白色会显示不出来

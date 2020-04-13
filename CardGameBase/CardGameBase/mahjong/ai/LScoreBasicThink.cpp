@@ -29,6 +29,7 @@ void CLScoreBasicThink::think()
 {
 	m_nMaxScore = 0;
 	m_nScore = 0;
+	m_mjLogic.copyCards(m_arrHandCardTemp, 14, m_arrHandCard, 14);
 	markThree();
 	//////////////////////////////////////////////////////////////////////////
 	// 这里问题大大的有，bug标记

@@ -24,6 +24,7 @@
 //};
 
 class CLGameDispatcher;
+class CSiChuanMjScoreService;
 
 // 最普通的四人四川麻将
 class CSiChuanMjDesk : public CLMjDesk
@@ -101,6 +102,7 @@ public:
 
 protected:
 	CLGameDispatcher* _gameDispatcher;
+	CSiChuanMjScoreService* m_pSiChuanMjScoreService;
 	//E_GameState _nGameState;
 
 };

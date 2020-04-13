@@ -30,6 +30,7 @@
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjDesk.cpp" />
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjLogic.cpp" />
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjPlayer.cpp" />
+    <ClCompile Include="mahjong\SiChuanMj\SiChuanMjScoreService..cpp" />
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjThink.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +53,7 @@
     <ClInclude Include="mahjong\SiChuanMj\SiChuanMjDesk.h" />
     <ClInclude Include="mahjong\SiChuanMj\SiChuanMjLogic.h" />
     <ClInclude Include="mahjong\SiChuanMj\SiChuanMjPlayer.h" />
+    <ClInclude Include="mahjong\SiChuanMj\SiChuanMjScoreService.h" />
     <ClInclude Include="mahjong\SiChuanMj\SiChuanMjThink.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

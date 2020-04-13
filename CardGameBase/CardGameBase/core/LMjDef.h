@@ -1,8 +1,8 @@
 #ifndef __L_MJ_DEF_H__
 #define __L_MJ_DEF_H__
-#include <iostream>
+
 #include <vector>
-#include <math.h>
+
 
 // 麻将通用定义
 //////////////////////////////////////////////////////////////////////////
@@ -141,25 +141,6 @@ struct T_WeaveCardsValueItem
 		return 3;
 	}
 
-	int calculateScore(const T_DeskConfig & tDeskConfig)
-	{
-		if (byWeaveKind == 2)
-		{
-			return 2 * tDeskConfig.bBaseScore * nNotHuUserNum;
-		}
-		else if (byWeaveKind == 3)
-		{
-			return tDeskConfig.bBaseScore * nNotHuUserNum;
-		}
-		else if (byWeaveKind == 4)
-		{
-			return 2 * tDeskConfig.bBaseScore;
-		}
-		else
-		{
-			return 0;
-		}
-	}
 };
 
 enum ActiveUserType
@@ -454,115 +435,6 @@ struct T_UserHuInfo
 		return false;
 	}
 
-	void calculateScore(const T_DeskConfig & tDeskConfig)
-	{
-		if (!bHu)
-		{
-			return;
-		}
-		// E_MjHuWay  + E_MjHuName + 根
-		int nUnit = 0;
-		int nFan = 0;
-		//E_MjHuWay
-		switch (eMjHuWay)
-		{
-		case EHW_Unknown:
-			break;
-		case EHW_JiePao:
-			break;
-		case EHW_ZiMo:
-			nUnit++;//自摸加底
-			break;
-		case EHW_DayHu:
-			nUnit++;
-			nFan += 6;
-			goto end;
-		case EHW_LandHu:
-			nUnit++;
-			nFan += 6;
-			goto end;
-		case EHW_PensonHu:
-			nFan += 6;
-			goto end;
-		case EHW_QiangGang:
-			nFan++;
-			break;
-		case EHW_DianGangKai:
-			nUnit++;
-			nFan++;
-			break;
-		case EHW_AnGangKai:
-			nUnit++;
-			nFan++;
-			break;
-		case EHW_BuGangKai:
-			nUnit++;
-			nFan++;
-			break;
-		default:
-			break;
-		}
-
-		// E_MjHuName
-		switch (eMjHuName)
-		{
-		case EHN_Ping:
-			break;
-		case EHN_Pong:
-			nFan++;
-			break;
-		case EHN_Qing:
-			nFan += 2;
-			break;
-		case EHN_SevenPair:
-			nFan += 2;
-			break;
-		case EHN_JinGouDiao:
-			nFan += 2;
-			break;
-		case EHN_DragonSevenPair:
-			nFan += 3;
-			break;
-		case EHN_QingPong:
-			nFan += 3;
-			break;
-		case EHN_QingSevenPair:
-			nFan += 4;
-			break;
-		case EHN_QingDragonSevenPair:
-			nFan += 5;
-			break;
-		case EHN_QingJinGouDiao:
-			nFan += 4;
-			break;
-		default:
-			break;
-		}
-
-		// 地方配置情况
-		if (tDeskConfig.bAbleHaiDiLao)
-		{
-			if (bHaiDiLao)
-			{
-				nFan++;
-			}
-		}
-
-		//gen
-		nFan += nGeng;	// 牌型番数+根
-
-	end:
-		nTotalFan = nFan;
-		nFinalFan = nTotalFan;
-		if (nTotalFan > tDeskConfig.nMaxFan)
-		{
-			nFinalFan = tDeskConfig.nMaxFan;
-		}
-
-		int nFinalMultiple = pow(2, nFinalFan); //倍数
-		nFinalUnit = nUnit + nFinalMultiple;
-		nFinalScore = nFinalUnit * tDeskConfig.bBaseScore;
-	}
 };
 
 
@@ -655,44 +527,6 @@ struct T_MsgActResultInfo
 
 	// 执行杠或胡动作后的分数变化
 	int arrScoreChanged[MJ_MAX_PLAYER];
-	void calculateKongScoreChanged(int nToUser, const T_DeskConfig & tDeskConfig)
-	{
-		arrScoreChanged[nToUser] += tWeaveCardsValueItem.calculateScore(tDeskConfig);
-		if (tWeaveCardsValueItem.byWeaveKind == 2)//暗杠与补杠
-		{
-			for (int i = 0; i < tWeaveCardsValueItem.nNotHuUserNum; ++i)
-			{
-				if (i == nToUser)
-				{
-					continue;
-				}
-				arrScoreChanged[nToUser] += 2 * tDeskConfig.bBaseScore;
-				arrScoreChanged[tWeaveCardsValueItem.arrNotHuUser[i]] -= 2 * tDeskConfig.bBaseScore;
-
-
-			}
-		}
-		else if (tWeaveCardsValueItem.byWeaveKind == 3)
-		{
-			for (int i = 0; i < tWeaveCardsValueItem.nNotHuUserNum; ++i)
-			{
-				if (i == nToUser)
-				{
-					continue;
-				}
-				arrScoreChanged[nToUser] += tDeskConfig.bBaseScore;
-				arrScoreChanged[tWeaveCardsValueItem.arrNotHuUser[i]] -= tDeskConfig.bBaseScore;
-
-
-			}
-		}
-		else
-		{
-			arrScoreChanged[nToUser] += 2 * tDeskConfig.bBaseScore;
-			arrScoreChanged[tWeaveCardsValueItem.byProvideUser] -= 2 * tDeskConfig.bBaseScore;
-
-		}
-	}
 
 	T_MsgActResultInfo()
 	{
@@ -702,7 +536,28 @@ struct T_MsgActResultInfo
 
 };
 
-struct T_MsgChaJiao
+
+
+struct T_KongScoreItem
+{
+	unsigned char byWeaveKind;						//组合类型
+	unsigned char nKongUser;
+	//ProvideUser
+	int nScore;
+	T_KongScoreItem()
+	{
+
+	}
+	T_KongScoreItem(unsigned char nKongUser, const T_WeaveCardsValueItem & tWeaveCardsValueItem, int nScore)
+		: nKongUser(nKongUser)
+		, byWeaveKind(tWeaveCardsValueItem.byWeaveKind)
+		, nScore(nScore)
+	{
+
+	}
+};
+
+struct T_ChaJiaoScoreItem
 {
 	int arrChaJiaoUser[MJ_MAX_PLAYER];
 	int arrNotTingUser[MJ_MAX_PLAYER];
@@ -715,17 +570,32 @@ struct T_MsgChaJiao
 
 };
 
-struct T_HuLostItem
+struct T_HuScoreItem
 {
-	int nToUser;
-	T_UserHuInfo tUserHuInfoOther;
+	int nHuUser;
+	int nHuIndex;						// 第几个胡
+	unsigned char byFangPaoUser;		//放炮玩家
 
-	T_HuLostItem()
+
+	E_MjHuWay eMjHuWay;
+	E_MjHuNameFlags eMjHuName;
+	int nGeng;	// 根
+
+	// 地方配置
+	bool bHaiDiLao;
+
+	// 
+	int nTotalFan;	// 当前牌型总番数
+	int nFinalFan;	// 当前牌型最终番数(如果有定义最大番数不能超过最大番数)
+	int nFinalUnit;	// 当前牌型最终多少个 底分数
+	int nFinalScore;	// 当前牌型最终得分nTotalScore = nTotalUnit*UnitScore; //UnitScore由玩家定
+
+	T_HuScoreItem()
 	{
 
 	}
-	T_HuLostItem(int nToUser, const T_UserHuInfo & tUserHuInfo)
-		: nToUser(nToUser)
+	T_HuScoreItem(int nHuUser, const T_UserHuInfo & tUserHuInfo)
+		: nHuUser(nHuUser)
 		, tUserHuInfoOther(tUserHuInfo)
 	{
 
@@ -744,107 +614,27 @@ struct T_HuLostItem
 
 };
 
-struct T_KongLostItem
-{
-	unsigned char byWeaveKind;						//组合类型
-	unsigned char nToUser;					//供应用户
-	//int nLostScore;
-	T_KongLostItem()
-	{
-
-	}
-	T_KongLostItem(unsigned char nToUser, const T_WeaveCardsValueItem & tWeaveCardsValueItem)
-		: nToUser(nToUser)
-		, byWeaveKind(tWeaveCardsValueItem.byWeaveKind)
-	{
-
-	}
-
-	int calculateScore(const T_DeskConfig & tDeskConfig)
-	{
-		if (byWeaveKind == 2)
-		{
-			return 2 * tDeskConfig.bBaseScore;
-		}
-		else if (byWeaveKind == 3)
-		{
-			return tDeskConfig.bBaseScore;
-		}
-		else if (byWeaveKind == 4)
-		{
-			return 2 * tDeskConfig.bBaseScore;
-		}
-		else
-		{
-			return 0;
-		}
-	}
-};
-
 // 某个玩家的本局的结算清单
 struct T_SettlementList
 {
-	// 胡或查叫得分
-	T_UserHuInfo tUserHuInfo;
-
-	// 胡或查叫失分
-	T_HuLostItem arrHuLostItem[MJ_MAX_PLAYER];
-	int nHuLostItemNum;
-	int nHuLostScore;
-
-	// 杠分得分
-	T_WeaveCardsValueItem arrWeaveCardsKongGot[MJ_MAX_WEAVE];
+	// 杠分项
+	T_KongScoreItem arrKongScoreItem[MJ_MAX_WEAVE * MJ_MAX_PLAYER];
 	int nKongNum;
 	int nKongScore;
 
-	// 杠分失分
-	T_KongLostItem arrKongLostItem[MJ_MAX_WEAVE * 4];
-	int nKongLostNum;
-	int nKongLostScore;
+	// 查叫项
+	T_ChaJiaoScoreItem arrChaJiaoItem[MJ_MAX_PLAYER];
+	int nChaJiaoItemNum;
+	int nChaJiaoScore;
+
+	// 胡分项
+	T_HuScoreItem arrHuItem[MJ_MAX_PLAYER];
+	int nHuItemNum;
+	int nHuScore;
 
 	// 实际最终分数
 	int nRealScore;
 
-	//实际得失分 有正负值
-	int realScore()
-	{
-		return nRealScore;
-	}
-
-	void addHuLostItem(const T_HuLostItem & tHuLostItem)
-	{
-		arrHuLostItem[nHuLostItemNum++] = tHuLostItem;
-	}
-
-	void addKongLostItem(const T_KongLostItem & tKongLostItem)
-	{
-		arrKongLostItem[nKongLostNum++] = tKongLostItem;
-	}
-
-	void calculateScore(const T_DeskConfig & tDeskConfig)
-	{
-		tUserHuInfo.calculateScore(tDeskConfig);
-
-		nHuLostScore = 0;
-		for (int i = 0; i < nHuLostItemNum; ++i)
-		{
-			nHuLostScore += arrHuLostItem[i].calculateScore(tDeskConfig);
-		}
-
-		nKongScore = 0;
-		for (int i = 0; i < nKongNum; ++i)
-		{
-			nKongScore += arrWeaveCardsKongGot[i].calculateScore(tDeskConfig);
-		}
-
-		nKongLostScore = 0;
-		for (int i = 0; i < nKongLostNum; ++i)
-		{
-			nKongLostScore += arrKongLostItem[i].calculateScore(tDeskConfig);
-		}
-
-		nRealScore = tUserHuInfo.nFinalScore - nHuLostScore + nKongScore - nKongLostScore;
-	}
 
 };
 
@@ -852,11 +642,6 @@ struct T_SettlementList
 struct T_MsgResult
 {
 	bool bHuangZhuang;				//是否荒庄
-
-	T_UserHuInfo arrUserHuInfo[MJ_MAX_PLAYER]; // 也可以放在createSettlementList参数列表中
-
-	T_WeaveCardsValueItem arrWeaveCardsKong[MJ_MAX_PLAYER][MJ_MAX_WEAVE];// 也可以放在createSettlementList参数列表中
-	int arrKongNum[MJ_MAX_PLAYER];// 也可以放在createSettlementList参数列表中
 
 	T_SettlementList arrSettlementList[MJ_MAX_PLAYER];
 
@@ -866,82 +651,6 @@ struct T_MsgResult
 
 	}
 
-	void addHuSettlement(int nHuUser, const T_UserHuInfo & tUserHuInfo, int nPlayerNum)
-	{
-		arrSettlementList[nHuUser].tUserHuInfo = tUserHuInfo;
-		if (tUserHuInfo.isZiMoType())
-		{
-			for (int i = 0; i < nPlayerNum; ++i)
-			{
-				if (i == nHuUser)
-				{
-					continue;
-				}
-				if (arrUserHuInfo[i].nHuIndex > arrUserHuInfo[nHuUser].nHuIndex)
-				{
-					T_HuLostItem tLostScoreItem(nHuUser, arrUserHuInfo[nHuUser]);
-					arrSettlementList[i].addHuLostItem(tLostScoreItem);
-				}
-			}
-		}
-		else
-		{
-			T_HuLostItem tLostScoreItem(arrUserHuInfo[nHuUser].byFangPaoUser, arrUserHuInfo[nHuUser]);
-			arrSettlementList[arrUserHuInfo[nHuUser].byFangPaoUser].addHuLostItem(tLostScoreItem);
-		}
-	}
-
-	void addKongSettlementItem(int nToUser, const T_WeaveCardsValueItem & tWeaveCardsValueItem)
-	{
-		arrSettlementList[nToUser].arrWeaveCardsKongGot[arrSettlementList[nToUser].nKongNum] = tWeaveCardsValueItem;
-		arrSettlementList[nToUser].nKongNum++;
-		if (tWeaveCardsValueItem.byWeaveKind == 2 || tWeaveCardsValueItem.byWeaveKind == 3)//暗杠与补杠
-		{
-			for (int i = 0; i < tWeaveCardsValueItem.nNotHuUserNum; ++i)
-			{
-				if (tWeaveCardsValueItem.arrNotHuUser[i] == nToUser)
-				{
-					continue;
-				}
-				T_KongLostItem tKongLostItem(nToUser, tWeaveCardsValueItem);
-				arrSettlementList[tWeaveCardsValueItem.arrNotHuUser[i]].addKongLostItem(tKongLostItem);
-			}
-		}
-		else
-		{
-			T_KongLostItem tKongLostItem(nToUser, tWeaveCardsValueItem);
-			arrSettlementList[tWeaveCardsValueItem.byProvideUser].addKongLostItem(tKongLostItem);
-		}
-	}
-
-	void createSettlementList(std::vector<int> vecHu, int nPlayerNum, const T_DeskConfig & tDeskConfig)
-	{
-
-		// 给胡牌与被胡牌玩家之间结算分数，首先先给一胡的玩家结算，再给二胡的玩家结算,最后三胡
-		for (int i = 0; i < vecHu.size(); i++)
-		{
-			int nHuUser = vecHu.at(i);
-			addHuSettlement(nHuUser, arrUserHuInfo[nHuUser], nPlayerNum);
-		}
-
-		// 生成杠清单
-
-
-		for (int i = 0; i < nPlayerNum; ++i)
-		{
-			for (int j = 0; j < arrKongNum[i]; ++j)
-			{
-				addKongSettlementItem(i, arrWeaveCardsKong[i][j]);
-			}
-		}
-
-		// 结算
-		for (int i = 0; i < nPlayerNum; ++i)
-		{
-			arrSettlementList[i].calculateScore(tDeskConfig);
-		}
-
-	}
 };
 
 //////////////////////////////////////////////////////////////////////////
