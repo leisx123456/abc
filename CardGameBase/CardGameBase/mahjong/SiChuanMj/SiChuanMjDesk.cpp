@@ -192,7 +192,10 @@ bool CSiChuanMjDesk::execActPong(int nFromUser, int nToUser)
 
 bool CSiChuanMjDesk::execActKong(int nFromUser, int nToUser)
 {
-	m_pArrMjPlayer[nFromUser]->removeLatestOutCard();
+	if (nFromUser != nToUser)
+	{
+		m_pArrMjPlayer[nFromUser]->removeLatestOutCard();
+	}
 	m_pArrMjPlayer[nToUser]->execKong(nFromUser, m_cardOut, m_vecHu, playerCount());
 
 	// 向各玩家广播动作消息/////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -259,7 +262,13 @@ bool CSiChuanMjDesk::execActHu(int nFromUser, int arrToUser[], int nUserNums)
 		m_pArrMjPlayer[arrToUser[i]]->getHandCards(tMsgActResultInfo.byHands, tMsgActResultInfo.iHandNums);
 	}
 	// 更新玩家分数变化并加入到结算清单里
-	m_pSiChuanMjScoreService->addHuSettlement()
+	for (int i = 0; i < nUserNums; ++i)
+	{
+		m_pSiChuanMjScoreService->addHuSettlement(arrToUser[i], m_pArrMjPlayer[arrToUser[i]]->userHuInfo()
+			, m_vecHu, playerCount(), m_tDeskConfig, tMsgActResultInfo.arrScoreChanged);
+	}
+	
+
 	onMsgActResult(tMsgActResultInfo);
 
 
@@ -444,27 +453,8 @@ void CSiChuanMjDesk::onEventGameFinshed()
 	T_MsgResult tMsgResult;
 	tMsgResult.bHuangZhuang = m_bHuangZhuang;
 
-	// 给消息结构体赋值
-	for (int i = 0; i < playerCount(); ++i)
-	{
-		// 胡信息
-		tMsgResult.arrUserHuInfo[i] = m_pArrMjPlayer[i]->userHuInfo();
-
-		// 杠信息
-		T_WeaveCardsItem arrWeaveCardsItem[MJ_MAX_WEAVE];
-		int nWeaveItemNums = 0;
-		m_pArrMjPlayer[i]->getWeaveCardsItems(arrWeaveCardsItem, nWeaveItemNums);
-		for (int i = 0; i < nWeaveItemNums; ++i)
-		{
-			if (arrWeaveCardsItem[i].isKong())
-			{
-				tMsgResult.arrWeaveCardsKong[i][tMsgResult.arrKongNum[i]++] = arrWeaveCardsItem[i];
-			}
-		}
-
-		// 生成结算清单
-		tMsgResult.createSettlementList(m_vecHu, playerCount(), m_tDeskConfig);
-	}
+	m_pSiChuanMjScoreService->update();
+	m_pSiChuanMjScoreService->getSettlementList(tMsgResult.arrSettlementList);
 
 	onMsgGameResult(tMsgResult);
 }

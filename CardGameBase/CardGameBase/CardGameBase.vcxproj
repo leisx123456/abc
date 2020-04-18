@@ -30,7 +30,7 @@
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjDesk.cpp" />
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjLogic.cpp" />
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjPlayer.cpp" />
-    <ClCompile Include="mahjong\SiChuanMj\SiChuanMjScoreService..cpp" />
+    <ClCompile Include="mahjong\SiChuanMj\SiChuanMjScoreService.cpp" />
     <ClCompile Include="mahjong\SiChuanMj\SiChuanMjThink.cpp" />
   </ItemGroup>
   <ItemGroup>

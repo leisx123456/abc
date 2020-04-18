@@ -75,7 +75,7 @@
     <ClCompile Include="core\LMjDef.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="mahjong\SiChuanMj\SiChuanMjScoreService..cpp">
+    <ClCompile Include="mahjong\SiChuanMj\SiChuanMjScoreService.cpp">
       <Filter>mahjong\SiChuanMj</Filter>
     </ClCompile>
   </ItemGroup>

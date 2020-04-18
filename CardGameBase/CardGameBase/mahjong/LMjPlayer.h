@@ -204,7 +204,7 @@ protected:
 	T_UserHuInfo m_tUserHuInfo;
 
 	// 保存玩家本局结算清单
-	T_SettlementList tSettlementList;
+	//T_SettlementList tSettlementList;
 	
 	//////////////////////////////////////////////////////////////////////////
 	bool m_bReady;

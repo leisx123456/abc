@@ -255,6 +255,7 @@ bool CLMjPlayer::execHu(unsigned char byProvideUser, int nHuIndex, const CLMjCar
 
 		// 加入到手牌
 		m_arrHandCards[13] = cardOut;
+		++m_nHandNums;
 	}
 	// 转移胡牌方式
 	m_tUserHuInfo.eMjHuWay = m_tMjActInfo.tMjActHuInfo.eMjHuWay;

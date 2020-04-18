@@ -12,12 +12,14 @@ public:
 		, int nPlayerNum, const T_DeskConfig & tDeskConfig, int *pScoreChanged = nullptr);
 
 
-	int huScore(const T_UserHuInfo & tUserHuInfo, const T_DeskConfig & tDeskConfig);
+	void update();
+
+	void getSettlementList(T_SettlementList arrSettlementList[MJ_MAX_PLAYER]);
 
 	//void createSettlementList(std::vector<int> vecHu, int nPlayerNum, const T_DeskConfig & tDeskConfig);
 private:
 	// 玩家的结算清单
-	T_SettlementList arrSettlementList[MJ_MAX_PLAYER];
+	T_SettlementList m_arrSettlementList[MJ_MAX_PLAYER];
 
 	int m_arrCurScoreChanged[MJ_MAX_PLAYER];
 

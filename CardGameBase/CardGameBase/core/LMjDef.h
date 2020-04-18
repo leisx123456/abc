@@ -395,9 +395,6 @@ struct T_UserHuInfo
 	int nHuIndex;						// 第几个胡
 	unsigned char byFangPaoUser;		//放炮玩家
 
-	bool bChaJiao;	// 是否成功查了别人的叫
-	int arrBeChaoJiaoUser[MJ_MAX_PLAYER];	// 被查叫的玩家id
-
 	E_MjHuWay eMjHuWay;
 	E_MjHuNameFlags eMjHuName;
 	int nGeng;	// 根
@@ -410,14 +407,6 @@ struct T_UserHuInfo
 	int nFinalFan;	// 当前牌型最终番数(如果有定义最大番数不能超过最大番数)
 	int nFinalUnit;	// 当前牌型最终多少个 底分数
 	int nFinalScore;	// 当前牌型最终得分nTotalScore = nTotalUnit*UnitScore; //UnitScore由玩家定
-
-
-
-	T_UserHuInfo()
-	{
-		memset(this, 0, sizeof(T_UserHuInfo));
-
-	}
 
 	bool isZiMoType() const
 	{
@@ -435,6 +424,116 @@ struct T_UserHuInfo
 		return false;
 	}
 
+	int huScore(const T_DeskConfig & tDeskConfig)
+	{
+		if (!bHu)
+		{
+			return 0;
+		}
+		// E_MjHuWay  + E_MjHuName + 根service
+		int nUnit = 0;
+		int nFan = 0;
+		//E_MjHuWay
+		switch (eMjHuWay)
+		{
+		case EHW_Unknown:
+			break;
+		case EHW_JiePao:
+			break;
+		case EHW_ZiMo:
+			nUnit++;//自摸加底
+			break;
+		case EHW_DayHu:
+			nUnit++;
+			nFan += 6;
+			goto end;
+		case EHW_LandHu:
+			nUnit++;
+			nFan += 6;
+			goto end;
+		case EHW_PensonHu:
+			nFan += 6;
+			goto end;
+		case EHW_QiangGang:
+			nFan++;
+			break;
+		case EHW_DianGangKai:
+			nUnit++;
+			nFan++;
+			break;
+		case EHW_AnGangKai:
+			nUnit++;
+			nFan++;
+			break;
+		case EHW_BuGangKai:
+			nUnit++;
+			nFan++;
+			break;
+		default:
+			break;
+		}
+
+		// E_MjHuName
+		switch (eMjHuName)
+		{
+		case EHN_Ping:
+			break;
+		case EHN_Pong:
+			nFan++;
+			break;
+		case EHN_Qing:
+			nFan += 2;
+			break;
+		case EHN_SevenPair:
+			nFan += 2;
+			break;
+		case EHN_JinGouDiao:
+			nFan += 2;
+			break;
+		case EHN_DragonSevenPair:
+			nFan += 3;
+			break;
+		case EHN_QingPong:
+			nFan += 3;
+			break;
+		case EHN_QingSevenPair:
+			nFan += 4;
+			break;
+		case EHN_QingDragonSevenPair:
+			nFan += 5;
+			break;
+		case EHN_QingJinGouDiao:
+			nFan += 4;
+			break;
+		default:
+			break;
+		}
+
+		// 地方配置情况
+		if (tDeskConfig.bAbleHaiDiLao)
+		{
+			if (bHaiDiLao)
+			{
+				nFan++;
+			}
+		}
+
+		//gen
+		nFan += nGeng;	// 牌型番数+根
+
+	end:
+		nTotalFan = nFan;
+		nFinalFan = nTotalFan;
+		if (nTotalFan > tDeskConfig.nMaxFan)
+		{
+			nFinalFan = tDeskConfig.nMaxFan;
+		}
+
+		int nFinalMultiple = pow(2, nFinalFan); //倍数
+		nFinalUnit = nUnit + nFinalMultiple;
+		nFinalScore = nFinalUnit * tDeskConfig.bBaseScore;
+		return nFinalScore;
+	}
 };
 
 
@@ -536,6 +635,21 @@ struct T_MsgActResultInfo
 
 };
 
+// 查叫信息结构体
+struct T_MsgChaJiao
+{
+	int arrChaJiaoUser[MJ_MAX_PLAYER];	// 查叫用户
+	int nChaJiaoNum;
+
+	int arrNotTingUser[MJ_MAX_PLAYER];	// 被查叫用户
+	int nNotTingNum;
+
+	// 退杠分
+	int arrScoreTuiGang[MJ_MAX_PLAYER];
+
+	// 查叫的分数变化
+	int arrScoreChanged[MJ_MAX_PLAYER];
+};
 
 
 struct T_KongScoreItem
@@ -559,58 +673,33 @@ struct T_KongScoreItem
 
 struct T_ChaJiaoScoreItem
 {
-	int arrChaJiaoUser[MJ_MAX_PLAYER];
-	int arrNotTingUser[MJ_MAX_PLAYER];
-
-	// 退杠分
-	int arrScoreTuiGang[MJ_MAX_PLAYER];
-
-	// 查叫的分数变化
-	int arrScoreChanged[MJ_MAX_PLAYER];
-
+	// 暂时简略只显示查叫或被查叫用户和分数，不显示最大牌型
+	int nChaJiaoUser;
+	int nBeChaJiaoUser;
+	int nScore;
+	//int arrBeChaoJiaoUser[MJ_MAX_PLAYER];	// 被查叫的玩家id
 };
 
 struct T_HuScoreItem
 {
 	int nHuUser;
-	int nHuIndex;						// 第几个胡
-	unsigned char byFangPaoUser;		//放炮玩家
-
-
-	E_MjHuWay eMjHuWay;
-	E_MjHuNameFlags eMjHuName;
-	int nGeng;	// 根
-
-	// 地方配置
-	bool bHaiDiLao;
-
-	// 
-	int nTotalFan;	// 当前牌型总番数
-	int nFinalFan;	// 当前牌型最终番数(如果有定义最大番数不能超过最大番数)
-	int nFinalUnit;	// 当前牌型最终多少个 底分数
-	int nFinalScore;	// 当前牌型最终得分nTotalScore = nTotalUnit*UnitScore; //UnitScore由玩家定
+	T_UserHuInfo tUserHuInfo;
+	
 
 	T_HuScoreItem()
 	{
+		memset(this, 0, sizeof(T_HuScoreItem));
 
 	}
-	T_HuScoreItem(int nHuUser, const T_UserHuInfo & tUserHuInfo)
+
+
+	T_HuScoreItem(int nHuUser, const T_UserHuInfo & tUserHuInfo, int nScore)
 		: nHuUser(nHuUser)
-		, tUserHuInfoOther(tUserHuInfo)
+		, tUserHuInfo(tUserHuInfo)
 	{
-
+		this->tUserHuInfo.nFinalScore = nScore;
 	}
 
-	int calculateScore(const T_DeskConfig & tDeskConfig)
-	{
-		tUserHuInfoOther.calculateScore(tDeskConfig);
-		return tUserHuInfoOther.nFinalScore;
-	}
-
-	int score()
-	{
-		return tUserHuInfoOther.nFinalScore;
-	}
 
 };
 
@@ -635,6 +724,39 @@ struct T_SettlementList
 	// 实际最终分数
 	int nRealScore;
 
+	T_SettlementList()
+	{
+		reset();
+	}
+
+	void reset()
+	{
+		memset(this, 0, sizeof(T_SettlementList));
+	}
+
+	void updateScore()
+	{
+
+		nKongScore = 0;
+		for (int i = 0; i < nKongNum; ++i)
+		{
+			nKongScore += arrKongScoreItem[i].nScore;
+		}
+	
+		nChaJiaoScore = 0;
+		for (int i = 0; i < nChaJiaoItemNum; ++i)
+		{
+			nChaJiaoScore += arrChaJiaoItem[i].nScore;
+		}
+
+		nHuScore = 0;
+		for (int i = 0; i < nHuItemNum; ++i)
+		{
+			nHuScore += arrHuItem[i].tUserHuInfo.nFinalScore;
+		}
+	
+		nRealScore = nKongScore + nChaJiaoScore + nHuScore;
+	}
 
 };
 
@@ -650,6 +772,7 @@ struct T_MsgResult
 		::memset(this, 0, sizeof(T_MsgResult));
 
 	}
+
 
 };
 
